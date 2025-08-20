@@ -19,8 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pastyra.R
-import com.example.pastyra.domain.model.Card
-import com.example.pastyra.domain.model.Game
 import com.example.pastyra.domain.model.Player
 import com.example.pastyra.ui.viewmodel.GameViewModel
 
@@ -59,8 +57,7 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                     onClick = {
                         player.activeCard?.let {
                             viewModel.takeCard(
-                                playerId = player.playerId,
-                                card = it
+                                playerId = player.playerId
                             )
                         }
                     }

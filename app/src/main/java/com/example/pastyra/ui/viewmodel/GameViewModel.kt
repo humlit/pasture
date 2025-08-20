@@ -1,6 +1,5 @@
 package com.example.pastyra.ui.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.pastyra.domain.model.Card
@@ -21,7 +20,6 @@ open class GameViewModel() : ViewModel() {
 
     init {
         startGame()
-        Log.d("PLAYER_CHECK", _state.value.game.playerList.toString())
     }
 
     private fun startGame() {
@@ -51,7 +49,7 @@ open class GameViewModel() : ViewModel() {
     fun selectTableCard(card: Card, playerId: Int) {
         _state.update { currentState ->
             val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
-            if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
+            if (currentPlayer == null || currentPlayer.activeCard == null || currentPlayer.activeCard.rank.toString() == "JACK") return@update currentState
 
             val newActiveCards = currentState.game.tableActiveCard.toMutableList()
             if (newActiveCards.any { it.id == card.id }) {
@@ -95,9 +93,18 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    fun takeCard(playerId: Int, card: Card) {
+    fun takeCard(playerId: Int) {
+        val currentPlayer = _state.value.game.playerList.find { it.playerId == playerId }
+
         when {
-            card.arithmeticValue != null -> takeArithmeticCard(playerId)
+            currentPlayer?.activeCard?.arithmeticValue != null -> takeArithmeticCard(playerId)
+
+            (currentPlayer?.activeCard?.rank.toString() == "QUEEN" || currentPlayer?.activeCard?.rank.toString() == "KING") -> takeQueenAndKingCard(
+                playerId
+            )
+
+            currentPlayer?.activeCard?.rank.toString() == "JACK" -> takeJackCard(playerId)
+
             else -> throw IllegalArgumentException("Try again!")
         }
     }
@@ -108,16 +115,16 @@ open class GameViewModel() : ViewModel() {
             val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
             if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
 
-            val defaultPlayerTakenCard = currentPlayer.cardsTaken
+            currentPlayer.cardsTaken
             val newPlayerTakenCard = currentPlayer.cardsTaken.toMutableList()
-            val currentTableDeck = currentState.game.tableDeck.toMutableList()
+            currentState.game.tableDeck.toMutableList()
             val currentTableActiveCard = currentState.game.tableActiveCard.toMutableList()
 
             if (currentTableActiveCard.last().arithmeticValue == currentPlayer.activeCard.arithmeticValue) {
                 temporaryPlayerTakenCardList.add(currentTableActiveCard.last())
             }
 
-            if (currentTableActiveCard.sumBy {
+            if (currentTableActiveCard.sumOf {
                     it.arithmeticValue ?: 0
                 } == currentPlayer.activeCard.arithmeticValue) {
                 newPlayerTakenCard.addAll(currentTableActiveCard)
@@ -139,6 +146,64 @@ open class GameViewModel() : ViewModel() {
                     playerList = newPlayerList
                 )
             )
+        }
+    }
+
+    fun takeQueenAndKingCard(playerId: Int) {
+        _state.update { currentState ->
+
+            val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
+            if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
+
+            currentState
+        }
+    }
+
+    fun takeJackCard(playerId: Int) {
+        _state.update { currentState ->
+
+            val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
+            if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
+
+            val mutableTableDeck = currentState.game.tableDeck.toMutableList()
+            val newPlayerTakenCard = currentPlayer.cardsTaken.toMutableList()
+
+            mutableTableDeck.forEach { tableCard ->
+                if (tableCard.canJackPickUp) {
+                    newPlayerTakenCard.add(tableCard)
+                }
+            }
+
+            val isCanTake = newPlayerTakenCard.isNotEmpty()
+
+            if (isCanTake) {
+                val newPlayerList = currentState.game.playerList.map { pl ->
+                    if (pl.playerId == playerId) {
+                        pl.copy(
+                            cardsTaken = newPlayerTakenCard + currentPlayer.activeCard,
+                            cardsHand = currentPlayer.cardsHand - currentPlayer.activeCard
+                        )
+                    } else {
+                        pl
+                    }
+                }
+
+                val newTableDeck = mutableTableDeck - newPlayerTakenCard
+
+                val updatedActivePlayer = newPlayerList.find { it.playerId == playerId }
+
+                val newGame = currentState.game.copy(
+                    playerList = newPlayerList,
+                    tableDeck = newTableDeck,
+                    activePlayer = updatedActivePlayer
+                )
+
+                currentState.copy(
+                    game = newGame
+                )
+            } else {
+                currentState
+            }
         }
     }
 
@@ -191,21 +256,23 @@ open class GameViewModel() : ViewModel() {
     private fun activePlayerSelect() {
         val currentState = _state.value
 
-        val activePlayer = currentState.game.playerList.random()
+        val randomPlayer = currentState.game.playerList.random()
 
         val newPlayerList = currentState.game.playerList.map { player ->
-            if (player.playerId == activePlayer.playerId) {
-                activePlayer.copy(isActive = true)
-            } else player
+            if (player.playerId == randomPlayer.playerId) {
+                player.copy(isActive = true)
+            } else {
+                player.copy(isActive = false)
+            }
         }
 
-        val newGame =
-            currentState.game.copy(activePlayer = activePlayer, playerList = newPlayerList)
+        val updatedActivePlayer = newPlayerList.find { it.playerId == randomPlayer.playerId }
+
+        val newGame = currentState.game.copy(
+            activePlayer = updatedActivePlayer,
+            playerList = newPlayerList
+        )
 
         _state.value = currentState.copy(game = newGame)
-    }
-
-    fun switchActivePlayer() {
-
     }
 }

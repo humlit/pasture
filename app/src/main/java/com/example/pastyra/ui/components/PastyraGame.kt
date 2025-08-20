@@ -1,5 +1,6 @@
 package com.example.pastyra.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,5 +36,8 @@ fun PastyraGameStart(
             TableUIView(game.tableDeck, viewModel)
             PlayerUIView(game.playerList[1], viewModel)
         }
+        Log.d("TAKEN_CARD", "activePlayer = ${game.activePlayer}")
+        Log.d("TAKEN_CARD", "cardsTaken = ${game.activePlayer?.cardsTaken}")
+        Log.d("TAKEN_CARD", "cardsTaken size = ${game.activePlayer?.cardsTaken?.size}")
     }
 }
