@@ -36,8 +36,5 @@ fun PastyraGameStart(
             TableUIView(game.tableDeck, viewModel)
             PlayerUIView(game.playerList[1], viewModel)
         }
-        Log.d("TAKEN_CARD", "activePlayer = ${game.activePlayer}")
-        Log.d("TAKEN_CARD", "cardsTaken = ${game.activePlayer?.cardsTaken}")
-        Log.d("TAKEN_CARD", "cardsTaken size = ${game.activePlayer?.cardsTaken?.size}")
     }
 }

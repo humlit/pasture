@@ -31,6 +31,7 @@ fun PreviewPlayerUIView() {
 @Composable
 fun PlayerUIView(player: Player, viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    val game = state.value.game
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
@@ -47,21 +48,11 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Button(
-                    onClick = { }
-                ) { Text(text = stringResource(R.string.cards_bundle)) }
-                Button(
-                    onClick = { viewModel.putCardOnTable(playerId = player.playerId) }
-                ) { Text(text = stringResource(R.string.cards_put)) }
-                Button(
-                    onClick = {
-                        player.activeCard?.let {
-                            viewModel.takeCard(
-                                playerId = player.playerId
-                            )
-                        }
-                    }
-                ) { Text(text = stringResource(R.string.cards_take)) }
+                BundleButton(clickListener = {viewModel.bundleCard(playerId = player.playerId)})
+
+                PutCardOnTableButton(clickListener = {viewModel.putCardOnTable(playerId = player.playerId)})
+
+                TakeCardButton(clickListener = {viewModel.takeCard(playerId = player.playerId)})
             }
             Spacer(modifier = Modifier.height(5.dp))
             Row(
