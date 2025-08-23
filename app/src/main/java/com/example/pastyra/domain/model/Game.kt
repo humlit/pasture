@@ -7,6 +7,7 @@ data class Game(
     val tableDeck: List<Card> = emptyList(),
     val tableActiveCard: List<Card> = emptyList(),
     var isStarted: Boolean = false,
+    val gameStage: Stage = Stage.Waiting,
 ) {
 
 }

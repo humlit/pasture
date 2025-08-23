@@ -59,14 +59,3 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
         }
     }
 }
-
-
-//Row {
-//    deck.forEachIndexed { index, card ->
-//        CardUIView(
-//            card = card,
-//            isSelected = false,
-//            onClick = {}
-//        )
-//    }
-//}

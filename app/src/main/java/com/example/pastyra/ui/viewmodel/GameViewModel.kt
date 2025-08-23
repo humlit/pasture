@@ -1,7 +1,9 @@
 package com.example.pastyra.ui.viewmodel
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import com.example.pastyra.data.usercase.isSelectable
+import com.example.pastyra.data.usercase.selectArithmeticTableCard
+import com.example.pastyra.data.usercase.selectQueenAndKingCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.GameState
 import com.example.pastyra.domain.model.Player
@@ -15,8 +17,6 @@ open class GameViewModel() : ViewModel() {
 
     private val _state = MutableStateFlow(GameState())
     val state: StateFlow<GameState> = _state.asStateFlow()
-
-    val temporaryPlayerTakenCardList = mutableStateListOf<Card>()
 
     init {
         startGame()
@@ -59,23 +59,16 @@ open class GameViewModel() : ViewModel() {
             val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
             if (currentPlayer == null || currentPlayer.activeCard == null || currentPlayer.activeCard.rank.toString() == "JACK") return@update currentState
 
-            val newActiveCards = currentState.game.tableActiveCard.toMutableList()
-
-            when {
+            val newActiveCards = when {
                 currentPlayer.activeCard.arithmeticValue != null -> {
-                    if (newActiveCards.any { it.id == card.id }) {
-                        newActiveCards.removeAll { it.id == card.id }
-                    } else {
-                        newActiveCards.add(card)
-                    }
+                    selectArithmeticTableCard(card, currentState, playerId)
                 }
 
                 currentPlayer.activeCard.rank.toString() == "QUEEN" || currentPlayer.activeCard.rank.toString() == "KING" -> {
-                    newActiveCards.clear()
-                    if (card.rank == currentPlayer.activeCard.rank) {
-                        newActiveCards.add(card)
-                    }
+                    selectQueenAndKingCard(card, currentState, playerId)
                 }
+
+                else -> throw IllegalArgumentException("")
             }
 
             currentState.copy(
@@ -103,12 +96,19 @@ open class GameViewModel() : ViewModel() {
                 }
             }
 
+            val newTableActiveCard = currentState.game.tableActiveCard.toMutableList()
+
+            if (newTableActiveCard.isNotEmpty()) {
+                newTableActiveCard.clear()
+            }
+
             val newTableDeck = currentState.game.tableDeck + cardToPlay
 
             currentState.copy(
                 game = currentState.game.copy(
                     playerList = updatePlayerList,
-                    tableDeck = newTableDeck
+                    tableDeck = newTableDeck,
+                    tableActiveCard = newTableActiveCard
                 )
             )
         }
@@ -133,6 +133,8 @@ open class GameViewModel() : ViewModel() {
 
             val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
             if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
+
+            val cardToPlay = currentPlayer.activeCard
 
             currentState
         }
@@ -294,5 +296,26 @@ open class GameViewModel() : ViewModel() {
         )
 
         _state.value = currentState.copy(game = newGame)
+    }
+
+    fun switchActivePlayer() {
+        _state.update { currentState ->
+
+            val playerList = currentState.game.playerList
+            val currentId = currentState.game.activePlayer?.playerId ?: 1
+
+            val nextId = if (currentId >= playerList.size) 1 else currentId + 1
+
+            val newPlayerList = playerList.map { player ->
+                player.copy(isActive = player.playerId == nextId)
+            }
+
+            currentState.copy(
+                game = currentState.game.copy(
+                    playerList = newPlayerList,
+                    activePlayer = newPlayerList.first { it.playerId == nextId }
+                )
+            )
+        }
     }
 }

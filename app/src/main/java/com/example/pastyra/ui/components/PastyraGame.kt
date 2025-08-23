@@ -22,6 +22,8 @@ fun PastyraGameStart(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val game = state.game
 
+    Log.d("ACTIVE_TABLE_CARD", game.tableActiveCard.toString())
+
     Card(
         modifier = Modifier.fillMaxSize(),
         colors = CardDefaults.cardColors(containerColor = Color.LightGray)
