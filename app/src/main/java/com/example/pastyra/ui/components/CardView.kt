@@ -27,12 +27,8 @@ import androidx.compose.ui.unit.sp
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.Rank
 import com.example.pastyra.domain.model.Suit
-
-@Preview
-@Composable
-fun PreviewCardUIView() {
-    CardUIView(card = Card(rank = Rank.TWO, suit = Suit.CLUBS, point = 2), isSelected = true, onClick = {})
-}
+import com.example.pastyra.domain.model.safeRank
+import com.example.pastyra.domain.model.safeSuit
 
 @Composable
 fun CardUIView(
@@ -41,6 +37,8 @@ fun CardUIView(
     onClick:() -> Unit,
 ) {
     val borderColor = if(isSelected) Color.Green else Color.Transparent
+
+
 
     Box(
         modifier = Modifier
@@ -61,8 +59,8 @@ fun CardUIView(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = """
-                        ${card.rank}
-                        ${card.suit}
+                        ${card.safeRank}
+                        ${card.safeSuit}
                     """.trimIndent(),
                 fontSize = 10.sp
             )
@@ -90,8 +88,8 @@ fun CardUIView(
                     .rotate(180f)
                     .align(alignment = Alignment.End),
                 text = """
-                        ${card.suit}
-                        ${card.rank}
+                        ${card.safeRank}
+                        ${card.safeSuit}
                     """.trimIndent(),
                 fontSize = 10.sp
             )

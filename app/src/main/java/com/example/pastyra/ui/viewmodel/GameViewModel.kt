@@ -1,12 +1,17 @@
 package com.example.pastyra.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.pastyra.domain.model.ArithmeticCard
+import com.example.pastyra.domain.model.Card
+import com.example.pastyra.domain.model.CardWithRank
+import com.example.pastyra.domain.model.GameState
+import com.example.pastyra.domain.model.JackCard
+import com.example.pastyra.domain.model.KingCard
+import com.example.pastyra.domain.model.Player
+import com.example.pastyra.domain.model.QueenCard
+import com.example.pastyra.domain.model.Stage
 import com.example.pastyra.domain.usercase.selectArithmeticTableCard
 import com.example.pastyra.domain.usercase.selectQueenAndKingCard
-import com.example.pastyra.domain.model.Card
-import com.example.pastyra.domain.model.GameState
-import com.example.pastyra.domain.model.Player
-import com.example.pastyra.domain.model.Stage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,10 +62,10 @@ open class GameViewModel() : ViewModel() {
     fun selectTableCard(card: Card, playerId: Int) {
         _state.update { currentState ->
             val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
-            if (currentPlayer == null || currentPlayer.activeCard == null || currentPlayer.activeCard.rank.toString() == "JACK") return@update currentState
+            if (currentPlayer == null || currentPlayer.activeCard == null || currentPlayer.activeCard is JackCard) return@update currentState
 
             val newActiveCards = when {
-                currentPlayer.activeCard.arithmeticValue != null -> {
+                currentPlayer.activeCard is ArithmeticCard -> {
                     if (currentState.game.gameStage == Stage.WaitToTakeArithmeticCard) {
                         selectArithmeticTableCard(card, currentState, playerId)
                     } else {
@@ -68,7 +73,7 @@ open class GameViewModel() : ViewModel() {
                     }
                 }
 
-                currentPlayer.activeCard.rank.toString() == "QUEEN" || currentPlayer.activeCard.rank.toString() == "KING" -> {
+                currentPlayer.activeCard is QueenCard || currentPlayer.activeCard is KingCard -> {
                     selectQueenAndKingCard(card, currentState, playerId)
                 }
 
@@ -122,13 +127,13 @@ open class GameViewModel() : ViewModel() {
         val currentPlayer = _state.value.game.playerList.find { it.playerId == playerId }
 
         when {
-            currentPlayer?.activeCard?.arithmeticValue != null -> takeArithmeticCard(playerId)
+            currentPlayer?.activeCard is ArithmeticCard -> takeArithmeticCard(playerId)
 
-            (currentPlayer?.activeCard?.rank.toString() == "QUEEN" || currentPlayer?.activeCard?.rank.toString() == "KING") -> takeQueenAndKingCard(
+            (currentPlayer?.activeCard is QueenCard || currentPlayer?.activeCard is KingCard) -> takeQueenAndKingCard(
                 playerId
             )
 
-            currentPlayer?.activeCard?.rank.toString() == "JACK" -> takeJackCard(playerId)
+            currentPlayer?.activeCard is JackCard -> takeJackCard(playerId)
         }
     }
 
@@ -149,22 +154,27 @@ open class GameViewModel() : ViewModel() {
             if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
 
             val cardToPlay = currentPlayer.activeCard
+            val lastTableCard = currentState.game.tableActiveCard.lastOrNull()
 
             val newPLayerList =
-                if (currentState.game.tableActiveCard.last().rank == currentPlayer.activeCard.rank) {
-                    currentState.game.playerList.map { pl ->
-                        when {
-                            pl.playerId == currentPlayer.playerId -> {
-                                pl.copy(
-                                    cardsHand = pl.cardsHand - cardToPlay,
-                                    activeCard = null
-                                )
-                            }
+                if (lastTableCard is CardWithRank && currentPlayer.activeCard is CardWithRank) {
+                    if (lastTableCard.rank == currentPlayer.activeCard.rank) {
+                        currentState.game.playerList.map { pl ->
+                            when {
+                                pl.playerId == currentPlayer.playerId -> {
+                                    pl.copy(
+                                        cardsHand = pl.cardsHand - cardToPlay,
+                                        activeCard = null
+                                    )
+                                }
 
-                            else -> {
-                                pl
+                                else -> {
+                                    pl
+                                }
                             }
                         }
+                    } else {
+                        return@update currentState
                     }
                 } else {
                     currentState.game.playerList.map { pl ->
@@ -195,7 +205,7 @@ open class GameViewModel() : ViewModel() {
             val newPlayerTakenCard = currentPlayer.cardsTaken.toMutableList()
 
             mutableTableDeck.forEach { tableCard ->
-                if (tableCard.canJackPickUp) {
+                if (tableCard is ArithmeticCard || tableCard is JackCard) {
                     newPlayerTakenCard.add(tableCard)
                 }
             }
