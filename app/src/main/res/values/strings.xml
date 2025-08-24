@@ -3,4 +3,5 @@
     <string name="cards_bundle">Связать</string>
     <string name="cards_put">Положить</string>
     <string name="cards_take">Взять</string>
+    <string name="finish_move">Завершить ход</string>
 </resources>

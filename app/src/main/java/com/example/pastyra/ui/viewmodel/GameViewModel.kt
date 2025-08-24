@@ -1,12 +1,12 @@
 package com.example.pastyra.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.pastyra.data.usercase.isSelectable
-import com.example.pastyra.data.usercase.selectArithmeticTableCard
-import com.example.pastyra.data.usercase.selectQueenAndKingCard
+import com.example.pastyra.domain.usercase.selectArithmeticTableCard
+import com.example.pastyra.domain.usercase.selectQueenAndKingCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.GameState
 import com.example.pastyra.domain.model.Player
+import com.example.pastyra.domain.model.Stage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -61,7 +61,11 @@ open class GameViewModel() : ViewModel() {
 
             val newActiveCards = when {
                 currentPlayer.activeCard.arithmeticValue != null -> {
-                    selectArithmeticTableCard(card, currentState, playerId)
+                    if (currentState.game.gameStage == Stage.WaitToTakeArithmeticCard) {
+                        selectArithmeticTableCard(card, currentState, playerId)
+                    } else {
+                        return@update currentState
+                    }
                 }
 
                 currentPlayer.activeCard.rank.toString() == "QUEEN" || currentPlayer.activeCard.rank.toString() == "KING" -> {
@@ -133,8 +137,6 @@ open class GameViewModel() : ViewModel() {
 
             val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
             if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
-
-            val cardToPlay = currentPlayer.activeCard
 
             currentState
         }
@@ -314,6 +316,46 @@ open class GameViewModel() : ViewModel() {
                 game = currentState.game.copy(
                     playerList = newPlayerList,
                     activePlayer = newPlayerList.first { it.playerId == nextId }
+                )
+            )
+        }
+    }
+
+    fun waitingStage() {
+        _state.update { currentState ->
+            currentState.copy(
+                game = currentState.game.copy(
+                    gameStage = Stage.Waiting
+                )
+            )
+        }
+    }
+
+    fun waitToTakeArithmeticCardStage() {
+        _state.update { currentState ->
+            currentState.copy(
+                game = currentState.game.copy(
+                    gameStage = Stage.WaitToTakeArithmeticCard
+                )
+            )
+        }
+    }
+
+    fun waitToBundleStage() {
+        _state.update { currentState ->
+            currentState.copy(
+                game = currentState.game.copy(
+                    gameStage = Stage.WaitToBundle
+                )
+            )
+        }
+    }
+
+    fun readyToFinishStage() {
+        _state.update { currentState ->
+            currentState.copy(
+                game = currentState.game.copy(
+                    gameStage = Stage.ReadyToFinish
                 )
             )
         }

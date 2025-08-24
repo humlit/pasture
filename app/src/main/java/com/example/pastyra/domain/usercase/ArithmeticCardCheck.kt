@@ -1,4 +1,4 @@
-package com.example.pastyra.data.usercase
+package com.example.pastyra.domain.usercase
 
 import com.example.pastyra.domain.model.Card
 
@@ -11,3 +11,6 @@ fun isSelectable(playerActiveCard: Card?, tableActiveCard: List<Card>): Boolean 
     return true
 }
 
+fun arithmeticTableWatcher() {
+
+}

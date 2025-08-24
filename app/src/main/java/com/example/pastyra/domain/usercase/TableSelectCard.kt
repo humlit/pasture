@@ -1,4 +1,4 @@
-package com.example.pastyra.data.usercase
+package com.example.pastyra.domain.usercase
 
 import android.util.Log
 import com.example.pastyra.domain.model.Card

@@ -7,8 +7,10 @@ import androidx.compose.ui.res.stringResource
 import com.example.pastyra.R
 
 @Composable
-fun FinishMoveButton() {
-
+fun FinishMoveButton(clickListener: () -> Unit) {
+    Button(
+        onClick = clickListener
+    ) { Text(text = stringResource(R.string.finish_move)) }
 }
 
 @Composable

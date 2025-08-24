@@ -1,4 +1,4 @@
-package com.example.pastyra.data.usercase
+package com.example.pastyra.domain.usercase
 
 fun isPlayerCanTakeCardFromTheTable(deck: IntArray, findCard: Int): Boolean {
     val dp = BooleanArray(findCard + 1) { false }

@@ -28,7 +28,7 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(280.dp),
+            .height(300.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Gray)
     ) {
         Column {
@@ -50,9 +50,7 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
 
                     }
 
-                    repeat(4 - rowCards.size) {
-                        Spacer(modifier = Modifier.size(85.dp, 140.dp))
-                    }
+
                 }
                 Spacer(modifier = Modifier.height(5.dp))
             }

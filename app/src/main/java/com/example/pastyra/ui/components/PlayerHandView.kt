@@ -27,7 +27,6 @@ fun PreviewPlayerUIView() {
 @Composable
 fun PlayerUIView(player: Player, viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val game = state.value.game
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
@@ -38,26 +37,31 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                 .height(200.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                BundleButton(clickListener = {
-                    viewModel.bundleCard(playerId = player.playerId)
-//                    viewModel.switchActivePlayer()
-                })
+            if (player.activeCard != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
 
-                PutCardOnTableButton(clickListener = {
-                    viewModel.putCardOnTable(playerId = player.playerId)
-//                    viewModel.switchActivePlayer()
-                })
+                    BundleButton(clickListener = {
+                        viewModel.bundleCard(playerId = player.playerId)
+                    })
 
-                TakeCardButton(clickListener = {
-                    viewModel.takeCard(playerId = player.playerId)
-//                    viewModel.switchActivePlayer()
-                })
+                    PutCardOnTableButton(clickListener = {
+                        viewModel.putCardOnTable(playerId = player.playerId)
+                        viewModel.switchActivePlayer()
+                    })
+
+                    TakeCardButton(clickListener = {
+                        if (player.activeCard.arithmeticValue != null) {
+                            viewModel.waitToTakeArithmeticCardStage()
+                        } else {
+                            viewModel.takeCard(playerId = player.playerId)
+                        }
+                    })
+                }
             }
             Spacer(modifier = Modifier.height(5.dp))
             Row(
