@@ -64,17 +64,21 @@ open class GameViewModel() : ViewModel() {
             val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
             if (currentPlayer == null || currentPlayer.activeCard == null || currentPlayer.activeCard is JackCard) return@update currentState
 
-            val newActiveCards = when {
-                currentPlayer.activeCard is ArithmeticCard -> {
-                    if (currentState.game.gameStage == Stage.WaitToTakeArithmeticCard) {
+            val newActiveCards = when (currentPlayer.activeCard) {
+                is ArithmeticCard -> {
+                    if (currentState.game.gameStage == Stage.TakeArithmeticCard) {
                         selectArithmeticTableCard(card, currentState, playerId)
                     } else {
                         return@update currentState
                     }
                 }
 
-                currentPlayer.activeCard is QueenCard || currentPlayer.activeCard is KingCard -> {
-                    selectQueenAndKingCard(card, currentState, playerId)
+                is QueenCard, is KingCard -> {
+                    if (currentState.game.gameStage == Stage.TakeQueenOrKingCard) {
+                        selectQueenAndKingCard(card, currentState, playerId)
+                    } else {
+                        return@update currentState
+                    }
                 }
 
                 else -> throw IllegalArgumentException("")
@@ -126,14 +130,20 @@ open class GameViewModel() : ViewModel() {
     fun takeCard(playerId: Int) {
         val currentPlayer = _state.value.game.playerList.find { it.playerId == playerId }
 
-        when {
-            currentPlayer?.activeCard is ArithmeticCard -> takeArithmeticCard(playerId)
+        when (currentPlayer?.activeCard) {
+            is ArithmeticCard -> {
+                takeArithmeticCard(playerId)
+            }
 
-            (currentPlayer?.activeCard is QueenCard || currentPlayer?.activeCard is KingCard) -> takeQueenAndKingCard(
-                playerId
-            )
+            is QueenCard, is KingCard -> {
+                takeQueenAndKingCard(
+                    playerId
+                )
+            }
 
-            currentPlayer?.activeCard is JackCard -> takeJackCard(playerId)
+            is JackCard -> {
+                takeJackCard(playerId)
+            }
         }
     }
 
@@ -331,11 +341,11 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    fun waitingStage() {
+    fun resetStage() {
         _state.update { currentState ->
             currentState.copy(
                 game = currentState.game.copy(
-                    gameStage = Stage.Waiting
+                    gameStage = Stage.DefaultStage
                 )
             )
         }
@@ -345,7 +355,17 @@ open class GameViewModel() : ViewModel() {
         _state.update { currentState ->
             currentState.copy(
                 game = currentState.game.copy(
-                    gameStage = Stage.WaitToTakeArithmeticCard
+                    gameStage = Stage.TakeArithmeticCard
+                )
+            )
+        }
+    }
+
+    fun waitToTakeQueenOrKingCardStage() {
+        _state.update { currentState ->
+            currentState.copy(
+                game = currentState.game.copy(
+                    gameStage = Stage.TakeQueenOrKingCard
                 )
             )
         }
@@ -356,16 +376,6 @@ open class GameViewModel() : ViewModel() {
             currentState.copy(
                 game = currentState.game.copy(
                     gameStage = Stage.WaitToBundle
-                )
-            )
-        }
-    }
-
-    fun readyToFinishStage() {
-        _state.update { currentState ->
-            currentState.copy(
-                game = currentState.game.copy(
-                    gameStage = Stage.ReadyToFinish
                 )
             )
         }

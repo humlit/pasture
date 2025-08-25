@@ -1,12 +1,12 @@
 package com.example.pastyra.domain.usercase
 
-import android.util.Log
 import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.CardWithRank
 import com.example.pastyra.domain.model.GameState
 import com.example.pastyra.domain.model.KingCard
 import com.example.pastyra.domain.model.QueenCard
+import com.example.pastyra.domain.model.safeRank
 
 fun selectArithmeticTableCard(card: Card, state: GameState, playerId: Int): MutableList<Card> {
     val newTableActiveCard = state.game.tableActiveCard.toMutableList()
@@ -24,16 +24,16 @@ fun selectArithmeticTableCard(card: Card, state: GameState, playerId: Int): Muta
         newTableActiveCard.removeLastOrNull()
     }
 
-    Log.d("CARD_VER", cardVerificationToTake.toString())
-
     return newTableActiveCard
 }
 
 fun selectQueenAndKingCard(card: Card, state: GameState, playerId: Int): MutableList<Card> {
     val newTableActiveCard = state.game.tableActiveCard.toMutableList()
 
-    if (newTableActiveCard.isNotEmpty() && (card is QueenCard || card is KingCard)) {
-        newTableActiveCard.clear()
+    if (newTableActiveCard.isNotEmpty() && card is CardWithRank) {
+        if(card.rank == state.game.activePlayer?.activeCard?.safeRank){
+            newTableActiveCard.clear()
+        }
     }
 
     val currentPlayer = state.game.playerList.find { it.playerId == playerId }

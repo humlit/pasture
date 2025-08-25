@@ -15,5 +15,5 @@ fun isSelectable(playerActiveCard: Card?, tableActiveCard: List<Card>): Boolean 
 }
 
 fun arithmeticTableWatcher(playerActiveCard: Card?, tableActiveCard: List<Card>) {
-
+    
 }

@@ -16,7 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pastyra.domain.model.ArithmeticCard
+import com.example.pastyra.domain.model.KingCard
 import com.example.pastyra.domain.model.Player
+import com.example.pastyra.domain.model.QueenCard
 import com.example.pastyra.ui.viewmodel.GameViewModel
 
 @Preview
@@ -56,10 +58,18 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                     })
 
                     TakeCardButton(clickListener = {
-                        if (player.activeCard is ArithmeticCard) {
-                            viewModel.waitToTakeArithmeticCardStage()
-                        } else {
-                            viewModel.takeCard(playerId = player.playerId)
+                        when (player.activeCard) {
+                            is ArithmeticCard -> {
+                                viewModel.waitToTakeArithmeticCardStage()
+                            }
+
+                            is QueenCard, is KingCard -> {
+                                viewModel.waitToTakeQueenOrKingCardStage()
+                            }
+
+                            else -> {
+                                viewModel.takeCard(playerId = player.playerId)
+                            }
                         }
                     })
                 }

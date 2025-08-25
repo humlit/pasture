@@ -8,7 +8,7 @@ data class Game(
     val tableActiveCard: List<Card> = emptyList(),
     val tableTemporaryActiveCard: List<Card> = emptyList(),
     var isStarted: Boolean = false,
-    val gameStage: Stage = Stage.Waiting,
+    val gameStage: Stage = Stage.DefaultStage,
 ) {
 
 }
