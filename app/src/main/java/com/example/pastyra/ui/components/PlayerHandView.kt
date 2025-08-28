@@ -71,7 +71,6 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                         isSelected = card == player.activeCard,
                         onClick = {
                             viewModel.selectCard(
-                                playerId = state.value.game.activePlayer?.playerId ?: 0,
                                 card = card
                             )
                         })
