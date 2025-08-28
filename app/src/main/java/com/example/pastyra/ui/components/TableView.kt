@@ -47,7 +47,6 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
                                 scope.launch {
                                     viewModel.selectTableCard(
                                         card = card,
-                                        playerId = state.value.game.activePlayer?.playerId ?: 0
                                     )
                                 }
                             })

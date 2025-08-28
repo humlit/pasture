@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlin.AssertionError
 
 
 open class GameViewModel() : ViewModel() {
@@ -40,20 +41,40 @@ open class GameViewModel() : ViewModel() {
         dealInitialCard()
     }
 
-    fun selectCard(playerId: Int, card: Card) {
-        _state.update { currentState ->
-            val combinedTableDeck = currentState.game.tableDeck +
-                    currentState.game.tableActiveCard +
-                    currentState.game.temporaryPlayerTakenCard
+    val activePlayer: Player? get() = state.value.game.playerList.find { it.isActive }
 
+    val requiredActivePlayer: Player
+        get() = activePlayer ?: throw AssertionError("No active player")
+
+    val requiredActivePlayerCard: Card
+        get() = requiredActivePlayer.activeCard ?: throw AssertionError("No active player card")
+
+
+    fun updateActivePlayerCard(card: Card) {
+        _state.update { currentState ->
             val newPlayerList = currentState.game.playerList.map { player ->
-                if (player.playerId == playerId) player.copy(activeCard = card)
+                if (player.playerId == requiredActivePlayer.playerId) player.copy(activeCard = card)
                 else player
             }
 
             currentState.copy(
                 game = currentState.game.copy(
                     playerList = newPlayerList,
+                )
+            )
+        }
+    }
+
+    fun selectCard(card: Card) {
+        _state.update { currentState ->
+
+            val combinedTableDeck = currentState.game.tableDeck +
+                    currentState.game.tableActiveCard +
+                    currentState.game.temporaryPlayerTakenCard
+
+            updateActivePlayerCard(card)
+            currentState.copy(
+                game = currentState.game.copy(
                     temporaryPlayerTakenCard = emptyList(),
                     tableActiveCard = emptyList(),
                     tableDeck = combinedTableDeck,
@@ -63,18 +84,21 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    fun selectTableCard(card: Card, playerId: Int) {
+    fun selectTableCard(card: Card) {
         viewModelScope.launch {
             selectionMutex.withLock {
                 _state.update { currentState ->
-                    val currentPlayer =
-                        currentState.game.playerList.find { it.playerId == playerId }
-                    if (currentPlayer == null || currentPlayer.activeCard == null || currentPlayer.activeCard is JackCard) return@update currentState
 
-                    val newActiveCards = when (currentPlayer.activeCard) {
+                    if (requiredActivePlayer.activeCard == null || requiredActivePlayer.activeCard is JackCard) return@update currentState
+
+                    val newActiveCards = when (requiredActivePlayer.activeCard) {
                         is ArithmeticCard -> {
                             if (currentState.game.gameStage == Stage.TakeArithmeticCard) {
-                                selectArithmeticTableCard(card, currentState, playerId)
+                                selectArithmeticTableCard(
+                                    card,
+                                    currentState,
+                                    requiredActivePlayer.playerId
+                                )
                             } else {
                                 return@update currentState
                             }
@@ -82,7 +106,11 @@ open class GameViewModel() : ViewModel() {
 
                         is QueenCard, is KingCard -> {
                             if (currentState.game.gameStage == Stage.TakeQueenOrKingCard) {
-                                selectQueenAndKingCard(card, currentState, playerId)
+                                selectQueenAndKingCard(
+                                    card,
+                                    currentState,
+                                    requiredActivePlayer.playerId
+                                )
                             } else {
                                 return@update currentState
                             }
@@ -98,7 +126,7 @@ open class GameViewModel() : ViewModel() {
 
                     if (newActiveCards.any { it is ArithmeticCard }) {
                         val tableCardChecker = activeTableCardEqualsPlayerCard(
-                            currentPlayer.activeCard as ArithmeticCard,
+                            requiredActivePlayer.activeCard as ArithmeticCard,
                             newActiveCards
                         )
 
@@ -107,7 +135,7 @@ open class GameViewModel() : ViewModel() {
                             newActiveCards.clear()
                         }
 
-                    } else if(!newActiveCards.any { it is ArithmeticCard }) {
+                    } else if (!newActiveCards.any { it is ArithmeticCard }) {
                         newTemporaryPlayerTakenCard.addAll(newActiveCards)
                         newActiveCards.clear()
                     }
@@ -124,19 +152,13 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    fun putCardOnTable(playerId: Int) {
+    fun putCardOnTable() {
         _state.update { currentState ->
-            val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
-            if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
-
-            val cardToPlay = currentPlayer.cardsHand.find { it.id == currentPlayer.activeCard.id }
-                ?: return@update currentState
-
-            val updatePlayerList = currentState.game.playerList.map { pl ->
+            val updatedPlayerList = currentState.game.playerList.map { pl ->
                 when {
-                    pl.playerId == playerId -> pl.copy(
-                        cardsHand = pl.cardsHand - cardToPlay,
-                        activeCard = null
+                    pl.playerId == requiredActivePlayer.playerId -> pl.copy(
+                        cardsHand = pl.cardsHand - requiredActivePlayerCard,
+                        activeCard = null,
                     )
 
                     else -> pl
@@ -149,11 +171,13 @@ open class GameViewModel() : ViewModel() {
                 newTableActiveCard.clear()
             }
 
-            val newTableDeck = currentState.game.tableDeck + cardToPlay
+            val newTableDeck = currentState.game.tableDeck + requiredActivePlayerCard
+
+            val switchedPlayerList = getSwitchedPlayerList(updatedPlayerList)
 
             currentState.copy(
                 game = currentState.game.copy(
-                    playerList = updatePlayerList,
+                    playerList = switchedPlayerList,
                     tableDeck = newTableDeck,
                     tableActiveCard = newTableActiveCard
                 )
@@ -161,40 +185,31 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    fun takeCard(playerId: Int) {
-        val currentPlayer = _state.value.game.playerList.find { it.playerId == playerId }
-
-        when (currentPlayer?.activeCard) {
+    fun takeCard() {
+        when (requiredActivePlayerCard) {
             is ArithmeticCard -> {
-                takeArithmeticCard(playerId)
+                takeArithmeticCard()
             }
 
             is QueenCard, is KingCard -> {
-                takeQueenAndKingCard(
-                    playerId
-                )
+                takeQueenAndKingCard()
             }
 
             is JackCard -> {
-                takeJackCard(playerId)
+                takeJackCard()
             }
         }
     }
 
-    private fun takeArithmeticCard(playerId: Int) {
+    private fun takeArithmeticCard() {
         _state.update { currentState ->
-
-            val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
-            if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
-
-            val cardToPlay = currentPlayer.activeCard
             val tableTemporaryCard = currentState.game.temporaryPlayerTakenCard.toMutableList()
 
             val newPlayerList = currentState.game.playerList.map { pl ->
                 when {
-                    pl.playerId == currentPlayer.playerId -> pl.copy(
-                        cardsTaken = pl.cardsTaken + tableTemporaryCard + cardToPlay,
-                        cardsHand = pl.cardsHand - cardToPlay,
+                    pl.playerId == requiredActivePlayer.playerId -> pl.copy(
+                        cardsTaken = pl.cardsTaken + tableTemporaryCard + requiredActivePlayerCard,
+                        cardsHand = pl.cardsHand - requiredActivePlayerCard,
                         activeCard = null,
                     )
 
@@ -204,32 +219,30 @@ open class GameViewModel() : ViewModel() {
 
             tableTemporaryCard.clear()
 
+            val switchedPlayerList = getSwitchedPlayerList(newPlayerList)
+
             currentState.copy(
                 game = currentState.game.copy(
-                    playerList = newPlayerList,
+                    playerList = switchedPlayerList,
                     temporaryPlayerTakenCard = tableTemporaryCard
                 )
             )
         }
     }
 
-    fun takeQueenAndKingCard(playerId: Int) {
+    fun takeQueenAndKingCard() {
         _state.update { currentState ->
-
-            val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
-            if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
-
-            val cardToPlay = currentPlayer.activeCard
             val lastTableCard = currentState.game.tableActiveCard.lastOrNull()
+            val cardToPlay = requiredActivePlayerCard
 
             val newPLayerList =
-                if (lastTableCard is CardWithRank && currentPlayer.activeCard is CardWithRank) {
-                    if (lastTableCard.rank == currentPlayer.activeCard.rank) {
+                if (lastTableCard is CardWithRank && cardToPlay is CardWithRank) {
+                    if (lastTableCard.rank == cardToPlay.rank) {
                         currentState.game.playerList.map { pl ->
                             when {
-                                pl.playerId == currentPlayer.playerId -> {
+                                pl.playerId == requiredActivePlayer.playerId -> {
                                     pl.copy(
-                                        cardsHand = pl.cardsHand - cardToPlay,
+                                        cardsHand = pl.cardsHand - requiredActivePlayerCard,
                                         activeCard = null
                                     )
                                 }
@@ -250,8 +263,10 @@ open class GameViewModel() : ViewModel() {
 
             val newTableDeck = currentState.game.tableDeck - currentState.game.tableActiveCard
 
+            val switchedPlayerList = getSwitchedPlayerList(newPLayerList)
+
             val newGame = currentState.game.copy(
-                playerList = newPLayerList,
+                playerList = switchedPlayerList,
                 tableDeck = newTableDeck
             )
 
@@ -261,14 +276,10 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    fun takeJackCard(playerId: Int) {
+    fun takeJackCard() {
         _state.update { currentState ->
-
-            val currentPlayer = currentState.game.playerList.find { it.playerId == playerId }
-            if (currentPlayer == null || currentPlayer.activeCard == null) return@update currentState
-
             val mutableTableDeck = currentState.game.tableDeck.toMutableList()
-            val newPlayerTakenCard = currentPlayer.cardsTaken.toMutableList()
+            val newPlayerTakenCard = requiredActivePlayer.cardsTaken.toMutableList()
 
             mutableTableDeck.forEach { tableCard ->
                 if (tableCard is ArithmeticCard || tableCard is JackCard) {
@@ -277,10 +288,10 @@ open class GameViewModel() : ViewModel() {
             }
 
             val newPlayerList = currentState.game.playerList.map { pl ->
-                if (pl.playerId == playerId) {
+                if (pl.playerId == requiredActivePlayer.playerId) {
                     pl.copy(
-                        cardsTaken = newPlayerTakenCard + currentPlayer.activeCard,
-                        cardsHand = currentPlayer.cardsHand - currentPlayer.activeCard
+                        cardsTaken = newPlayerTakenCard + requiredActivePlayerCard,
+                        cardsHand = requiredActivePlayer.cardsHand - requiredActivePlayerCard
                     )
                 } else {
                     pl
@@ -289,12 +300,11 @@ open class GameViewModel() : ViewModel() {
 
             val newTableDeck = mutableTableDeck - newPlayerTakenCard
 
-            val updatedActivePlayer = newPlayerList.find { it.playerId == playerId }
+            val switchedPlayerList = getSwitchedPlayerList(newPlayerList)
 
             val newGame = currentState.game.copy(
-                playerList = newPlayerList,
+                playerList = switchedPlayerList,
                 tableDeck = newTableDeck,
-                activePlayer = updatedActivePlayer
             )
 
             currentState.copy(
@@ -371,35 +381,16 @@ open class GameViewModel() : ViewModel() {
             }
         }
 
-        val updatedActivePlayer = newPlayerList.find { it.playerId == randomPlayer.playerId }
-
         val newGame = currentState.game.copy(
-            activePlayer = updatedActivePlayer,
             playerList = newPlayerList
         )
 
         _state.value = currentState.copy(game = newGame)
     }
 
-    fun switchActivePlayer() {
-        _state.update { currentState ->
-
-            val playerList = currentState.game.playerList
-            val currentId = currentState.game.activePlayer?.playerId ?: 1
-
-            val nextId = if (currentId >= playerList.size) 1 else currentId + 1
-
-            val newPlayerList = playerList.map { player ->
-                player.copy(isActive = player.playerId == nextId)
-            }
-
-            currentState.copy(
-                game = currentState.game.copy(
-                    playerList = newPlayerList,
-                    activePlayer = newPlayerList.first { it.playerId == nextId },
-                    gameStage = Stage.DefaultStage
-                )
-            )
+    fun getSwitchedPlayerList(playerList: List<Player>): List<Player> {
+        return playerList.map { player ->
+            player.copy(isActive = !player.isActive)
         }
     }
 

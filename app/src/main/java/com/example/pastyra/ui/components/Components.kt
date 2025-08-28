@@ -70,8 +70,7 @@ fun DefaultButtonPosition(player: Player, viewModel: GameViewModel) {
         })
 
         PutCardOnTableButton(clickListener = {
-            viewModel.putCardOnTable(playerId = player.playerId)
-            viewModel.switchActivePlayer()
+            viewModel.putCardOnTable()
         })
 
         TakeCardButton(clickListener = {
@@ -85,7 +84,7 @@ fun DefaultButtonPosition(player: Player, viewModel: GameViewModel) {
                 }
 
                 else -> {
-                    viewModel.takeCard(playerId = player.playerId)
+                    viewModel.takeCard()
                 }
             }
         })
@@ -101,8 +100,7 @@ fun PlayerTakeCard(player: Player, viewModel: GameViewModel) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         FinishMoveButton(clickListener = {
-            viewModel.takeCard(playerId = player.playerId)
-            viewModel.switchActivePlayer()
+            viewModel.takeCard()
         })
 
         CancelButton(clickListener = {
@@ -125,7 +123,6 @@ fun PlayerBundleCard(player: Player, viewModel: GameViewModel) {
 
         FinishMoveButton(clickListener = {
 
-            viewModel.switchActivePlayer()
         })
     }
 }
