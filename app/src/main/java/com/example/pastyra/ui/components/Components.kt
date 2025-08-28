@@ -1,10 +1,20 @@
 package com.example.pastyra.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.pastyra.R
+import com.example.pastyra.domain.model.ArithmeticCard
+import com.example.pastyra.domain.model.KingCard
+import com.example.pastyra.domain.model.Player
+import com.example.pastyra.domain.model.QueenCard
+import com.example.pastyra.ui.viewmodel.GameViewModel
 
 @Composable
 fun FinishMoveButton(clickListener: () -> Unit) {
@@ -35,5 +45,87 @@ fun TakeCardButton(clickListener: () -> Unit) {
         onClick = clickListener
     ) {
         Text(stringResource(R.string.cards_take))
+    }
+}
+
+@Composable
+fun CancelButton(clickListener: () -> Unit) {
+    Button(
+        onClick = clickListener
+    ) {
+        Text(stringResource(R.string.cansel_button))
+    }
+}
+
+@Composable
+fun DefaultButtonPosition(player: Player, viewModel: GameViewModel) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        BundleButton(clickListener = {
+            viewModel.waitToBundleCardStage()
+        })
+
+        PutCardOnTableButton(clickListener = {
+            viewModel.putCardOnTable(playerId = player.playerId)
+            viewModel.switchActivePlayer()
+        })
+
+        TakeCardButton(clickListener = {
+            when (player.activeCard) {
+                is ArithmeticCard -> {
+                    viewModel.waitToTakeArithmeticCardStage()
+                }
+
+                is QueenCard, is KingCard -> {
+                    viewModel.waitToTakeQueenOrKingCardStage()
+                }
+
+                else -> {
+                    viewModel.takeCard(playerId = player.playerId)
+                }
+            }
+        })
+    }
+}
+
+@Composable
+fun PlayerTakeCard(player: Player, viewModel: GameViewModel) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        FinishMoveButton(clickListener = {
+            viewModel.takeCard(playerId = player.playerId)
+            viewModel.switchActivePlayer()
+        })
+
+        CancelButton(clickListener = {
+
+        })
+    }
+}
+
+@Composable
+fun PlayerBundleCard(player: Player, viewModel: GameViewModel) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        CancelButton(clickListener = {
+
+        })
+
+        FinishMoveButton(clickListener = {
+
+            viewModel.switchActivePlayer()
+        })
     }
 }

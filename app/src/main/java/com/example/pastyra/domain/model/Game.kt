@@ -6,7 +6,7 @@ data class Game(
     val gameDeck: List<Card> = DECK,
     val tableDeck: List<Card> = emptyList(),
     val tableActiveCard: List<Card> = emptyList(),
-    val tableTemporaryActiveCard: List<Card> = emptyList(),
+    val temporaryPlayerTakenCard: List<Card> = emptyList(),
     var isStarted: Boolean = false,
     val gameStage: Stage = Stage.DefaultStage,
 ) {

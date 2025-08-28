@@ -15,10 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.pastyra.domain.model.ArithmeticCard
-import com.example.pastyra.domain.model.KingCard
 import com.example.pastyra.domain.model.Player
-import com.example.pastyra.domain.model.QueenCard
+import com.example.pastyra.domain.model.Stage
 import com.example.pastyra.ui.viewmodel.GameViewModel
 
 @Preview
@@ -40,41 +38,26 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                 .height(200.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (player.activeCard != null) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
+            if (player.isActive) {
+                when {
+                    state.value.game.gameStage == Stage.TakeArithmeticCard || state.value.game.gameStage == Stage.TakeQueenOrKingCard -> PlayerTakeCard(
+                        player,
+                        viewModel
+                    )
 
-                    BundleButton(clickListener = {
-                        viewModel.bundleCard(playerId = player.playerId)
-                    })
+                    state.value.game.gameStage == Stage.WaitToBundle -> PlayerBundleCard(
+                        player,
+                        viewModel
+                    )
 
-                    PutCardOnTableButton(clickListener = {
-                        viewModel.putCardOnTable(playerId = player.playerId)
-                        viewModel.switchActivePlayer()
-                    })
-
-                    TakeCardButton(clickListener = {
-                        when (player.activeCard) {
-                            is ArithmeticCard -> {
-                                viewModel.waitToTakeArithmeticCardStage()
-                            }
-
-                            is QueenCard, is KingCard -> {
-                                viewModel.waitToTakeQueenOrKingCardStage()
-                            }
-
-                            else -> {
-                                viewModel.takeCard(playerId = player.playerId)
-                            }
-                        }
-                    })
+                    player.activeCard != null -> DefaultButtonPosition(player, viewModel)
                 }
+            } else {
+                return@Card
             }
+
             Spacer(modifier = Modifier.height(5.dp))
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),

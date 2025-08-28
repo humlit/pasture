@@ -49,9 +49,8 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
                             })
 
                     }
-
-
                 }
+
                 Spacer(modifier = Modifier.height(5.dp))
             }
         }

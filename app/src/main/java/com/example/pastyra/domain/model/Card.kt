@@ -3,12 +3,17 @@ package com.example.pastyra.domain.model
 open class Card(
     open val point: Int = 0,
     open val id: Int = 0,
-) {
+
+    ) {
 
 }
 
 interface CardWithRank {
     val rank: Rank
+}
+
+interface CardBack {
+    val icon: Int
 }
 
 class ArithmeticCard(
@@ -17,10 +22,11 @@ class ArithmeticCard(
     override val point: Int = 0,
     val arithmeticValue: Int,
     override val id: Int,
+    override val icon: Int,
 ) : Card(
     point = point,
     id = id,
-) {
+), CardBack {
 
 }
 
@@ -29,10 +35,11 @@ class QueenCard(
     val suit: Suit,
     override val point: Int = 0,
     override val id: Int,
+    override val icon: Int
 ) : Card(
     point,
     id = id,
-), CardWithRank {
+), CardWithRank, CardBack {
 
 }
 
@@ -41,10 +48,11 @@ class KingCard(
     val suit: Suit,
     override val point: Int = 0,
     override val id: Int,
+    override val icon: Int
 ) : Card(
     point,
     id = id,
-), CardWithRank {
+), CardWithRank, CardBack {
 
 }
 
@@ -53,14 +61,16 @@ class JackCard(
     val suit: Suit,
     override val point: Int = 1,
     override val id: Int,
+    override val icon: Int
 ) : Card(
     point = point,
     id = id,
-), CardWithRank {
+    ), CardWithRank, CardBack {
 
 }
 
 class BundleCard(
+    val cardList: List<Card>,
     override val point: Int,
     val arithmeticValue: Int,
     val playerId: Int,
