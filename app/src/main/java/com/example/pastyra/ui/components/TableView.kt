@@ -6,20 +6,22 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.ui.viewmodel.GameViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
 
     val rowsCard = deck.chunked(
         4
@@ -42,12 +44,13 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
                             card = card,
                             isSelected = state.value.game.tableActiveCard.any { it.id == card.id },
                             onClick = {
-                                viewModel.selectTableCard(
-                                    card = card,
-                                    playerId = state.value.game.activePlayer?.playerId ?: 0
-                                )
+                                scope.launch {
+                                    viewModel.selectTableCard(
+                                        card = card,
+                                        playerId = state.value.game.activePlayer?.playerId ?: 0
+                                    )
+                                }
                             })
-
                     }
                 }
 

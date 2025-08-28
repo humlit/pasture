@@ -7,12 +7,11 @@ fun isPlayerCanTakeAnyoneCard(
     playerActiveCard: ArithmeticCard,
     tableActiveCard: List<Card>
 ): Boolean {
+        val tableSum = tableActiveCard
+            .filterIsInstance<ArithmeticCard>()
+            .sumOf { it.arithmeticValue }
 
-    val tableSum = tableActiveCard
-        .filterIsInstance<ArithmeticCard>()
-        .sumOf { it.arithmeticValue }
-
-    return tableSum <= playerActiveCard.arithmeticValue
+        return tableSum <= playerActiveCard.arithmeticValue
 }
 
 fun activeTableCardEqualsPlayerCard(
