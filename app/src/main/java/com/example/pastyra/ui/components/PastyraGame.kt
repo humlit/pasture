@@ -24,7 +24,14 @@ fun PastyraGameStart(
     val game = state.game
 
 
-    Log.d("ACTIVE_PLAYERS_CHECK", game.playerList.toString())
+    Log.d(
+        "ACTIVE_PLAYERS_CHECK",
+        game.playerList.joinToString { player ->
+            player.cardsTaken.joinToString { card ->
+                card.id.toString()
+            }
+        }
+    )
     Log.d("ACTIVE_TABLE", game.tableActiveCard.toString())
     Log.d("ACTIVE_TABLE", game.temporaryPlayerTakenCard.toString())
 
