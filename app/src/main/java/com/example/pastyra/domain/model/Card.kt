@@ -16,17 +16,21 @@ interface CardBack {
     val icon: Int
 }
 
+interface AnyArithmeticCard {
+    val arithmeticValue: Int
+}
+
 class ArithmeticCard(
     val rank: Rank,
     val suit: Suit,
     override val point: Int = 0,
-    val arithmeticValue: Int,
+    override val arithmeticValue: Int,
     override val id: Int,
     override val icon: Int,
 ) : Card(
     point = point,
     id = id,
-), CardBack {
+), CardBack, AnyArithmeticCard {
 
 }
 
@@ -65,18 +69,18 @@ class JackCard(
 ) : Card(
     point = point,
     id = id,
-    ), CardWithRank, CardBack {
+), CardWithRank, CardBack {
 
 }
 
 class BundleCard(
     val cardList: List<Card>,
     override val point: Int,
-    val arithmeticValue: Int,
+    override val arithmeticValue: Int,
     val playerId: Int,
 ) : Card(
     point = point,
-) {
+), AnyArithmeticCard {
 
 }
 

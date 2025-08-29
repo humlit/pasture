@@ -41,12 +41,10 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
             if (player.isActive) {
                 when {
                     state.value.game.gameStage == Stage.TakeArithmeticCard || state.value.game.gameStage == Stage.TakeQueenOrKingCard -> PlayerTakeCard(
-                        player,
                         viewModel
                     )
 
                     state.value.game.gameStage == Stage.WaitToBundle -> PlayerBundleCard(
-                        player,
                         viewModel
                     )
 
