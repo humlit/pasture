@@ -1,11 +1,11 @@
 package com.example.pastyra.domain.usercase
 
-import com.example.pastyra.domain.model.AnyArithmeticCard
 import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.JackCard
 import com.example.pastyra.domain.model.KingCard
 import com.example.pastyra.domain.model.QueenCard
+import isPlayerCanGetValueFromDeck
 
 fun isPlayerCanTakeCard(deck: List<Card>, findCard: Card): Boolean {
     return when (findCard) {
@@ -18,22 +18,7 @@ fun isPlayerCanTakeCard(deck: List<Card>, findCard: Card): Boolean {
 }
 
 fun isPlayerCanTakeArithmeticCard(deck: List<Card>, findCard: ArithmeticCard): Boolean {
-    val filterDeckNums = deck.filterIsInstance<AnyArithmeticCard>().map {
-        it.arithmeticValue
-    }
-
-    val dp = BooleanArray(findCard.arithmeticValue + 1) { false }
-    dp[0] = true
-
-    for (num in filterDeckNums) {
-        for (j in findCard.arithmeticValue downTo num) {
-            if (dp[j - num]) {
-                dp[j] = true
-            }
-        }
-    }
-
-    return dp[findCard.arithmeticValue]
+    return isPlayerCanGetValueFromDeck(deck, findCard.arithmeticValue)
 }
 
 fun isPlayerCanTakeKing(deck: List<Card>): Boolean {

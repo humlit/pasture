@@ -1,4 +1,4 @@
-package com.example.pastyra.ui.components
+package com.example.pastyra.ui.components.smart
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -6,6 +6,7 @@ import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.KingCard
 import com.example.pastyra.domain.model.QueenCard
 import com.example.pastyra.domain.usercase.isPlayerCanTakeCard
+import com.example.pastyra.ui.components.TakeCardButton
 import com.example.pastyra.ui.viewmodel.GameViewModel
 
 @Composable
