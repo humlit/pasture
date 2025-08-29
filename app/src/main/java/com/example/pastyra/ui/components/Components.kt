@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.pastyra.R
 import com.example.pastyra.domain.model.Player
+import com.example.pastyra.ui.components.smart.BundleButtonSmart
+import com.example.pastyra.ui.components.smart.TakeCardButtonSmart
 import com.example.pastyra.ui.viewmodel.GameViewModel
 
 @Composable
@@ -62,9 +64,7 @@ fun DefaultButtonPosition(player: Player, viewModel: GameViewModel) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        BundleButton(clickListener = {
-            viewModel.waitToBundleCardStage()
-        })
+        BundleButtonSmart(viewModel)
 
         PutCardOnTableButton(clickListener = {
             viewModel.putCardOnTable()
