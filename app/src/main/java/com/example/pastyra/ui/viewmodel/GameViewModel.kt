@@ -180,6 +180,14 @@ open class GameViewModel() : ViewModel() {
     }
 
     fun takeCard() {
+        /**
+         * TODO: Мне не нравится, что по окончанию взятия карты у нас делаются одинаковые
+         *  преобразования стейта, но дублируются внутри каждой функции
+         *  `takeArithmeticCard`, `takeQueenAndKingCard`, `takeJackCard`.
+         *  Все эти преобразования должны быть тут, в `takeCard`. т.к. они идентичны.
+         *  Надо подумать как это реализовать
+         *  */
+
         when (requiredActivePlayerCard) {
             is ArithmeticCard -> {
                 takeArithmeticCard()
@@ -218,7 +226,8 @@ open class GameViewModel() : ViewModel() {
             currentState.copy(
                 game = currentState.game.copy(
                     playerList = switchedPlayerList,
-                    temporaryPlayerTakenCard = tableTemporaryCard
+                    temporaryPlayerTakenCard = tableTemporaryCard,
+                    gameStage = Stage.DefaultStage
                 )
             )
         }
@@ -254,7 +263,8 @@ open class GameViewModel() : ViewModel() {
             currentState.copy(
                 game = currentState.game.copy(
                     playerList = switchedPlayerList,
-                    temporaryPlayerTakenCard = tableTemporaryCard
+                    temporaryPlayerTakenCard = tableTemporaryCard,
+                    gameStage = Stage.DefaultStage
                 )
             )
         }
@@ -289,6 +299,7 @@ open class GameViewModel() : ViewModel() {
             val newGame = currentState.game.copy(
                 playerList = switchedPlayerList,
                 tableDeck = newTableDeck,
+                gameStage = Stage.DefaultStage
             )
 
             currentState.copy(
