@@ -10,10 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.pastyra.R
-import com.example.pastyra.domain.model.ArithmeticCard
-import com.example.pastyra.domain.model.KingCard
 import com.example.pastyra.domain.model.Player
-import com.example.pastyra.domain.model.QueenCard
 import com.example.pastyra.ui.viewmodel.GameViewModel
 
 @Composable
@@ -73,26 +70,12 @@ fun DefaultButtonPosition(player: Player, viewModel: GameViewModel) {
             viewModel.putCardOnTable()
         })
 
-        TakeCardButton(clickListener = {
-            when (player.activeCard) {
-                is ArithmeticCard -> {
-                    viewModel.waitToTakeArithmeticCardStage()
-                }
-
-                is QueenCard, is KingCard -> {
-                    viewModel.waitToTakeQueenOrKingCardStage()
-                }
-
-                else -> {
-                    viewModel.takeCard()
-                }
-            }
-        })
+        TakeCardButtonSmart(viewModel)
     }
 }
 
 @Composable
-fun PlayerTakeCard(player: Player, viewModel: GameViewModel) {
+fun PlayerTakeCard(viewModel: GameViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -110,7 +93,7 @@ fun PlayerTakeCard(player: Player, viewModel: GameViewModel) {
 }
 
 @Composable
-fun PlayerBundleCard(player: Player, viewModel: GameViewModel) {
+fun PlayerBundleCard(viewModel: GameViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),

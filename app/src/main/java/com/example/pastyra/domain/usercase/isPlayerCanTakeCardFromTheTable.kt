@@ -1,13 +1,49 @@
 package com.example.pastyra.domain.usercase
 
-fun isPlayerCanTakeCardFromTheTable(deck: IntArray, findCard: Int): Boolean {
-    val dp = BooleanArray(findCard + 1) { false }
-    for (num in deck) {
-        for (j in findCard downTo num) {
+import com.example.pastyra.domain.model.AnyArithmeticCard
+import com.example.pastyra.domain.model.ArithmeticCard
+import com.example.pastyra.domain.model.Card
+import com.example.pastyra.domain.model.JackCard
+import com.example.pastyra.domain.model.KingCard
+import com.example.pastyra.domain.model.QueenCard
+
+fun isPlayerCanTakeCard(deck: List<Card>, findCard: Card): Boolean {
+    return when (findCard) {
+        is ArithmeticCard -> isPlayerCanTakeArithmeticCard(deck, findCard)
+        is KingCard -> isPlayerCanTakeKing(deck)
+        is QueenCard -> isPlayerCanTakeQueen(deck)
+        is JackCard -> isPlayerCanTakeJackCard(deck)
+        else -> throw IllegalArgumentException()
+    }
+}
+
+fun isPlayerCanTakeArithmeticCard(deck: List<Card>, findCard: ArithmeticCard): Boolean {
+    val filterDeckNums = deck.filterIsInstance<AnyArithmeticCard>().map {
+        it.arithmeticValue
+    }
+
+    val dp = BooleanArray(findCard.arithmeticValue + 1) { false }
+    dp[0] = true
+
+    for (num in filterDeckNums) {
+        for (j in findCard.arithmeticValue downTo num) {
             if (dp[j - num]) {
                 dp[j] = true
             }
         }
     }
-    return dp[findCard]
+
+    return dp[findCard.arithmeticValue]
+}
+
+fun isPlayerCanTakeKing(deck: List<Card>): Boolean {
+    return deck.any { it is KingCard }
+}
+
+fun isPlayerCanTakeQueen(deck: List<Card>): Boolean {
+    return deck.any { it is QueenCard }
+}
+
+fun isPlayerCanTakeJackCard(deck: List<Card>): Boolean {
+    return deck.any { it is ArithmeticCard || it is JackCard }
 }
