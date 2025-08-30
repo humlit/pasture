@@ -13,7 +13,7 @@ fun isPlayerCanBundleCard(
     deck: List<Card>, cardThatBundles: ArithmeticCard, cardToBeBundled: ArithmeticCard
 ): Boolean {
     return isPlayerCanGetValueFromDeck(
-        deck + cardThatBundles, cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue
+        deck, cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue
     )
 }
 
