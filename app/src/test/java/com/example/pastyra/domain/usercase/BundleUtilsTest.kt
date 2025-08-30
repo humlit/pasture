@@ -3,6 +3,7 @@ package com.example.pastyra
 import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card
+import com.example.pastyra.domain.model.Player
 import getPlayerBundlingCards
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -24,9 +25,12 @@ class BundleUtilsTest {
             CARDS.NINE.CLUBS,
         )
 
+
         val activePlayerCard = CARDS.TWO.CLUBS
 
-        val playerBundlingCards = getPlayerBundlingCards(playerHand, tableDeck, activePlayerCard)
+        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck)
 
         val expectedPlayerBundlingCards = listOf<Card>()
 
@@ -56,7 +60,9 @@ class BundleUtilsTest {
 
         val activePlayerCard = CARDS.ACE.HEARTS
 
-        val playerBundlingCards = getPlayerBundlingCards(playerHand, tableDeck, activePlayerCard)
+        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck)
 
         val expectedPlayerBundlingCards = listOf<Card>(
             CARDS.THREE.DIAMONDS
@@ -84,7 +90,9 @@ class BundleUtilsTest {
 
         val activePlayerCard = CARDS.EIGHT.HEARTS
 
-        val playerBundlingCards = getPlayerBundlingCards(playerHand, tableDeck, activePlayerCard)
+        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck)
 
         val expectedPlayerBundlingCards = listOf<Card>(
             CARDS.EIGHT.DIAMONDS,
@@ -114,12 +122,15 @@ class BundleUtilsTest {
                 point = 1,
                 arithmeticValue = 6,
                 playerId = 1,
-            )
+            ),
+            CARDS.TEN.DIAMONDS
         )
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val playerBundlingCards = getPlayerBundlingCards(playerHand, tableDeck, activePlayerCard)
+        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck)
 
         val expectedPlayerBundlingCards = listOf<Card>(
             CARDS.EIGHT.DIAMONDS,
@@ -155,7 +166,9 @@ class BundleUtilsTest {
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val playerBundlingCards = getPlayerBundlingCards(playerHand, tableDeck, activePlayerCard)
+        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck)
 
         val expectedPlayerBundlingCards = listOf<Card>()
 

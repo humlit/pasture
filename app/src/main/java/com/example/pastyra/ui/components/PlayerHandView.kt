@@ -30,12 +30,10 @@ fun PreviewPlayerUIView() {
 fun PlayerUIView(player: Player, viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
 
-    val activePlayer = viewModel.requiredActivePlayer
-    val activePlayerCard = viewModel.activePlayerCard // нет активной карты и приложение падает
     val tableDeck = state.value.game.tableDeck
 
     val cardsForBundleCheckList =
-        getPlayerBundlingCards(activePlayer.cardsHand, tableDeck, activePlayerCard)
+        getPlayerBundlingCards(player, tableDeck)
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
