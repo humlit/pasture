@@ -1,5 +1,7 @@
 import com.example.pastyra.domain.model.ArithmeticCard
+import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.Card
+import com.example.pastyra.domain.model.Player
 
 /**
  * Проверяет, может ли игрок сделать завязку с выбранной картой в руке для конкретной карты, учитывая столл.
@@ -15,8 +17,16 @@ fun isPlayerCanBundleCard(
         )
     }
 
+    val filterCardToBundle = deck.filter {
+        if (it is BundleCard) {
+            it.bundleStage == 1
+        } else {
+            true
+        }
+    }
+
     return isPlayerCanGetValueFromDeck(
-        deck, cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue
+        filterCardToBundle, cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue
     )
 }
 
@@ -24,17 +34,20 @@ fun isPlayerCanBundleCard(
  * Возвращает список карт в руке игрока, которые можно завязать с выбранной активной картой игрока.
  */
 fun getPlayerBundlingCards(
-    playerHand: List<Card>,
+    player: Player,
     tableDeck: List<Card>,
-    activePlayerCard: Card?
 ): List<Card> {
+    if (player.activeCard == null) return listOf()
+
+    val playerActiveCard = player.activeCard
+
     val cardsToBeBundled = mutableListOf<Card>()
 
-    val filteredPlayerHand = playerHand.filter { it.id != activePlayerCard?.id }
+    val filteredPlayerHand = player.cardsHand.filter { it.id != playerActiveCard.id }
 
     filteredPlayerHand.forEach { card ->
-        if (card is ArithmeticCard && activePlayerCard is ArithmeticCard && isPlayerCanBundleCard(
-                tableDeck, activePlayerCard, card
+        if (card is ArithmeticCard && playerActiveCard is ArithmeticCard && isPlayerCanBundleCard(
+                tableDeck, playerActiveCard, card
             )
         ) {
             cardsToBeBundled.add(card)

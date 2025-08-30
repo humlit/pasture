@@ -13,7 +13,7 @@ fun BundleButtonSmart(viewModel: GameViewModel) {
     val tableDeck = state.value.game.tableDeck
     val activePlayerCard = activePlayer.activeCard
 
-    if (getPlayerBundlingCards(activePlayer.cardsHand, tableDeck, activePlayerCard).isNotEmpty()) {
+    if (getPlayerBundlingCards(activePlayer, tableDeck).isNotEmpty()) {
         BundleButton(clickListener = {
             viewModel.waitToBundleCardStage()
         })

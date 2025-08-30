@@ -78,7 +78,7 @@ class BundleCard(
     override val point: Int,
     override val arithmeticValue: Int,
     val playerId: Int,
-    val bundleStage: Int = 0,
+    val bundleStage: Int = 1,
 ) : Card(
     point = point,
 ), AnyArithmeticCard {
