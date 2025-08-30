@@ -1,5 +1,6 @@
 package com.example.pastyra.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.pastyra.domain.model.safeRank
+import com.example.pastyra.domain.model.safeSuit
 import com.example.pastyra.ui.viewmodel.GameViewModel
 
 @Composable
@@ -22,6 +25,13 @@ fun PastyraGameStart(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val game = state.game
 
+    Log.d(
+        "PLAYER-TAKEN-CARD",
+        viewModel.requiredActivePlayer.cardsTaken.joinToString("\n") { "${it.safeRank} ${it.safeSuit}" })
+    Log.d(
+        "PLAYER-TABLE-ACTIVE", game.tableActiveCard.joinToString("\n") { "${it.safeRank} ${it.safeSuit}"})
+    Log.d(
+        "PLAYER-TABLE-TEMP", game.temporaryPlayerTakenCard.joinToString("\n") { "${it.safeRank} ${it.safeSuit}"})
     Card(
         modifier = Modifier.fillMaxSize(),
         colors = CardDefaults.cardColors(containerColor = Color.LightGray)

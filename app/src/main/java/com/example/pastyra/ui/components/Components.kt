@@ -64,7 +64,7 @@ fun CancelButton(clickListener: () -> Unit) {
 }
 
 @Composable
-fun DefaultButtonPosition(player: Player, viewModel: GameViewModel) {
+fun DefaultButtonPosition(viewModel: GameViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
