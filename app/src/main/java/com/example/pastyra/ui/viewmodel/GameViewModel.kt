@@ -41,12 +41,14 @@ open class GameViewModel() : ViewModel() {
 
     val activePlayer: Player? get() = state.value.game.playerList.find { it.isActive }
 
+    val activePlayerCard: Card?
+        get() = requiredActivePlayer.activeCard
+
     val requiredActivePlayer: Player
         get() = activePlayer ?: throw AssertionError("No active player")
 
     val requiredActivePlayerCard: Card
         get() = requiredActivePlayer.activeCard ?: throw AssertionError("No active player card")
-
 
     fun updateActivePlayerCard(card: Card) {
         _state.update { currentState ->
