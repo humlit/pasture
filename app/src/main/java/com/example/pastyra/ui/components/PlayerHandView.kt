@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pastyra.domain.model.Player
 import com.example.pastyra.domain.model.Stage
 import com.example.pastyra.ui.viewmodel.GameViewModel
+import getPlayerBundlingCards
 
 @Preview
 @Composable
@@ -28,6 +29,13 @@ fun PreviewPlayerUIView() {
 @Composable
 fun PlayerUIView(player: Player, viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+
+    val activePlayer = viewModel.requiredActivePlayer
+    val activePlayerCard = viewModel.activePlayerCard // нет активной карты и приложение падает
+    val tableDeck = state.value.game.tableDeck
+
+    val cardsForBundleCheckList =
+        getPlayerBundlingCards(activePlayer.cardsHand, tableDeck, activePlayerCard)
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
@@ -68,11 +76,13 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                     CardUIView(
                         card = card,
                         isSelected = card == player.activeCard,
+                        isReadyForBundle = cardsForBundleCheckList.any { it.id == card.id },
                         onClick = {
                             viewModel.selectCard(
                                 card = card
                             )
-                        })
+                        }, viewModel = viewModel
+                    )
                 }
             }
         }

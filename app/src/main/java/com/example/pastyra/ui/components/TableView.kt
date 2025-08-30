@@ -57,7 +57,8 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
                                         )
                                     }
                                 }
-                            })
+                            }, viewModel = viewModel
+                        )
                     }
                 }
 

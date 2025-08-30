@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 import com.example.pastyra.R
 import com.example.pastyra.domain.model.Player
 import com.example.pastyra.ui.components.smart.BundleButtonSmart
@@ -27,7 +28,12 @@ fun FinishMoveButton(clickListener: () -> Unit) {
 fun BundleButton(clickListener: () -> Unit) {
     Button(
         onClick = clickListener
-    ) { Text(text = stringResource(R.string.cards_bundle)) }
+    ) {
+        Text(
+            text = stringResource(R.string.cards_bundle),
+            fontSize = 10.sp
+        )
+    }
 }
 
 @Composable
@@ -65,8 +71,6 @@ fun DefaultButtonPosition(player: Player, viewModel: GameViewModel) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        BundleButtonSmart(viewModel)
-
         PutCardOnTableButtonSmart(viewModel)
 
         TakeCardButtonSmart(viewModel)
