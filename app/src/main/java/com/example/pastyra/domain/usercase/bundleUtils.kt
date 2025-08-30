@@ -1,8 +1,5 @@
-import android.util.Log
 import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.Card
-import com.example.pastyra.domain.model.safeRank
-import com.example.pastyra.domain.model.safeSuit
 
 /**
  * Проверяет, может ли игрок сделать завязку с выбранной картой в руке для конкретной карты, учитывая столл.
@@ -37,6 +34,6 @@ fun getPlayerBundlingCards(
             cardsToBeBundled.add(card)
         }
     }
-    Log.d("BUNDLE", cardsToBeBundled.joinToString("\n") { "${it.safeRank} ${it.safeSuit}" })
+
     return cardsToBeBundled
 }
