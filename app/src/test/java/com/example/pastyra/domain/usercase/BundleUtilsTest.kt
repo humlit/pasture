@@ -1,5 +1,6 @@
 package com.example.pastyra
 
+import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card
 import getPlayerBundlingCards
@@ -92,6 +93,74 @@ class BundleUtilsTest {
 
         assertEquals(
             "А вот этот случай то мы не учли :))))",
+            expectedPlayerBundlingCards,
+            playerBundlingCards
+        )
+    }
+
+    @Test
+    fun getPlayerBundlingCards_should_work_correct_test4() {
+        val playerHand = listOf<Card>(
+            CARDS.EIGHT.DIAMONDS,
+            CARDS.TWO.DIAMONDS
+        )
+
+        val tableDeck = listOf<Card>(
+            BundleCard(
+                cardList = listOf<Card>(
+                    CARDS.ACE.DIAMONDS,
+                    CARDS.FIVE.DIAMONDS,
+                ),
+                point = 1,
+                arithmeticValue = 6,
+                playerId = 1,
+            )
+        )
+
+        val activePlayerCard = CARDS.TWO.DIAMONDS
+
+        val playerBundlingCards = getPlayerBundlingCards(playerHand, tableDeck, activePlayerCard)
+
+        val expectedPlayerBundlingCards = listOf<Card>(
+            CARDS.EIGHT.DIAMONDS,
+        )
+
+        assertEquals(
+            "Должна быть возможность перевязать завязку 1 уровня со стола",
+            expectedPlayerBundlingCards,
+            playerBundlingCards
+        )
+    }
+
+    @Test
+    fun getPlayerBundlingCards_should_work_correct_test5() {
+        val playerHand = listOf<Card>(
+            CARDS.EIGHT.DIAMONDS,
+            CARDS.TWO.DIAMONDS
+        )
+
+        val tableDeck = listOf<Card>(
+            BundleCard(
+                cardList = listOf<Card>(
+                    CARDS.ACE.DIAMONDS,
+                    CARDS.FIVE.DIAMONDS,
+                    CARDS.SIX.DIAMONDS,
+                ),
+                point = 1,
+                arithmeticValue = 6,
+                playerId = 1,
+                bundleStage = 2
+            )
+        )
+
+        val activePlayerCard = CARDS.TWO.DIAMONDS
+
+        val playerBundlingCards = getPlayerBundlingCards(playerHand, tableDeck, activePlayerCard)
+
+        val expectedPlayerBundlingCards = listOf<Card>()
+
+        assertEquals(
+            "Не должна быть возможность перевязать завязку 2 уровня со стола",
             expectedPlayerBundlingCards,
             playerBundlingCards
         )

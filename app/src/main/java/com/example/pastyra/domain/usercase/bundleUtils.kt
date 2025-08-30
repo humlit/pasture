@@ -9,6 +9,12 @@ import com.example.pastyra.domain.model.Card
 fun isPlayerCanBundleCard(
     deck: List<Card>, cardThatBundles: ArithmeticCard, cardToBeBundled: ArithmeticCard
 ): Boolean {
+    if (cardThatBundles.arithmeticValue == cardToBeBundled.arithmeticValue) {
+        return isPlayerCanGetValueFromDeck(
+            deck, cardToBeBundled.arithmeticValue
+        )
+    }
+
     return isPlayerCanGetValueFromDeck(
         deck, cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue
     )
