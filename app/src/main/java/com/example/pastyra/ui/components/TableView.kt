@@ -15,12 +15,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pastyra.domain.model.Card
+import com.example.pastyra.domain.model.Stage
 import com.example.pastyra.ui.viewmodel.GameViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    val game = state.value.game
     val scope = rememberCoroutineScope()
 
     val rowsCard = deck.chunked(
@@ -45,9 +47,15 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
                             isSelected = state.value.game.tableActiveCard.any { it.id == card.id },
                             onClick = {
                                 scope.launch {
-                                    viewModel.selectTableCard(
-                                        card = card,
-                                    )
+                                    if (game.gameStage == Stage.TakeArithmeticCard || game.gameStage == Stage.TakeQueenOrKingCard) {
+                                        viewModel.selectTableCard(
+                                            card = card,
+                                        )
+                                    } else if (game.gameStage == Stage.WaitToBundle) {
+                                        viewModel.selectTableCardForBundle(
+                                            card = card
+                                        )
+                                    }
                                 }
                             })
                     }

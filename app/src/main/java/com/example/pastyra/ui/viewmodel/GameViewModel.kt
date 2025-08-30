@@ -51,8 +51,11 @@ open class GameViewModel() : ViewModel() {
     fun updateActivePlayerCard(card: Card) {
         _state.update { currentState ->
             val newPlayerList = currentState.game.playerList.map { player ->
-                if (player.playerId == requiredActivePlayer.playerId) player.copy(activeCard = card)
-                else player
+                if (player.playerId == requiredActivePlayer.playerId) {
+                    player.copy(activeCard = card)
+                } else {
+                    player
+                }
             }
 
             currentState.copy(
@@ -71,6 +74,7 @@ open class GameViewModel() : ViewModel() {
                     currentState.game.temporaryPlayerTakenCard
 
             updateActivePlayerCard(card)
+
             currentState.copy(
                 game = currentState.game.copy(
                     temporaryPlayerTakenCard = emptyList(),
@@ -144,6 +148,16 @@ open class GameViewModel() : ViewModel() {
                 }
             }
         }
+    }
+
+    fun selectTableCardForBundle(card: Card) {
+//        viewModelScope.launch {
+//            selectionMutex.withLock {
+//                _state.update { currentState ->
+//
+//                }
+//            }
+//        }
     }
 
     fun putCardOnTable() {
@@ -309,7 +323,9 @@ open class GameViewModel() : ViewModel() {
     }
 
     fun bundleCard(playerId: Int) {
-
+//        _state.update { currentState ->
+//
+//        }
     }
 
     fun cancelMove() {
