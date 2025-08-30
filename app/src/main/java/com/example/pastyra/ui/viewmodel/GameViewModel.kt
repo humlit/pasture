@@ -128,14 +128,14 @@ open class GameViewModel() : ViewModel() {
                     val newTemporaryPlayerTakenCard =
                         currentState.game.temporaryPlayerTakenCard.toMutableList()
 
-                    if (newActiveCards.any { it !is ArithmeticCard }) {
-                        newTemporaryPlayerTakenCard.addAll(newActiveCards)
-                        newActiveCards.clear()
-                    } else if (newActiveCards.any { it is ArithmeticCard } && activeTableCardEqualsPlayerCard(
+                    if (newActiveCards.any { card -> card is ArithmeticCard } && activeTableCardEqualsPlayerCard(
                             requiredActivePlayer.activeCard as ArithmeticCard,
                             newActiveCards
                         )
                     ) {
+                        newTemporaryPlayerTakenCard.addAll(newActiveCards)
+                        newActiveCards.clear()
+                    } else {
                         newTemporaryPlayerTakenCard.addAll(newActiveCards)
                         newActiveCards.clear()
                     }

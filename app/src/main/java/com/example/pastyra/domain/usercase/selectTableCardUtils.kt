@@ -43,3 +43,7 @@ fun selectCardForBundle(card: Card, state: GameState): MutableList<Card> {
 
     return newTableActiveCard
 }
+
+fun selectCardForBundle() {
+
+}

@@ -46,23 +46,22 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                 .height(200.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (player.isActive) {
-                when {
-                    // TODO: Мб кнопка "завершить ход" должна быть всегда, на случай если игрок передумает?
-                    state.value.game.gameStage == Stage.TakeArithmeticCard || state.value.game.gameStage == Stage.TakeQueenOrKingCard -> PlayerTakeCard(
-                        viewModel
-                    )
+                if (player.isActive) {
+                    when {
+                        // TODO: Мб кнопка "завершить ход" должна быть всегда, на случай если игрок передумает?
+                        state.value.game.gameStage == Stage.TakeArithmeticCard || state.value.game.gameStage == Stage.TakeQueenOrKingCard -> PlayerTakeCard(
+                            viewModel
+                        )
 
-                    state.value.game.gameStage == Stage.WaitToBundle -> PlayerBundleCard(
-                        viewModel
-                    )
+                        state.value.game.gameStage == Stage.WaitToBundle -> PlayerBundleCard(
+                            viewModel
+                        )
 
-                    player.activeCard != null -> DefaultButtonPosition(player, viewModel)
+                        player.activeCard != null -> DefaultButtonPosition(viewModel)
+                    }
+                } else {
+                    return@Card
                 }
-            } else {
-                return@Card
-            }
-
             Spacer(modifier = Modifier.height(5.dp))
 
             Row(
