@@ -5,6 +5,23 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+tasks.register("installGitHooks") {
+    doLast {
+        val preCommitHookFile = project.rootDir.resolve(".git/hooks/pre-commit")
+        preCommitHookFile.writeText(
+            """
+                #!/bin/sh
+                ./gradlew test
+                RESULT=${'$'}?
+                [ ${'$'}RESULT -ne 0 ] && exit 1
+                exit 0
+                """.trimIndent()
+        )
+        preCommitHookFile.setExecutable(true)
+        println("Git pre-commit hook installed successfully.")
+    }
+}
+
 android {
     namespace = "com.example.pastyra"
     compileSdk = 35
@@ -23,8 +40,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
