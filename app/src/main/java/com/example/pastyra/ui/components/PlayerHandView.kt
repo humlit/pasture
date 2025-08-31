@@ -60,6 +60,7 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                 } else {
                     return@Card
                 }
+
             Spacer(modifier = Modifier.height(5.dp))
 
             Row(
