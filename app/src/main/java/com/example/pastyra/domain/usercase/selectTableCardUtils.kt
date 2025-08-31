@@ -4,6 +4,7 @@ import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.CardWithRank
 import com.example.pastyra.domain.model.GameState
+import com.example.pastyra.domain.model.Player
 
 fun selectArithmeticTableCard(card: Card, state: GameState, playerId: Int): MutableList<Card> {
     val newTableActiveCard = state.game.tableActiveCard.toMutableList()
@@ -44,6 +45,6 @@ fun selectCardForBundle(card: Card, state: GameState): MutableList<Card> {
     return newTableActiveCard
 }
 
-fun selectCardForBundle() {
+fun selectCardForBundle(cardToBeBundled: ArithmeticCard, player: Player, deck: List<Card>) {
 
 }

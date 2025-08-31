@@ -45,8 +45,7 @@ fun CardUIView(
     ) {
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             if (isReadyForBundle) {
                 BundleButtonSmart(viewModel)
