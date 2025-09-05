@@ -1,16 +1,16 @@
-package com.example.pastyra
+package com.example.pastyra.domain.usercase.bundlingTests
 
 import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.Player
 import getPlayerBundlingCards
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Test
 
-class BundleUtilsTest {
+class GetPlayerBundlingCardsTests {
     @Test
-    fun getPlayerBundlingCards_should_work_correct_test1() {
+    fun should_work_correct_test1() {
         val playerHand = listOf<Card>(
             CARDS.FIVE.DIAMONDS,
             CARDS.ACE.CLUBS,
@@ -34,7 +34,7 @@ class BundleUtilsTest {
 
         val expectedPlayerBundlingCards = listOf<Card>()
 
-        assertEquals(
+        Assert.assertEquals(
             "Карты, доступные для завязки должны соответствовать ожидаемым",
             expectedPlayerBundlingCards,
             playerBundlingCards
@@ -42,7 +42,7 @@ class BundleUtilsTest {
     }
 
     @Test
-    fun getPlayerBundlingCards_should_work_correct_test2() {
+    fun should_work_correct_test2() {
         val playerHand = listOf<Card>(
             CARDS.THREE.DIAMONDS,
             CARDS.TWO.SPADES,
@@ -68,7 +68,7 @@ class BundleUtilsTest {
             CARDS.THREE.DIAMONDS
         )
 
-        assertEquals(
+        Assert.assertEquals(
             "Карты, доступные для завязки должны соответствовать ожидаемым",
             expectedPlayerBundlingCards,
             playerBundlingCards
@@ -76,7 +76,7 @@ class BundleUtilsTest {
     }
 
     @Test
-    fun getPlayerBundlingCards_should_work_correct_test3() {
+    fun should_work_correct_test3() {
         val playerHand = listOf<Card>(
             CARDS.EIGHT.DIAMONDS,
             CARDS.EIGHT.CLUBS,
@@ -99,7 +99,7 @@ class BundleUtilsTest {
             CARDS.EIGHT.CLUBS,
         )
 
-        assertEquals(
+        Assert.assertEquals(
             "Можно повысить уровень завязки, используя карту с таким же значением",
             expectedPlayerBundlingCards,
             playerBundlingCards
@@ -107,7 +107,7 @@ class BundleUtilsTest {
     }
 
     @Test
-    fun getPlayerBundlingCards_should_work_correct_test4() {
+    fun should_work_correct_test4() {
         val playerHand = listOf<Card>(
             CARDS.EIGHT.DIAMONDS, CARDS.TWO.DIAMONDS
         )
@@ -134,7 +134,7 @@ class BundleUtilsTest {
             CARDS.EIGHT.DIAMONDS,
         )
 
-        assertEquals(
+        Assert.assertEquals(
             "Должна быть возможность перевязать завязку 1 уровня со стола",
             expectedPlayerBundlingCards,
             playerBundlingCards
@@ -142,7 +142,7 @@ class BundleUtilsTest {
     }
 
     @Test
-    fun getPlayerBundlingCards_should_work_correct_test5() {
+    fun should_work_correct_test5() {
         val playerHand = listOf<Card>(
             CARDS.EIGHT.DIAMONDS, CARDS.TWO.DIAMONDS
         )
@@ -165,7 +165,7 @@ class BundleUtilsTest {
 
         val expectedPlayerBundlingCards = listOf<Card>()
 
-        assertEquals(
+        Assert.assertEquals(
             "Не должна быть возможность перевязать завязку 2 уровня со стола",
             expectedPlayerBundlingCards,
             playerBundlingCards
@@ -173,7 +173,7 @@ class BundleUtilsTest {
     }
 
     @Test
-    fun getPlayerBundlingCards_should_work_correct_test6() {
+    fun should_work_correct_test6() {
         val playerHand = listOf<Card>(
             CARDS.EIGHT.DIAMONDS, CARDS.TWO.DIAMONDS
         )
@@ -200,15 +200,15 @@ class BundleUtilsTest {
             CARDS.EIGHT.DIAMONDS,
         )
 
-        assertEquals(
+        Assert.assertEquals(
             "Должна быть возможность перевязать завязку 1 уровня с использованием дополнительной карты со стола",
             expectedPlayerBundlingCards,
             playerBundlingCards
         )
     }
-  
+
     @Test
-    fun getPlayerBundlingCards_should_work_correct_test7() {
+    fun should_work_correct_test7() {
         val playerHand = listOf<Card>(
             CARDS.EIGHT.DIAMONDS, CARDS.TWO.DIAMONDS
         )
@@ -233,7 +233,7 @@ class BundleUtilsTest {
 
         val expectedPlayerBundlingCards = listOf<Card>()
 
-        assertEquals(
+        Assert.assertEquals(
             "Нет возможности перевязать завязку 1 уровня с использованием дополнительной карты со стола, если сумма неправильная",
             expectedPlayerBundlingCards,
             playerBundlingCards

@@ -56,3 +56,11 @@ fun getPlayerBundlingCards(
 
     return cardsToBeBundled
 }
+
+fun canPlayerFinishBundlingCards(
+    cardToBeBundled: ArithmeticCard,
+    tableDeck: List<Card>,
+    temporaryBundlingCards: List<BundleCard>
+): Boolean {
+    return true
+}
