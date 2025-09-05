@@ -4,7 +4,7 @@ import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.CardWithRank
 import com.example.pastyra.domain.model.GameState
-import com.example.pastyra.domain.model.Player
+import com.example.pastyra.domain.model.safeValue
 
 fun selectArithmeticTableCard(card: Card, state: GameState, playerId: Int): MutableList<Card> {
     val newTableActiveCard = state.game.tableActiveCard.toMutableList()
@@ -35,16 +35,16 @@ fun selectQueenAndKingCard(card: Card, state: GameState, playerId: Int): Mutable
     return newTableActiveCard
 }
 
-fun selectCardForBundle(card: Card, state: GameState): MutableList<Card> {
-    val newTableActiveCard = state.game.tableActiveCard.toMutableList()
+fun selectCardForBundle(
+    cardToBeBundled: Card,
+    tableDeck: List<Card>,
+): MutableList<Card> {
+    val newTableActiveCard = tableDeck.toMutableList()
 
-    if (card !is CardWithRank) {
-        newTableActiveCard.add(card)
+
+    if (cardToBeBundled !is CardWithRank && cardToBeBundled.safeValue >= newTableActiveCard.sumOf { it.safeValue }) {
+        newTableActiveCard.add(cardToBeBundled)
     }
 
     return newTableActiveCard
-}
-
-fun selectCardForBundle(cardToBeBundled: ArithmeticCard, player: Player, deck: List<Card>) {
-
 }

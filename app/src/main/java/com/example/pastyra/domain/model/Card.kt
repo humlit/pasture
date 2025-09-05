@@ -102,3 +102,9 @@ val Card.safeSuit: Suit?
         is JackCard -> this.suit
         else -> null
     }
+
+val Card.safeValue: Int
+    get() = when (this) {
+        is ArithmeticCard -> this.arithmeticValue
+        else -> 0
+    }

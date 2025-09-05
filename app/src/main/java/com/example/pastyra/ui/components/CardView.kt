@@ -18,8 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.CardBack
+import com.example.pastyra.domain.model.Stage
 import com.example.pastyra.ui.components.smart.BundleButtonSmart
 import com.example.pastyra.ui.viewmodel.GameViewModel
 
@@ -31,6 +33,8 @@ fun CardUIView(
     isReadyForBundle: Boolean = false,
     onClick: () -> Unit,
 ) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    val game = state.value.game
 
     val borderColor = if (isSelected) Color.Green else Color.Transparent
 
@@ -47,8 +51,8 @@ fun CardUIView(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            if (isReadyForBundle) {
-                BundleButtonSmart(viewModel)
+            if (isReadyForBundle && game.gameStage == Stage.DefaultStage && game.tableActiveCard.isEmpty() && game.temporaryPlayerBundlingCard.isEmpty()) {
+                BundleButtonSmart(viewModel, card)
             }
         }
 
