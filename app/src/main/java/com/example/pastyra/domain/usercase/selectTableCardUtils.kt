@@ -1,13 +1,15 @@
 package com.example.pastyra.domain.usercase
 
+import android.util.Log
 import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.CardWithRank
 import com.example.pastyra.domain.model.GameState
+import com.example.pastyra.domain.model.Player
 import com.example.pastyra.domain.model.safeValue
 
 fun selectArithmeticTableCard(card: Card, state: GameState, playerId: Int): MutableList<Card> {
-    val newTableActiveCard = state.game.tableActiveCard.toMutableList()
+    val newTableActiveCard = state.game.tableActiveCards.toMutableList()
     val currentPlayer = state.game.playerList.find { it.playerId == playerId }
 
     if (card is ArithmeticCard) {
@@ -25,7 +27,7 @@ fun selectArithmeticTableCard(card: Card, state: GameState, playerId: Int): Muta
 }
 
 fun selectQueenAndKingCard(card: Card, state: GameState, playerId: Int): MutableList<Card> {
-    val newTableActiveCard = state.game.tableActiveCard.toMutableList()
+    val newTableActiveCard = state.game.tableActiveCards.toMutableList()
     val currentPlayer = state.game.playerList.find { it.playerId == playerId }
 
     if (card is CardWithRank && currentPlayer?.activeCard is CardWithRank && card.rank == currentPlayer.activeCard.rank) {
@@ -38,12 +40,19 @@ fun selectQueenAndKingCard(card: Card, state: GameState, playerId: Int): Mutable
 fun selectCardForBundle(
     cardToBeBundled: Card,
     tableDeck: List<Card>,
+    player: Player
 ): MutableList<Card> {
     val newTableActiveCard = tableDeck.toMutableList()
 
-
-    if (cardToBeBundled !is CardWithRank && cardToBeBundled.safeValue >= newTableActiveCard.sumOf { it.safeValue }) {
+    if (cardToBeBundled !is CardWithRank) {
         newTableActiveCard.add(cardToBeBundled)
+    }
+
+    val cardVerificationToTake =
+        isPlayerCanTakeAnyoneCard(player.cardToTheBundle as ArithmeticCard, newTableActiveCard)
+
+    if (!cardVerificationToTake && newTableActiveCard.isNotEmpty()) {
+        newTableActiveCard.removeLastOrNull()
     }
 
     return newTableActiveCard

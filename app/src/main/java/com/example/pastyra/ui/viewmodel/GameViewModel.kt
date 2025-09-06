@@ -75,8 +75,8 @@ open class GameViewModel() : ViewModel() {
             _state.update { currentState ->
 
                 val newTempPlayerBundlingCard =
-                    currentState.game.temporaryPlayerBundlingCard.flatten().toMutableList()
-                val newTableActiveCard = currentState.game.tableActiveCard.toMutableList()
+                    currentState.game.temporaryPlayerBundlingCards.flatten().toMutableList()
+                val newTableActiveCard = currentState.game.tableActiveCards.toMutableList()
 
                 val newPlayerList: List<Player> = currentState.game.playerList.map { pl ->
                     if (pl.playerId == requiredActivePlayer.playerId) {
@@ -106,16 +106,16 @@ open class GameViewModel() : ViewModel() {
                 }
 
                 val combinedTableDeck =
-                    currentState.game.tableDeck + newTableActiveCard + currentState.game.temporaryPlayerTakenCard + newTempPlayerBundlingCard
+                    currentState.game.tableDeck + newTableActiveCard + currentState.game.temporaryPlayerTakenCards + newTempPlayerBundlingCard
 
                 updateActivePlayerCard(card)
 
                 currentState.copy(
                     game = currentState.game.copy(
                         playerList = newPlayerList,
-                        temporaryPlayerTakenCard = emptyList(),
-                        temporaryPlayerBundlingCard = emptyList(),
-                        tableActiveCard = emptyList(),
+                        temporaryPlayerTakenCards = emptyList(),
+                        temporaryPlayerBundlingCards = emptyList(),
+                        tableActiveCards = emptyList(),
                         tableDeck = combinedTableDeck,
                         gameStage = Stage.DefaultStage
                     )
@@ -161,7 +161,7 @@ open class GameViewModel() : ViewModel() {
                     val newTableDeck = currentState.game.tableDeck.toMutableList() - newActiveCards
 
                     val newTemporaryPlayerTakenCard =
-                        currentState.game.temporaryPlayerTakenCard.toMutableList()
+                        currentState.game.temporaryPlayerTakenCards.toMutableList()
 
                     if (newActiveCards.any { card -> card is AnyArithmeticCard } && activeTableCardEqualsPlayerCard(
                             requiredActivePlayer.activeCard as ArithmeticCard,
@@ -177,9 +177,9 @@ open class GameViewModel() : ViewModel() {
 
                     currentState.copy(
                         game = currentState.game.copy(
-                            tableActiveCard = newActiveCards,
+                            tableActiveCards = newActiveCards,
                             tableDeck = newTableDeck,
-                            temporaryPlayerTakenCard = newTemporaryPlayerTakenCard
+                            temporaryPlayerTakenCards = newTemporaryPlayerTakenCard
                         )
                     )
                 }
@@ -193,21 +193,36 @@ open class GameViewModel() : ViewModel() {
                 _state.update { currentState ->
                     val tableDeck = currentState.game.tableDeck
 
-                    if (requiredActivePlayer.activeCard == null) return@update currentState
+                    if (requiredActivePlayer.cardToTheBundle == null) return@update currentState
 
                     val newTableActiveCard = selectCardForBundle(
                         cardToBeBundled = card,
-                        tableDeck = currentState.game.tableActiveCard,
+                        tableDeck = currentState.game.tableActiveCards,
+                        player = requiredActivePlayer
                     )
 
                     val newTableDeck = tableDeck - newTableActiveCard
 
+                    val newTempPlayerBundlingCards =
+                        currentState.game.temporaryPlayerBundlingCards.toMutableList()
+
+                    if (activeTableCardEqualsPlayerCard(
+                            requiredActivePlayer.cardToTheBundle!!,
+                            newTableActiveCard
+                        )
+                    ) {
+                        newTempPlayerBundlingCards.add(newTableActiveCard.toList())
+                        newTableActiveCard.clear()
+                    }
+
                     currentState.copy(
                         game = currentState.game.copy(
-                            tableActiveCard = newTableActiveCard,
-                            tableDeck = newTableDeck
+                            tableActiveCards = newTableActiveCard,
+                            tableDeck = newTableDeck,
+                            temporaryPlayerBundlingCards = newTempPlayerBundlingCards,
                         )
                     )
+
                 }
             }
         }
@@ -226,7 +241,7 @@ open class GameViewModel() : ViewModel() {
                 }
             }
 
-            val newTableActiveCard = currentState.game.tableActiveCard.toMutableList()
+            val newTableActiveCard = currentState.game.tableActiveCards.toMutableList()
 
             if (newTableActiveCard.isNotEmpty()) {
                 newTableActiveCard.clear()
@@ -240,7 +255,7 @@ open class GameViewModel() : ViewModel() {
                 game = currentState.game.copy(
                     playerList = switchedPlayerList,
                     tableDeck = newTableDeck,
-                    tableActiveCard = newTableActiveCard
+                    tableActiveCards = newTableActiveCard
                 )
             )
         }
@@ -272,7 +287,7 @@ open class GameViewModel() : ViewModel() {
 
     private fun takeArithmeticCard() {
         _state.update { currentState ->
-            val tableTemporaryCard = currentState.game.temporaryPlayerTakenCard.toMutableList()
+            val tableTemporaryCard = currentState.game.temporaryPlayerTakenCards.toMutableList()
 
             val newPlayerList = currentState.game.playerList.map { pl ->
                 when {
@@ -293,7 +308,7 @@ open class GameViewModel() : ViewModel() {
             currentState.copy(
                 game = currentState.game.copy(
                     playerList = switchedPlayerList,
-                    temporaryPlayerTakenCard = tableTemporaryCard,
+                    temporaryPlayerTakenCards = tableTemporaryCard,
                     gameStage = Stage.DefaultStage
                 )
             )
@@ -302,7 +317,7 @@ open class GameViewModel() : ViewModel() {
 
     fun takeQueenAndKingCard() {
         _state.update { currentState ->
-            val tableTemporaryCard = currentState.game.temporaryPlayerTakenCard.toMutableList()
+            val tableTemporaryCard = currentState.game.temporaryPlayerTakenCards.toMutableList()
             val cardToPlay = requiredActivePlayerCard
 
             val newPLayerList =
@@ -330,7 +345,7 @@ open class GameViewModel() : ViewModel() {
             currentState.copy(
                 game = currentState.game.copy(
                     playerList = switchedPlayerList,
-                    temporaryPlayerTakenCard = tableTemporaryCard,
+                    temporaryPlayerTakenCards = tableTemporaryCard,
                     gameStage = Stage.DefaultStage
                 )
             )
@@ -382,9 +397,9 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    fun startBundling(card: Card) {
+    fun startBundling(card: ArithmeticCard) {
         _state.update { currentState ->
-            val activeTableCard = currentState.game.tableActiveCard.toMutableList()
+            val activeTableCard = currentState.game.tableActiveCards.toMutableList()
             activeTableCard.add(requiredActivePlayerCard)
 
             val newPlayerList = currentState.game.playerList.map { pl ->
@@ -393,6 +408,7 @@ open class GameViewModel() : ViewModel() {
                         pl.copy(
                             cardsHand = pl.cardsHand - requiredActivePlayerCard,
                             cardToTheBundle = card,
+                            activeCard = null,
                         )
                     }
 
@@ -402,7 +418,7 @@ open class GameViewModel() : ViewModel() {
 
             currentState.copy(
                 game = currentState.game.copy(
-                    tableActiveCard = activeTableCard,
+                    tableActiveCards = activeTableCard,
                     playerList = newPlayerList
                 )
             )

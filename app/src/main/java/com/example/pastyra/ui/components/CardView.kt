@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.CardBack
 import com.example.pastyra.domain.model.Stage
@@ -29,7 +30,7 @@ import com.example.pastyra.ui.viewmodel.GameViewModel
 fun CardUIView(
     viewModel: GameViewModel,
     card: Card,
-    isSelected: Boolean,
+    isSelected: Boolean = false,
     isReadyForBundle: Boolean = false,
     onClick: () -> Unit,
 ) {
@@ -51,8 +52,8 @@ fun CardUIView(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            if (isReadyForBundle && game.gameStage == Stage.DefaultStage && game.tableActiveCard.isEmpty() && game.temporaryPlayerBundlingCard.isEmpty()) {
-                BundleButtonSmart(viewModel, card)
+            if (isReadyForBundle && game.gameStage == Stage.DefaultStage && game.tableActiveCards.isEmpty() && game.temporaryPlayerBundlingCards.isEmpty()) {
+                BundleButtonSmart(viewModel, card as ArithmeticCard)
             }
         }
 
