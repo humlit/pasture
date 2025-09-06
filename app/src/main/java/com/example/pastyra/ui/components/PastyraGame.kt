@@ -26,14 +26,17 @@ fun PastyraGameStart(
     val game = state.game
 
     Log.d(
-        "PLAYER-HAND-CARDS",
-        viewModel.requiredActivePlayer.cardsHand.joinToString("\n") { "${it.safeRank} ${it.safeSuit}" })
+        "PLAYER-TABLE-ACTIVE",
+        game.tableActiveCards.joinToString("\n") { "${it.safeRank} ${it.safeSuit}" })
+
     Log.d(
-        "PLAYER-TABLE-ACTIVE", game.tableActiveCard.joinToString("\n") { "${it.safeRank} ${it.safeSuit}"})
+        "PLAYER-TABLE-TEMP",
+        game.temporaryPlayerTakenCards.joinToString("\n") { "${it.safeRank} ${it.safeSuit}" })
+
     Log.d(
-        "PLAYER-TABLE-TEMP", game.temporaryPlayerTakenCard.joinToString("\n") { "${it.safeRank} ${it.safeSuit}"})
-    Log.d(
-        "PLAYER-TABLE-TEMP_BUND", game.temporaryPlayerBundlingCard.toString())
+        "PLAYER-TABLE-TEMP_BUND",
+        game.temporaryPlayerBundlingCards.toString())
+
     Card(
         modifier = Modifier.fillMaxSize(),
         colors = CardDefaults.cardColors(containerColor = Color.LightGray)

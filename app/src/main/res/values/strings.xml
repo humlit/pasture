@@ -4,5 +4,6 @@
     <string name="cards_put">Положить</string>
     <string name="cards_take">Взять</string>
     <string name="finish_move">Завершить ход</string>
-    <string name="cansel_button">Отменить</string>
+    <string name="cancel_button">Отменить</string>
+    <string name="confirm_button">Подтвердить</string>
 </resources>

@@ -81,7 +81,8 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                             viewModel.selectCard(
                                 card = card
                             )
-                        }, viewModel = viewModel
+                        },
+                        viewModel = viewModel,
                     )
                 }
             }

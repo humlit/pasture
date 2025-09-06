@@ -5,23 +5,23 @@ import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.Card
 
 fun isPlayerCanTakeAnyoneCard(
-    playerActiveCard: ArithmeticCard,
+    checkedCard: ArithmeticCard,
     tableActiveCard: List<Card>
 ): Boolean {
         val tableSum = tableActiveCard
             .filterIsInstance<AnyArithmeticCard>()
             .sumOf { it.arithmeticValue }
 
-        return tableSum <= playerActiveCard.arithmeticValue
+        return tableSum <= checkedCard.arithmeticValue
 }
 
 fun activeTableCardEqualsPlayerCard(
-    playerActiveCard: ArithmeticCard, tableActiveCard: List<Card>
+    checkedCard: ArithmeticCard, tableActiveCard: List<Card>
 ): Boolean {
 
     val tableSum = tableActiveCard
         .filterIsInstance<AnyArithmeticCard>()
         .sumOf { it.arithmeticValue }
 
-    return tableSum == playerActiveCard.arithmeticValue
+    return tableSum == checkedCard.arithmeticValue
 }

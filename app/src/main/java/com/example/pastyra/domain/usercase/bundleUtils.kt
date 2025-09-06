@@ -1,3 +1,4 @@
+import com.example.pastyra.domain.model.AnyArithmeticCard
 import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.Card
