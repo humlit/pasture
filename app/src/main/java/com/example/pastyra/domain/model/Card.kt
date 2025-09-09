@@ -16,11 +16,6 @@ interface CardBack {
     val icon: Int
 }
 
-interface ShortCard {
-    val shortRank: String
-    val shortSuit: String
-}
-
 interface AnyArithmeticCard {
     val arithmeticValue: Int
 }
@@ -32,12 +27,10 @@ class ArithmeticCard(
     override val arithmeticValue: Int,
     override val id: Int,
     override val icon: Int,
-    override val shortRank: String,
-    override val shortSuit: String,
 ) : Card(
     point = point,
     id = id,
-), CardBack, AnyArithmeticCard, ShortCard {
+), CardBack, AnyArithmeticCard {
 
 }
 
@@ -47,12 +40,10 @@ class QueenCard(
     override val point: Int = 0,
     override val id: Int,
     override val icon: Int,
-    override val shortRank: String,
-    override val shortSuit: String,
 ) : Card(
     point,
     id = id,
-), CardWithRank, CardBack, ShortCard {
+), CardWithRank, CardBack {
 
 }
 
@@ -62,12 +53,10 @@ class KingCard(
     override val point: Int = 0,
     override val id: Int,
     override val icon: Int,
-    override val shortRank: String,
-    override val shortSuit: String,
 ) : Card(
     point,
     id = id,
-), CardWithRank, CardBack, ShortCard {
+), CardWithRank, CardBack {
 
 }
 
@@ -77,12 +66,10 @@ class JackCard(
     override val point: Int = 1,
     override val id: Int,
     override val icon: Int,
-    override val shortRank: String,
-    override val shortSuit: String,
 ) : Card(
     point = point,
     id = id,
-), CardWithRank, CardBack, ShortCard {
+), CardWithRank, CardBack {
 
 }
 
