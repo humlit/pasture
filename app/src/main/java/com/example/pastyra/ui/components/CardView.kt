@@ -8,8 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -41,8 +40,7 @@ fun CardUIView(
 
     Column(
         modifier = Modifier
-            .height(140.dp)
-            .width(85.dp)
+            .size(width = 85.dp, height = 120.dp)
             .border(1.5.dp, borderColor, RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
             .background(Color.Transparent)
@@ -62,7 +60,7 @@ fun CardUIView(
                 modifier = Modifier.fillMaxSize(),
                 painter = painterResource(card.icon),
                 contentDescription = null,
-                contentScale = ContentScale.None
+                contentScale = ContentScale.Crop
             )
         }
     }

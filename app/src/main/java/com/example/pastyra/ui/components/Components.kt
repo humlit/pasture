@@ -1,22 +1,22 @@
 package com.example.pastyra.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pastyra.R
 import com.example.pastyra.domain.model.Card
@@ -28,7 +28,8 @@ import com.example.pastyra.ui.viewmodel.GameViewModel
 fun DisplayCards(
     viewModel: GameViewModel,
     showDialog: Boolean,
-    listOfCards: List<Card>,
+    beingCollectedList: List<Card>,
+    readyList: List<Card>,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     clickListener: (Card) -> Unit
@@ -39,25 +40,58 @@ fun DisplayCards(
 
             title = {
                 Text(
-                    text = "Выберите карты для удаления ",
+                    text = "Выбранные карты: ",
                     fontSize = 16.sp,
                 )
             },
 
             text = {
+                Column(
+
+                ) {
+                    Text(
+                        text = if (beingCollectedList.isNotEmpty()) {
+                            "Они только растут"
+                        } else {
+                            ""
+                        }
+                    )
+
                     LazyRow(
                         modifier = Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Absolute.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        items(listOfCards) { card ->
+                        items(beingCollectedList) { card ->
                             CardUIView(
                                 card = card,
                                 onClick = { clickListener(card) },
                                 viewModel = viewModel,
+                                isSelected = viewModel.cardForDeleteFromDisplay.any { it.id == card.id }
                             )
                         }
+                    }
+
+                    Spacer(modifier = Modifier.height(15.dp))
+
+                    Text(text = if (readyList.isNotEmpty()) {
+                        "Эти карты уже у вас в кармане"
+                    } else {
+                        "Карман пуст"
+                    })
+
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        items(readyList) { card ->
+                            CardUIView(
+                                card = card,
+                                onClick = { },
+                                viewModel = viewModel,
+                            )
+                        }
+                    }
                 }
             },
 
