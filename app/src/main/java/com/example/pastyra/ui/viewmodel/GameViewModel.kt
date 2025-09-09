@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pastyra.domain.model.AnyArithmeticCard
 import com.example.pastyra.domain.model.ArithmeticCard
+import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.GameState
 import com.example.pastyra.domain.model.JackCard
@@ -14,6 +15,8 @@ import com.example.pastyra.domain.model.KingCard
 import com.example.pastyra.domain.model.Player
 import com.example.pastyra.domain.model.QueenCard
 import com.example.pastyra.domain.model.Stage
+import com.example.pastyra.domain.model.safePoint
+import com.example.pastyra.domain.model.safeValue
 import com.example.pastyra.domain.usercase.activeTableCardEqualsPlayerCard
 import com.example.pastyra.domain.usercase.selectArithmeticTableCard
 import com.example.pastyra.domain.usercase.selectCardForBundle
@@ -56,6 +59,10 @@ open class GameViewModel() : ViewModel() {
 
     val requiredActivePlayerCard: Card
         get() = requiredActivePlayer.activeCard ?: throw AssertionError("No active player card")
+
+    val requireActivePlayerBundleCard: Card
+        get() = requiredActivePlayer.cardToTheBundle
+            ?: throw AssertionError("No active player bundle card")
 
     fun updateActivePlayerCard(card: Card) {
         _state.update { currentState ->
@@ -425,10 +432,52 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    fun bundleCard(playerId: Int) {
+    fun bundleCard() {
         _state.update { currentState ->
+            val tempCards = currentState.game.temporaryPlayerBundlingCards.flatten()
+            val temporaryBundleCards = currentState.game.temporaryPlayerBundlingCards
+            val playerBundleCard = requireActivePlayerBundleCard
 
-            currentState
+            if (tempCards.isEmpty()) return@update currentState
+
+            val bundleStage = tempCards.maxOf {
+                if (it is BundleCard) (temporaryBundleCards.size - 1) + it.bundleStage
+                else temporaryBundleCards.size
+            }
+
+            val newBundleCards = BundleCard(
+                cardList = tempCards,
+                point = tempCards.sumOf { card ->
+                    card.safePoint
+                },
+                arithmeticValue = playerBundleCard.safeValue,
+                playerId = requiredActivePlayer.playerId,
+                bundleStage = bundleStage
+            )
+
+            val newTableDeck = currentState.game.tableDeck + newBundleCards
+
+            val newPlayerList = currentState.game.playerList.map { pl ->
+                when {
+                    pl.playerId == requiredActivePlayer.playerId -> pl.copy(
+                        bundlingCard = newBundleCards,
+                        cardsHand = pl.cardsHand - playerBundleCard,
+                        activeCard = null,
+                    )
+
+                    else -> pl
+                }
+            }
+
+            val switchedPlayerList = getSwitchedPlayerList(newPlayerList)
+
+            currentState.copy(
+                game = currentState.game.copy(
+                    tableDeck = newTableDeck,
+                    playerList = switchedPlayerList,
+                    temporaryPlayerBundlingCards = emptyList()
+                )
+            )
         }
     }
 

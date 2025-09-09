@@ -75,11 +75,13 @@ fun DisplayCards(
 
                     Spacer(modifier = Modifier.height(15.dp))
 
-                    Text(text = if (readyList.isNotEmpty()) {
-                        "Эти карты уже у вас в кармане"
-                    } else {
-                        "Карман пуст"
-                    })
+                    Text(
+                        text = if (readyList.isNotEmpty()) {
+                            "Эти карты уже у вас в кармане"
+                        } else {
+                            "Карман пуст"
+                        }
+                    )
 
                     LazyRow(
                         modifier = Modifier.fillMaxWidth()
@@ -199,7 +201,7 @@ fun PlayerBundleCard(viewModel: GameViewModel) {
         })
 
         FinishMoveButton(clickListener = {
-
+            viewModel.bundleCard()
         })
     }
 }

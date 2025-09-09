@@ -25,17 +25,19 @@ fun PastyraGameStart(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val game = state.game
 
-    Log.d(
-        "PLAYER-TABLE-ACTIVE",
-        game.tableActiveCards.joinToString("\n") { "${it.safeRank} ${it.safeSuit}" })
+//    Log.d(
+//        "PLAYER-TABLE-ACTIVE",
+//        game.tableActiveCards.joinToString("\n") { "${it.safeRank} ${it.safeSuit}" })
+//
+//    Log.d(
+//        "PLAYER-TABLE-TEMP",
+//        game.temporaryPlayerTakenCards.joinToString("\n") { "${it.safeRank} ${it.safeSuit}" })
+//
+//    Log.d(
+//        "PLAYER-TABLE-TEMP_BUND",
+//        game.temporaryPlayerBundlingCards.toString())
 
-    Log.d(
-        "PLAYER-TABLE-TEMP",
-        game.temporaryPlayerTakenCards.joinToString("\n") { "${it.safeRank} ${it.safeSuit}" })
-
-    Log.d(
-        "PLAYER-TABLE-TEMP_BUND",
-        game.temporaryPlayerBundlingCards.toString())
+    Log.d("PLAYER",viewModel.requiredActivePlayer.toString())
 
     Card(
         modifier = Modifier.fillMaxSize(),

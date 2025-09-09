@@ -399,10 +399,10 @@ object CARDS {
         )
         val SPADES = KingCard(
             suit = Suit.SPADES, id = 51, icon = R.drawable.ic_king_of_spades,
-            )
+        )
         val HEARTS = KingCard(
             suit = Suit.HEARTS, id = 52, icon = R.drawable.ic_king_of_hearts,
-            )
+        )
     }
 }
 

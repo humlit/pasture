@@ -106,5 +106,13 @@ val Card.safeSuit: Suit?
 val Card.safeValue: Int
     get() = when (this) {
         is ArithmeticCard -> this.arithmeticValue
+        is BundleCard -> this.arithmeticValue
+        else -> 0
+    }
+
+val Card.safePoint: Int
+    get() = when (this) {
+        is ArithmeticCard -> this.point
+        is BundleCard -> this.point
         else -> 0
     }
