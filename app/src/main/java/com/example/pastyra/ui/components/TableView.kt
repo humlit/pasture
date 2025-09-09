@@ -1,15 +1,17 @@
 package com.example.pastyra.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,9 +32,18 @@ import kotlinx.coroutines.launch
 fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val game = state.value.game
+
+    var onTableDisplayListOfCard by remember { mutableStateOf(emptyList<Card>()) }
+
     val scope = rememberCoroutineScope()
 
     var showDialog by remember { mutableStateOf(false) }
+
+    onTableDisplayListOfCard = when (game.gameStage) {
+        Stage.DefaultStage -> emptyList()
+        Stage.WaitToBundle -> game.temporaryPlayerBundlingCards.flatten() + game.tableActiveCards
+        Stage.TakeArithmeticCard, Stage.TakeQueenOrKingCard -> game.temporaryPlayerTakenCards + game.tableActiveCards
+    }
 
     val rowsCard = deck.sortedCard().chunked(
         4
@@ -44,24 +55,47 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
             .height(300.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
-        Row {
-            Button(
-                onClick = { showDialog = true }
-            ) {
-                Text(text = "Выбранные карты")
+
+        LazyRow(
+            modifier = Modifier
+                .clickable(
+                    onClick = { showDialog = true }
+                )
+                .background(color = Color.Transparent)
+        ) {
+            items(onTableDisplayListOfCard) { card ->
+                ShortCardUIView(
+                    card,
+                    onClick = {
+                        showDialog = true
+                    })
             }
-
-            DisplayCards(
-                viewModel = viewModel,
-                showDialog = showDialog,
-                listOfCards = game.tableActiveCards, //TODO: объединить списки по фазе (Фаза взятия карта = Активные карты + Временный массив уже взятых карт игрока, со связками также) -> у игрока 1 кнопка, но сразу все доступные массивы
-                onConfirm = {},
-                onDismiss = { showDialog = false },
-                clickListener = { card ->
-
-                }
-            )
         }
+
+        DisplayCards(
+            viewModel = viewModel,
+            showDialog = showDialog,
+            beingCollectedList = game.tableActiveCards,
+            readyList = if (game.gameStage == Stage.WaitToBundle) {
+                game.temporaryPlayerBundlingCards.flatten()
+            } else {
+                game.temporaryPlayerTakenCards
+            },
+            onConfirm = {
+                viewModel.confirmDeleteCardFromDisplay()
+                showDialog = false
+            },
+            onDismiss = {
+                showDialog = false
+                viewModel.closeDialogBox()
+            },
+            clickListener = { card ->
+                viewModel.selectCardForDeleteFromDisplay(card)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(5.dp))
+
         Column(
         ) {
             rowsCard.forEach { rowCards ->

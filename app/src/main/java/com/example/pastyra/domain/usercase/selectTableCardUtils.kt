@@ -1,12 +1,10 @@
 package com.example.pastyra.domain.usercase
 
-import android.util.Log
 import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.CardWithRank
 import com.example.pastyra.domain.model.GameState
 import com.example.pastyra.domain.model.Player
-import com.example.pastyra.domain.model.safeValue
 
 fun selectArithmeticTableCard(card: Card, state: GameState, playerId: Int): MutableList<Card> {
     val newTableActiveCard = state.game.tableActiveCards.toMutableList()
@@ -56,4 +54,11 @@ fun selectCardForBundle(
     }
 
     return newTableActiveCard
+}
+
+fun removeTableCards(card: Card, chosenTableCards: List<Card>): List<Card> {
+    val newChosenTableCards = chosenTableCards.toMutableList()
+
+
+    return newChosenTableCards
 }

@@ -1,5 +1,8 @@
 package com.example.pastyra.ui.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pastyra.domain.model.AnyArithmeticCard
@@ -29,6 +32,8 @@ open class GameViewModel() : ViewModel() {
     private val _state = MutableStateFlow(GameState())
     val state: StateFlow<GameState> = _state.asStateFlow()
 
+    var cardForDeleteFromDisplay by mutableStateOf<List<Card>>(emptyList())
+        private set
     private val selectionMutex = Mutex()
 
     init {
@@ -130,7 +135,7 @@ open class GameViewModel() : ViewModel() {
                 _state.update { currentState ->
                     if (requiredActivePlayer.activeCard == null || requiredActivePlayer.activeCard is JackCard) return@update currentState
 
-                    val newActiveCards = when (requiredActivePlayer.activeCard) {
+                    val newTableActiveCard = when (requiredActivePlayer.activeCard) {
                         is ArithmeticCard -> {
                             if (currentState.game.gameStage == Stage.TakeArithmeticCard) {
                                 selectArithmeticTableCard(
@@ -158,28 +163,29 @@ open class GameViewModel() : ViewModel() {
                         else -> throw IllegalArgumentException("")
                     }
 
-                    val newTableDeck = currentState.game.tableDeck.toMutableList() - newActiveCards
+                    val newTableDeck =
+                        currentState.game.tableDeck.toMutableList() - newTableActiveCard
 
                     val newTemporaryPlayerTakenCard =
                         currentState.game.temporaryPlayerTakenCards.toMutableList()
 
-                    if (newActiveCards.any { card -> card is AnyArithmeticCard } && activeTableCardEqualsPlayerCard(
+                    if (newTableActiveCard.any { card -> card is AnyArithmeticCard } && activeTableCardEqualsPlayerCard(
                             requiredActivePlayer.activeCard as ArithmeticCard,
-                            newActiveCards
+                            newTableActiveCard
                         )
                     ) {
-                        newTemporaryPlayerTakenCard.addAll(newActiveCards)
-                        newActiveCards.clear()
-                    } else if (newActiveCards.any { card -> card is KingCard || card is QueenCard }) {
-                        newTemporaryPlayerTakenCard.addAll(newActiveCards)
-                        newActiveCards.clear()
+                        newTemporaryPlayerTakenCard.addAll(newTableActiveCard)
+                        newTableActiveCard.clear()
+                    } else if (newTableActiveCard.any { card -> card is KingCard || card is QueenCard }) {
+                        newTemporaryPlayerTakenCard.addAll(newTableActiveCard)
+                        newTableActiveCard.clear()
                     }
 
                     currentState.copy(
                         game = currentState.game.copy(
-                            tableActiveCards = newActiveCards,
+                            tableActiveCards = newTableActiveCard,
                             tableDeck = newTableDeck,
-                            temporaryPlayerTakenCards = newTemporaryPlayerTakenCard
+                            temporaryPlayerTakenCards = newTemporaryPlayerTakenCard,
                         )
                     )
                 }
@@ -222,10 +228,39 @@ open class GameViewModel() : ViewModel() {
                             temporaryPlayerBundlingCards = newTempPlayerBundlingCards,
                         )
                     )
-
                 }
             }
         }
+    }
+
+    fun selectCardForDeleteFromDisplay(card: Card) {
+        if (cardForDeleteFromDisplay.any { it == card }) {
+            cardForDeleteFromDisplay -= card
+        } else {
+            cardForDeleteFromDisplay += card
+        }
+    }
+
+    fun confirmDeleteCardFromDisplay() {
+        _state.update { currentState ->
+            val newTableActiveCards = currentState.game.tableActiveCards.toMutableList()
+
+            newTableActiveCards.removeAll(cardForDeleteFromDisplay)
+
+            val combinedTableDeck = currentState.game.tableDeck + cardForDeleteFromDisplay
+            cardForDeleteFromDisplay = emptyList()
+
+            currentState.copy(
+                game = currentState.game.copy(
+                    tableActiveCards = newTableActiveCards,
+                    tableDeck = combinedTableDeck
+                )
+            )
+        }
+    }
+
+    fun closeDialogBox() {
+        cardForDeleteFromDisplay = emptyList()
     }
 
     fun putCardOnTable() {
@@ -499,16 +534,6 @@ open class GameViewModel() : ViewModel() {
     fun getSwitchedPlayerList(playerList: List<Player>): List<Player> {
         return playerList.map { player ->
             player.copy(isActive = !player.isActive)
-        }
-    }
-
-    fun resetStage() {
-        _state.update { currentState ->
-            currentState.copy(
-                game = currentState.game.copy(
-                    gameStage = Stage.DefaultStage
-                )
-            )
         }
     }
 
