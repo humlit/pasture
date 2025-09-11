@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+// TODO: запусти это и удали этот комментарий
 tasks.register("installGitHooks") {
     doLast {
         val preCommitHookFile = project.rootDir.resolve(".git/hooks/pre-commit")
