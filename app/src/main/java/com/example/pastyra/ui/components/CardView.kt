@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -66,40 +67,49 @@ fun CardUIView(
             .clip(RoundedCornerShape(10.dp))
     ) {
 
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            if (isReadyForBundle && game.gameStage == Stage.DefaultStage && game.tableActiveCards.isEmpty() && game.temporaryPlayerBundlingCards.isEmpty()) {
-                BundleButtonSmart(viewModel, card as ArithmeticCard)
-            }
-        }
-
-        if (card is CardBack) {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(card.icon),
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
-        } else if (card is BundleCard) {
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-                    .padding(2.dp),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
+        Box {
+            Row(
+                modifier = Modifier.align(alignment = Alignment.TopCenter)
             ) {
-                Text(text = "V-> ${card.arithmeticValue}")
+                if (card is CardBack) {
+                    Image(
+                        modifier = Modifier.fillMaxSize(),
+                        painter = painterResource(card.icon),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop
+                    )
+                } else if (card is BundleCard) {
 
-                if (card.point != 0) {
-                    Text(text = "P -> ${card.point}")
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White)
+                            .padding(2.dp),
+                        verticalArrangement = Arrangement.SpaceEvenly,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "V-> ${card.arithmeticValue}")
+
+                        if (card.point != 0) {
+                            Text(text = "P -> ${card.point}")
+                        }
+
+                        Text(text = "S -> ${card.bundleStage}")
+
+                        Text(text = "PlId -> ${card.playerId}")
+                    }
                 }
+            }
 
-                Text(text = "S -> ${card.bundleStage}")
-
-                Text(text = "PlId -> ${card.playerId}")
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(alignment = Alignment.BottomCenter)
+                    .padding(horizontal = 6.dp, vertical = 6.dp),
+            ) {
+                if (isReadyForBundle && game.gameStage == Stage.DefaultStage && game.tableActiveCards.isEmpty() && game.temporaryPlayerBundlingCards.isEmpty()) {
+                    BundleButtonSmart(viewModel, card as ArithmeticCard)
+                }
             }
         }
     }
