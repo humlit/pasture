@@ -11,11 +11,9 @@ fun PutCardOnTableButtonSmart(viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val tableDeck = state.value.game.tableDeck
     val activePlayerCard = viewModel.requiredActivePlayerCard
+    val isActivePlayerHasBundleCard = viewModel.requiredActivePlayer.bundlingCard == null
 
-    if (isPlayerCanPutCardOnTable(
-            tableDeck, activePlayerCard
-        )
-    ) {
+    if (isPlayerCanPutCardOnTable(tableDeck, activePlayerCard) && isActivePlayerHasBundleCard) {
         PutCardOnTableButton(clickListener = {
             viewModel.putCardOnTable()
         })

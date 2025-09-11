@@ -16,8 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pastyra.R
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.ui.components.smart.PutCardOnTableButtonSmart
@@ -115,9 +119,10 @@ fun DisplayCards(
 }
 
 @Composable
-fun FinishMoveButton(clickListener: () -> Unit) {
+fun FinishMoveButton(clickListener: () -> Unit, enabledCondition: Boolean) {
     Button(
-        onClick = clickListener
+        onClick = clickListener,
+        enabled = enabledCondition,
     ) { Text(text = stringResource(R.string.finish_move)) }
 }
 
@@ -127,7 +132,13 @@ fun BundleButton(clickListener: () -> Unit) {
         onClick = clickListener
     ) {
         Text(
-            text = stringResource(R.string.cards_bundle), fontSize = 10.sp
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.cards_bundle),
+            fontSize = 9.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Visible,
+            fontStyle = FontStyle.Italic,
+            fontFamily = FontFamily.SansSerif
         )
     }
 }
@@ -174,14 +185,20 @@ fun DefaultButtonPosition(viewModel: GameViewModel) {
 
 @Composable
 fun PlayerTakeCard(viewModel: GameViewModel) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    val game = state.value.game
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        FinishMoveButton(clickListener = {
-            viewModel.takeCard()
-        })
+        FinishMoveButton(
+            clickListener = {
+                viewModel.takeCard()
+            },
+            enabledCondition = game.tableActiveCards.isEmpty() && game.temporaryPlayerTakenCards.isNotEmpty()
+        )
 
         CancelButton(clickListener = {
 
@@ -191,6 +208,9 @@ fun PlayerTakeCard(viewModel: GameViewModel) {
 
 @Composable
 fun PlayerBundleCard(viewModel: GameViewModel) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    val game = state.value.game
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -199,9 +219,11 @@ fun PlayerBundleCard(viewModel: GameViewModel) {
         CancelButton(clickListener = {
 
         })
-
-        FinishMoveButton(clickListener = {
-            viewModel.bundleCard()
-        })
+        FinishMoveButton(
+            clickListener = {
+                viewModel.bundleCard()
+            },
+            enabledCondition = game.tableActiveCards.isEmpty() && game.temporaryPlayerBundlingCards.isNotEmpty()
+        )
     }
 }

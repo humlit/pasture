@@ -16,6 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Player
 import com.example.pastyra.domain.model.Stage
 import com.example.pastyra.domain.usercase.common.sortedCard
@@ -25,7 +27,8 @@ import getPlayerBundlingCards
 @Preview
 @Composable
 fun PreviewPlayerUIView() {
-
+    val player = Player(playerId = 1, isActive = true, cardsHand = listOf(CARDS.TEN.DIAMONDS, CARDS.TWO.HEARTS))
+    PlayerUIView(player = player, viewModel = viewModel())
 }
 
 @Composable
