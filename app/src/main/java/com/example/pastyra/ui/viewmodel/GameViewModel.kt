@@ -1,5 +1,6 @@
 package com.example.pastyra.ui.viewmodel
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -34,6 +35,9 @@ open class GameViewModel() : ViewModel() {
 
     private val _state = MutableStateFlow(GameState())
     val state: StateFlow<GameState> = _state.asStateFlow()
+
+    @get:VisibleForTesting
+    internal val mutableState: MutableStateFlow<GameState> get() = _state
 
     var cardForDeleteFromDisplay by mutableStateOf<List<Card>>(emptyList())
         private set
@@ -314,7 +318,7 @@ open class GameViewModel() : ViewModel() {
 
         when (requiredActivePlayerCard) {
             is ArithmeticCard -> {
-                takeArithmeticCard()
+                takeAnyArithmeticCard()
             }
 
             is QueenCard, is KingCard -> {
@@ -327,30 +331,47 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    private fun takeArithmeticCard() {
+    private fun takeAnyArithmeticCard() {
         _state.update { currentState ->
-            val tableTemporaryCard = currentState.game.temporaryPlayerTakenCards.toMutableList()
+            val newTemporaryPlayerTakenCards =
+                currentState.game.temporaryPlayerTakenCards.toMutableList()
 
             val newPlayerList = currentState.game.playerList.map { pl ->
-                when {
-                    pl.playerId == requiredActivePlayer.playerId -> pl.copy(
-                        cardsTaken = pl.cardsTaken + tableTemporaryCard + requiredActivePlayerCard,
-                        cardsHand = pl.cardsHand - requiredActivePlayerCard,
-                        activeCard = null,
-                    )
+                var updatedPlayer = pl
 
-                    else -> pl
+                if (newTemporaryPlayerTakenCards.any { it == pl.bundlingCard }) {
+                    val currentPlayerBundling =
+                        currentState.game.playerList.find { it.bundlingCard == pl.bundlingCard }
+                    when {
+                        pl.playerId == currentPlayerBundling?.playerId -> {
+                            updatedPlayer = updatedPlayer.copy(
+                                bundlingCard = null,
+                            )
+                        }
+                    }
                 }
+
+                when {
+                    pl.playerId == requiredActivePlayer.playerId -> {
+                        updatedPlayer = updatedPlayer.copy(
+                            cardsTaken = pl.cardsTaken + newTemporaryPlayerTakenCards + requiredActivePlayerCard,
+                            cardsHand = pl.cardsHand - requiredActivePlayerCard,
+                            activeCard = null,
+                        )
+                    }
+                }
+
+                updatedPlayer
             }
 
-            tableTemporaryCard.clear()
+            newTemporaryPlayerTakenCards.clear()
 
             val switchedPlayerList = getSwitchedPlayerList(newPlayerList)
 
             currentState.copy(
                 game = currentState.game.copy(
                     playerList = switchedPlayerList,
-                    temporaryPlayerTakenCards = tableTemporaryCard,
+                    temporaryPlayerTakenCards = newTemporaryPlayerTakenCards,
                     gameStage = Stage.DefaultStage
                 )
             )
@@ -461,8 +482,7 @@ open class GameViewModel() : ViewModel() {
                 when {
                     pl.playerId == requiredActivePlayer.playerId -> pl.copy(
                         bundlingCard = newBundleCards,
-                        cardsHand = pl.cardsHand - playerBundleCard,
-                        activeCard = null,
+                        cardToTheBundle = null,
                     )
 
                     else -> pl

@@ -1,5 +1,6 @@
 package com.example.pastyra.domain.usercase.bundlingTests
 
+import canPlayerFinishBundlingCards
 import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card

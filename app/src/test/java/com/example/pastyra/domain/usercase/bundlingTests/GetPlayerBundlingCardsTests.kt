@@ -3,7 +3,10 @@ package com.example.pastyra.domain.usercase.bundlingTests
 import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card
+import com.example.pastyra.domain.model.Game
+import com.example.pastyra.domain.model.GameState
 import com.example.pastyra.domain.model.Player
+import com.example.pastyra.ui.viewmodel.GameViewModel
 import getPlayerBundlingCards
 import org.junit.Assert
 import org.junit.Test
@@ -153,7 +156,11 @@ class GetPlayerBundlingCardsTests {
                     CARDS.ACE.DIAMONDS,
                     CARDS.FIVE.DIAMONDS,
                     CARDS.SIX.DIAMONDS,
-                ), point = 1, arithmeticValue = 6, playerId = 1, bundleStage = 2
+                ),
+                point = 1,
+                arithmeticValue = 6,
+                playerId = 1,
+                bundleStage = 2
             )
         )
 
@@ -239,4 +246,63 @@ class GetPlayerBundlingCardsTests {
             playerBundlingCards
         )
     }
+
+    @Test
+    fun should_player_link_the_card_older() {
+        val playerHand = listOf(
+            CARDS.EIGHT.DIAMONDS, CARDS.ACE.DIAMONDS
+        )
+
+        val tableDeck = listOf<Card>(
+            BundleCard(
+                cardList = listOf(
+                    CARDS.ACE.HEARTS,
+                    CARDS.SIX.SPADES
+                ),
+                point = 1,
+                arithmeticValue = 7,
+                playerId = 1,
+                bundleStage = 1,
+            ),
+            CARDS.TEN.SPADES
+        )
+
+        val activePlayerCard = CARDS.ACE.DIAMONDS
+
+        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck)
+
+        val expectedPlayerBundlingCards = listOf<Card>(CARDS.EIGHT.DIAMONDS)
+
+        Assert.assertEquals(
+            "Можем перевязать завязку на свою карту, с картой из руки",
+            expectedPlayerBundlingCards,
+            playerBundlingCards
+        )
+    }
+
+//    @Test
+//    fun should_player_() {
+//        val viewModel = GameViewModel()
+//        viewModel.mutableState.value = GameState(
+//            game = Game(
+//                temporaryPlayerBundlingCards = listOf(
+//                    listOf(
+//                        BundleCard(
+//                            cardList = listOf(
+//                                CARDS.TWO.DIAMONDS,
+//                                CARDS.FOUR.HEARTS
+//                            ),
+//                            point = 0,
+//                            arithmeticValue = 6,
+//                            playerId = 1,
+//                            bundleStage = 1
+//                        ),
+//                        CARDS.THREE.SPADES
+//                    )
+//                )
+//            )
+//        )
+//    }
 }

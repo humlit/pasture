@@ -1,5 +1,6 @@
 package com.example.pastyra.domain.usercase
 
+import com.example.pastyra.domain.model.AnyArithmeticCard
 import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.CardWithRank
@@ -10,7 +11,7 @@ fun selectArithmeticTableCard(card: Card, state: GameState, playerId: Int): Muta
     val newTableActiveCard = state.game.tableActiveCards.toMutableList()
     val currentPlayer = state.game.playerList.find { it.playerId == playerId }
 
-    if (card is ArithmeticCard) {
+    if (card is AnyArithmeticCard) {
         newTableActiveCard.add(card)
     }
 
@@ -42,7 +43,7 @@ fun selectCardForBundle(
 ): MutableList<Card> {
     val newTableActiveCard = tableDeck.toMutableList()
 
-    if (cardToBeBundled !is CardWithRank) {
+    if (cardToBeBundled is AnyArithmeticCard) {
         newTableActiveCard.add(cardToBeBundled)
     }
 

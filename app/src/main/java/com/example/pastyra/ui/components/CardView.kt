@@ -14,20 +14,35 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.BundleCard
+import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.CardBack
 import com.example.pastyra.domain.model.Stage
 import com.example.pastyra.ui.components.smart.BundleButtonSmart
 import com.example.pastyra.ui.viewmodel.GameViewModel
+
+@Preview
+@Composable
+fun PreviewCardUIView() {
+    CardUIView(
+        viewModel = viewModel(),
+        card = CARDS.TEN.DIAMONDS,
+        isSelected = false,
+        isReadyForBundle = true,
+        onClick = {})
+}
 
 @Composable
 fun CardUIView(
@@ -73,11 +88,18 @@ fun CardUIView(
                     .fillMaxSize()
                     .background(Color.White)
                     .padding(2.dp),
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "${card.arithmeticValue}")
+                Text(text = "V-> ${card.arithmeticValue}")
 
-                Text(text = "${card.bundleStage}")
+                if (card.point != 0) {
+                    Text(text = "P -> ${card.point}")
+                }
+
+                Text(text = "S -> ${card.bundleStage}")
+
+                Text(text = "PlId -> ${card.playerId}")
             }
         }
     }
