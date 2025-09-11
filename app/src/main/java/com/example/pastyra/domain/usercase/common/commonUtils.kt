@@ -24,22 +24,8 @@ fun isPlayerCanGetValueFromDeck(deck: List<Card>, findCardValue: Int): Boolean {
 }
 
 fun isPlayerCanGetValueFromDeckForTakeCard(deck: List<Card>, findCardValue: Int): Boolean {
-    if (findCardValue < 1) return false
-
-    val filterDeckNums = deck.filterIsInstance<AnyArithmeticCard>()
-        .filter { card -> card is ArithmeticCard || (card is BundleCard && card.arithmeticValue == findCardValue) }
-        .map { card -> card.arithmeticValue }
-
-    val dp = BooleanArray(findCardValue + 1) { false }
-    dp[0] = true
-
-    for (num in filterDeckNums) {
-        for (j in findCardValue downTo num) {
-            if (dp[j - num]) {
-                dp[j] = true
-            }
-        }
-    }
-
-    return dp[findCardValue]
+    return isPlayerCanGetValueFromDeck(
+        deck.filter { card -> card is ArithmeticCard || (card is BundleCard && card.arithmeticValue == findCardValue) },
+        findCardValue = findCardValue
+    )
 }
