@@ -150,9 +150,7 @@ open class GameViewModel() : ViewModel() {
                         is ArithmeticCard -> {
                             if (currentState.game.gameStage == Stage.TakeArithmeticCard) {
                                 selectArithmeticTableCard(
-                                    card,
-                                    currentState,
-                                    requiredActivePlayer.playerId
+                                    card, currentState, requiredActivePlayer.playerId
                                 )
                             } else {
                                 return@update currentState
@@ -162,9 +160,7 @@ open class GameViewModel() : ViewModel() {
                         is QueenCard, is KingCard -> {
                             if (currentState.game.gameStage == Stage.TakeQueenOrKingCard) {
                                 selectQueenAndKingCard(
-                                    card,
-                                    currentState,
-                                    requiredActivePlayer.playerId
+                                    card, currentState, requiredActivePlayer.playerId
                                 )
                             } else {
                                 return@update currentState
@@ -181,10 +177,8 @@ open class GameViewModel() : ViewModel() {
                         currentState.game.temporaryPlayerTakenCards.toMutableList()
 
                     if (newTableActiveCard.any { card -> card is AnyArithmeticCard } && activeTableCardEqualsPlayerCard(
-                            requiredActivePlayer.activeCard as ArithmeticCard,
-                            newTableActiveCard
-                        )
-                    ) {
+                            requiredActivePlayer.activeCard as ArithmeticCard, newTableActiveCard
+                        )) {
                         newTemporaryPlayerTakenCard.addAll(newTableActiveCard)
                         newTableActiveCard.clear()
                     } else if (newTableActiveCard.any { card -> card is KingCard || card is QueenCard }) {
@@ -224,8 +218,7 @@ open class GameViewModel() : ViewModel() {
                         currentState.game.temporaryPlayerBundlingCards.toMutableList()
 
                     if (activeTableCardEqualsPlayerCard(
-                            requiredActivePlayer.cardToTheBundle!!,
-                            newTableActiveCard
+                            requiredActivePlayer.cardToTheBundle!!, newTableActiveCard
                         )
                     ) {
                         newTempPlayerBundlingCards.add(newTableActiveCard.toList())
@@ -263,8 +256,7 @@ open class GameViewModel() : ViewModel() {
 
             currentState.copy(
                 game = currentState.game.copy(
-                    tableActiveCards = newTableActiveCards,
-                    tableDeck = combinedTableDeck
+                    tableActiveCards = newTableActiveCards, tableDeck = combinedTableDeck
                 )
             )
         }
@@ -522,8 +514,7 @@ open class GameViewModel() : ViewModel() {
 
             currentState.copy(
                 game = currentState.game.copy(
-                    tableActiveCards = activeTableCard,
-                    playerList = newPlayerList
+                    tableActiveCards = activeTableCard, playerList = newPlayerList
                 )
             )
         }
@@ -545,9 +536,7 @@ open class GameViewModel() : ViewModel() {
 
             currentState.copy(
                 game = currentState.game.copy(
-                    gameDeck = newDeck,
-                    playerList = newPlayer,
-                    tableDeck = newTable
+                    gameDeck = newDeck, playerList = newPlayer, tableDeck = newTable
                 )
             )
         }
@@ -634,5 +623,28 @@ open class GameViewModel() : ViewModel() {
                 )
             )
         }
+    }
+
+    fun finishMove() {
+//        NOTE: Если решишься взяться за это, будь готов к большому рефакторингу и багфиксам ;)
+//        if (действие == завязка) {
+//            finishBundle() -> меняет карты стола и активного игрока, а также temporary карты
+//        }
+//
+//        if (действие == взятка) {
+//            finishTake() (ну или takeCard(), но оттуда надо будет убрать лишнюю логику)
+//            -> меняет карты стола и активного игрока, а также temporary карты
+//        }
+//
+//        далее общие действия завершения хода:
+//        _state.update { currentState ->
+//            currentState.copy(
+//                game = currentState.game.copy(
+//                    gameStage = Stage.DefaultStage,
+//                    playerList = нужно сменить статус активности игрока, тут может быть подъебка,
+//                                 если выше playerList ты обновляешь, нужно будет проверить
+//                )
+//            )
+//        }
     }
 }
