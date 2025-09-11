@@ -196,6 +196,8 @@ fun PlayerTakeCard(viewModel: GameViewModel) {
     ) {
         FinishMoveButton(
             clickListener = {
+                // Тут нужно делать viewModel.finishMove(), этот метод надо создать
+                // В нем будут поочередно выполняться нужные действия, см пример во viewModel
                 viewModel.takeCard()
             },
             enabledCondition = game.tableActiveCards.isEmpty() && game.temporaryPlayerTakenCards.isNotEmpty()
