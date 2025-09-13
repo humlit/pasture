@@ -1,16 +1,15 @@
 import com.example.pastyra.domain.model.Card
+import com.example.pastyra.domain.model.Player
 
 fun isPlayerCanGetValueFromDeck(
-    tableDeck: List<Card>,
-    tableActiveCards: List<Card>,
-    findCardValue: Int
+    tableDeck: List<Card>, tableActiveCards: List<Card>, findCardValue: Int
 ): Boolean {
     val inspectedListOfCards = tableDeck + tableActiveCards
 
     if (findCardValue < 1) return false
 
-    val filterDeckNums =
-        inspectedListOfCards.filterIsInstance<Card.AnyArithmeticCard>().map { card -> card.arithmeticValue }
+    val filterDeckNums = inspectedListOfCards.filterIsInstance<Card.AnyArithmeticCard>()
+        .map { card -> card.arithmeticValue }
 
     val dp = BooleanArray(findCardValue + 1) { false }
     dp[0] = true
@@ -26,13 +25,21 @@ fun isPlayerCanGetValueFromDeck(
     return dp[findCardValue]
 }
 
-fun isPlayerCanGetValueFromDeckForTakeCard(tableDeck: List<Card>, tableActiveCards: List<Card>, findCardValue: Int): Boolean {
-    val filteredTableDeck = tableDeck.filter { card -> card is Card.AnyArithmeticCard.ArithmeticCard || (card is Card.AnyArithmeticCard.BundleCard && card.arithmeticValue == findCardValue) }
-    val filteredTableActiveCards = tableActiveCards.filter { card -> card is Card.AnyArithmeticCard.ArithmeticCard || (card is Card.AnyArithmeticCard.BundleCard && card.arithmeticValue == findCardValue) }
+fun isPlayerCanGetValueFromDeckForTakeCard(
+    tableDeck: List<Card>, tableActiveCards: List<Card>, findCardValue: Int
+): Boolean {
+    val filteredTableDeck =
+        tableDeck.filter { card -> card is Card.AnyArithmeticCard.ArithmeticCard || (card is Card.AnyArithmeticCard.BundleCard && card.arithmeticValue == findCardValue) }
+    val filteredTableActiveCards =
+        tableActiveCards.filter { card -> card is Card.AnyArithmeticCard.ArithmeticCard || (card is Card.AnyArithmeticCard.BundleCard && card.arithmeticValue == findCardValue) }
 
     return isPlayerCanGetValueFromDeck(
         tableDeck = filteredTableDeck,
         tableActiveCards = filteredTableActiveCards,
         findCardValue = findCardValue
     )
+}
+
+fun getPlayerScore(player: Player): Int {
+    return player.pastyrs + player.cardsTaken.sumOf { it.point }
 }

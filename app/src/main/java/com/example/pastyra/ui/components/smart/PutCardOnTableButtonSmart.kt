@@ -16,13 +16,13 @@ fun PutCardOnTableButtonSmart(viewModel: GameViewModel) {
     val isActivePlayerHasBundleCard = viewModel.requiredActivePlayer.bundlingCard == null
 
     if (isPlayerCanPutCardOnTable(
-            tableDeck,
-            tableActiveCards,
-            activePlayerCard
+            tableDeck, tableActiveCards, activePlayerCard
         ) && isActivePlayerHasBundleCard
     ) {
         PutCardOnTableButton(clickListener = {
             viewModel.putCardOnTable()
+            viewModel.finishMove()
+
         })
     }
 }
