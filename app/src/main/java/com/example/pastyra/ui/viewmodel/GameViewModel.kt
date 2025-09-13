@@ -6,18 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pastyra.domain.model.AnyArithmeticCard
-import com.example.pastyra.domain.model.ArithmeticCard
-import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.GameState
-import com.example.pastyra.domain.model.JackCard
-import com.example.pastyra.domain.model.KingCard
 import com.example.pastyra.domain.model.Player
-import com.example.pastyra.domain.model.QueenCard
 import com.example.pastyra.domain.model.Stage
-import com.example.pastyra.domain.model.safePoint
-import com.example.pastyra.domain.model.safeValue
 import com.example.pastyra.domain.usercase.activeTableCardEqualsPlayerCard
 import com.example.pastyra.domain.usercase.selectArithmeticTableCard
 import com.example.pastyra.domain.usercase.selectCardForBundle
@@ -64,7 +56,7 @@ open class GameViewModel() : ViewModel() {
     val requiredActivePlayerCard: Card
         get() = requiredActivePlayer.activeCard ?: throw AssertionError("No active player card")
 
-    val requireActivePlayerBundleCard: Card
+    val requireActivePlayerBundleCard: Card.AnyArithmeticCard.ArithmeticCard
         get() = requiredActivePlayer.cardToTheBundle
             ?: throw AssertionError("No active player bundle card")
 
@@ -99,7 +91,7 @@ open class GameViewModel() : ViewModel() {
                         when {
                             currentState.game.gameStage == Stage.WaitToBundle && newTempPlayerBundlingCard.isNotEmpty() -> {
                                 pl.copy(
-                                    cardsHand = pl.cardsHand + newTempPlayerBundlingCard.first(),
+                                    cardsHand = pl.cardsHand + newTempPlayerBundlingCard.first() as Card,
                                     cardToTheBundle = null
                                 ).also { newTempPlayerBundlingCard.removeFirstOrNull() }
                             }
@@ -122,7 +114,7 @@ open class GameViewModel() : ViewModel() {
                 }
 
                 val combinedTableDeck =
-                    currentState.game.tableDeck + newTableActiveCard + currentState.game.temporaryPlayerTakenCards + newTempPlayerBundlingCard
+                    currentState.game.tableDeck + newTableActiveCard + currentState.game.temporaryPlayerTakenCards + newTempPlayerBundlingCard as List<Card>
 
                 updateActivePlayerCard(card)
 
@@ -144,10 +136,12 @@ open class GameViewModel() : ViewModel() {
         viewModelScope.launch {
             selectionMutex.withLock {
                 _state.update { currentState ->
-                    if (requiredActivePlayer.activeCard == null || requiredActivePlayer.activeCard is JackCard) return@update currentState
+                    val playerActiveCard = requiredActivePlayer.activeCard
 
-                    val newTableActiveCard = when (requiredActivePlayer.activeCard) {
-                        is ArithmeticCard -> {
+                    if (playerActiveCard == null || playerActiveCard is Card.JackCard) return@update currentState
+
+                    val newTableActiveCard = when (playerActiveCard) {
+                        is Card.AnyArithmeticCard.ArithmeticCard -> {
                             if (currentState.game.gameStage == Stage.TakeArithmeticCard) {
                                 selectArithmeticTableCard(
                                     card, currentState, requiredActivePlayer.playerId
@@ -157,7 +151,7 @@ open class GameViewModel() : ViewModel() {
                             }
                         }
 
-                        is QueenCard, is KingCard -> {
+                        is Card.QueenCard, is Card.KingCard -> {
                             if (currentState.game.gameStage == Stage.TakeQueenOrKingCard) {
                                 selectQueenAndKingCard(
                                     card, currentState, requiredActivePlayer.playerId
@@ -176,12 +170,13 @@ open class GameViewModel() : ViewModel() {
                     val newTemporaryPlayerTakenCard =
                         currentState.game.temporaryPlayerTakenCards.toMutableList()
 
-                    if (newTableActiveCard.any { card -> card is AnyArithmeticCard } && activeTableCardEqualsPlayerCard(
-                            requiredActivePlayer.activeCard as ArithmeticCard, newTableActiveCard
+                    if (newTableActiveCard.any { it is Card.AnyArithmeticCard } && activeTableCardEqualsPlayerCard(
+                            playerActiveCard as Card.AnyArithmeticCard.ArithmeticCard,
+                            newTableActiveCard
                         )) {
                         newTemporaryPlayerTakenCard.addAll(newTableActiveCard)
                         newTableActiveCard.clear()
-                    } else if (newTableActiveCard.any { card -> card is KingCard || card is QueenCard }) {
+                    } else if (newTableActiveCard.any { card -> card is Card.KingCard || card is Card.QueenCard }) {
                         newTemporaryPlayerTakenCard.addAll(newTableActiveCard)
                         newTableActiveCard.clear()
                     }
@@ -204,12 +199,14 @@ open class GameViewModel() : ViewModel() {
                 _state.update { currentState ->
                     val tableDeck = currentState.game.tableDeck
 
-                    if (requiredActivePlayer.cardToTheBundle == null) return@update currentState
+                    val activePlayer = requiredActivePlayer
+
+                    if (activePlayer.cardToTheBundle == null) return@update currentState
 
                     val newTableActiveCard = selectCardForBundle(
                         cardToBeBundled = card,
                         tableDeck = currentState.game.tableActiveCards,
-                        player = requiredActivePlayer
+                        player = activePlayer
                     )
 
                     val newTableDeck = tableDeck - newTableActiveCard
@@ -218,7 +215,7 @@ open class GameViewModel() : ViewModel() {
                         currentState.game.temporaryPlayerBundlingCards.toMutableList()
 
                     if (activeTableCardEqualsPlayerCard(
-                            requiredActivePlayer.cardToTheBundle!!, newTableActiveCard
+                            activePlayer.cardToTheBundle, newTableActiveCard
                         )
                     ) {
                         newTempPlayerBundlingCards.add(newTableActiveCard.toList())
@@ -309,17 +306,19 @@ open class GameViewModel() : ViewModel() {
          *  */
 
         when (requiredActivePlayerCard) {
-            is ArithmeticCard -> {
+            is Card.AnyArithmeticCard.ArithmeticCard -> {
                 takeAnyArithmeticCard()
             }
 
-            is QueenCard, is KingCard -> {
+            is Card.QueenCard, is Card.KingCard -> {
                 takeQueenAndKingCard()
             }
 
-            is JackCard -> {
+            is Card.JackCard -> {
                 takeJackCard()
             }
+
+            else -> throw IllegalArgumentException("")
         }
     }
 
@@ -413,7 +412,7 @@ open class GameViewModel() : ViewModel() {
             val newPlayerTakenCard = requiredActivePlayer.cardsTaken.toMutableList()
 
             mutableTableDeck.forEach { tableCard ->
-                if (tableCard is ArithmeticCard || tableCard is JackCard) {
+                if (tableCard is Card.AnyArithmeticCard.ArithmeticCard || tableCard is Card.JackCard) {
                     newPlayerTakenCard.add(tableCard)
                 }
             }
@@ -454,16 +453,16 @@ open class GameViewModel() : ViewModel() {
             if (tempCards.isEmpty()) return@update currentState
 
             val bundleStage = tempCards.maxOf {
-                if (it is BundleCard) (temporaryBundleCards.size - 1) + it.bundleStage
+                if (it is Card.AnyArithmeticCard.BundleCard) (temporaryBundleCards.size - 1) + it.bundleStage
                 else temporaryBundleCards.size
             }
 
-            val newBundleCards = BundleCard(
+            val newBundleCards = Card.AnyArithmeticCard.BundleCard(
                 cardList = tempCards,
                 point = tempCards.sumOf { card ->
-                    card.safePoint
+                    card.point
                 },
-                arithmeticValue = playerBundleCard.safeValue,
+                arithmeticValue = playerBundleCard.arithmeticValue,
                 playerId = requiredActivePlayer.playerId,
                 bundleStage = bundleStage
             )
@@ -493,7 +492,7 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    fun startBundling(card: ArithmeticCard) {
+    fun startBundling(card: Card.AnyArithmeticCard.ArithmeticCard) {
         _state.update { currentState ->
             val activeTableCard = currentState.game.tableActiveCards.toMutableList()
             activeTableCard.add(requiredActivePlayerCard)

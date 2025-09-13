@@ -1,12 +1,8 @@
 package com.example.pastyra.domain.usercase.bundlingTests
 
-import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card
-import com.example.pastyra.domain.model.Game
-import com.example.pastyra.domain.model.GameState
 import com.example.pastyra.domain.model.Player
-import com.example.pastyra.ui.viewmodel.GameViewModel
 import getPlayerBundlingCards
 import org.junit.Assert
 import org.junit.Test
@@ -116,8 +112,8 @@ class GetPlayerBundlingCardsTests {
         )
 
         val tableDeck = listOf<Card>(
-            BundleCard(
-                cardList = listOf<Card>(
+            Card.AnyArithmeticCard.BundleCard(
+                cardList = listOf<Card.AnyArithmeticCard>(
                     CARDS.ACE.DIAMONDS,
                     CARDS.FIVE.DIAMONDS,
                 ),
@@ -151,16 +147,12 @@ class GetPlayerBundlingCardsTests {
         )
 
         val tableDeck = listOf<Card>(
-            BundleCard(
-                cardList = listOf<Card>(
+            Card.AnyArithmeticCard.BundleCard(
+                cardList = listOf<Card.AnyArithmeticCard>(
                     CARDS.ACE.DIAMONDS,
                     CARDS.FIVE.DIAMONDS,
                     CARDS.SIX.DIAMONDS,
-                ),
-                point = 1,
-                arithmeticValue = 6,
-                playerId = 1,
-                bundleStage = 2
+                ), point = 1, arithmeticValue = 6, playerId = 1, bundleStage = 2
             )
         )
 
@@ -186,8 +178,8 @@ class GetPlayerBundlingCardsTests {
         )
 
         val tableDeck = listOf<Card>(
-            BundleCard(
-                cardList = listOf<Card>(
+            Card.AnyArithmeticCard.BundleCard(
+                cardList = listOf<Card.AnyArithmeticCard>(
                     CARDS.ACE.DIAMONDS,
                     CARDS.FOUR.DIAMONDS,
                 ),
@@ -221,8 +213,8 @@ class GetPlayerBundlingCardsTests {
         )
 
         val tableDeck = listOf<Card>(
-            BundleCard(
-                cardList = listOf<Card>(
+            Card.AnyArithmeticCard.BundleCard(
+                cardList = listOf<Card.AnyArithmeticCard>(
                     CARDS.ACE.DIAMONDS,
                     CARDS.FOUR.DIAMONDS,
                 ),
@@ -254,17 +246,15 @@ class GetPlayerBundlingCardsTests {
         )
 
         val tableDeck = listOf<Card>(
-            BundleCard(
+            Card.AnyArithmeticCard.BundleCard(
                 cardList = listOf(
-                    CARDS.ACE.HEARTS,
-                    CARDS.SIX.SPADES
+                    CARDS.ACE.HEARTS, CARDS.SIX.SPADES
                 ),
                 point = 1,
                 arithmeticValue = 7,
                 playerId = 1,
                 bundleStage = 1,
-            ),
-            CARDS.TEN.SPADES
+            ), CARDS.TEN.SPADES
         )
 
         val activePlayerCard = CARDS.ACE.DIAMONDS
@@ -289,7 +279,7 @@ class GetPlayerBundlingCardsTests {
 //            game = Game(
 //                temporaryPlayerBundlingCards = listOf(
 //                    listOf(
-//                        BundleCard(
+//                        Card.AnyArithmeticCard.BundleCard(
 //                            cardList = listOf(
 //                                CARDS.TWO.DIAMONDS,
 //                                CARDS.FOUR.HEARTS

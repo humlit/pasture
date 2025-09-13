@@ -25,11 +25,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.pastyra.domain.model.ArithmeticCard
-import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card
-import com.example.pastyra.domain.model.CardBack
+import com.example.pastyra.domain.model.SimpleCard
 import com.example.pastyra.domain.model.Stage
 import com.example.pastyra.ui.components.smart.BundleButtonSmart
 import com.example.pastyra.ui.viewmodel.GameViewModel
@@ -58,6 +56,7 @@ fun CardUIView(
 
     val borderColor = if (isSelected) Color.Green else Color.Transparent
 
+
     Column(
         modifier = Modifier
             .size(width = 85.dp, height = 120.dp)
@@ -71,14 +70,14 @@ fun CardUIView(
             Row(
                 modifier = Modifier.align(alignment = Alignment.TopCenter)
             ) {
-                if (card is CardBack) {
+                if (card is SimpleCard) {
                     Image(
                         modifier = Modifier.fillMaxSize(),
                         painter = painterResource(card.icon),
                         contentDescription = null,
                         contentScale = ContentScale.Crop
                     )
-                } else if (card is BundleCard) {
+                } else if (card is Card.AnyArithmeticCard.BundleCard) {
 
                     Column(
                         modifier = Modifier
@@ -108,7 +107,7 @@ fun CardUIView(
                     .padding(horizontal = 6.dp, vertical = 6.dp),
             ) {
                 if (isReadyForBundle && game.gameStage == Stage.DefaultStage && game.tableActiveCards.isEmpty() && game.temporaryPlayerBundlingCards.isEmpty()) {
-                    BundleButtonSmart(viewModel, card as ArithmeticCard)
+                    BundleButtonSmart(viewModel, card as Card.AnyArithmeticCard.ArithmeticCard)
                 }
             }
         }

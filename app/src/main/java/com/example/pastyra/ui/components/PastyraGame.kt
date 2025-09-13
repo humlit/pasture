@@ -14,8 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.pastyra.domain.model.safeRank
-import com.example.pastyra.domain.model.safeSuit
 import com.example.pastyra.ui.viewmodel.GameViewModel
 
 @Composable
@@ -37,7 +35,9 @@ fun PastyraGameStart(
 //        "PLAYER-TABLE-TEMP_BUND",
 //        game.temporaryPlayerBundlingCards.toString())
 
-    Log.d("PLAYER",viewModel.requiredActivePlayer.toString())
+    Log.d("PLAYER", viewModel.requiredActivePlayer.toString())
+
+    Log.d("GAME_SHOULD_RENDER", "PastyraGame")
 
     Card(
         modifier = Modifier.fillMaxSize(),

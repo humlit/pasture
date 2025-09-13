@@ -1,118 +1,82 @@
 package com.example.pastyra.domain.model
 
-open class Card(
-    open val point: Int = 0,
-    open val id: Int = 0,
-
-    ) {
-
-}
-
-interface CardWithRank {
+interface SimpleCard {
     val rank: Rank
-}
 
-interface CardBack {
+    val suit: Suit
+
+    val point: Int
+
     val icon: Int
 }
 
-interface AnyArithmeticCard {
+interface ArithmeticCardInterface {
     val arithmeticValue: Int
+
+    val point: Int
 }
 
-class ArithmeticCard(
-    val rank: Rank,
-    val suit: Suit,
-    override val point: Int = 0,
-    override val arithmeticValue: Int,
-    override val id: Int,
-    override val icon: Int,
-) : Card(
-    point = point,
-    id = id,
-), CardBack, AnyArithmeticCard {
+sealed class Card(
+    open val point: Int = 0,
+    open val id: Int = 0,
+) {
+    data class KingCard(
+        override val suit: Suit,
+        override val icon: Int,
+        override val rank: Rank = Rank.KING,
+        override val point: Int = 0,
+        override val id: Int,
+    ) : Card(
+        point,
+        id = id,
+    ), SimpleCard
 
-}
+    data class JackCard(
+        override val rank: Rank = Rank.JACK,
+        override val suit: Suit,
+        override val icon: Int,
+        override val point: Int = 1,
+        override val id: Int,
+    ) : Card(
+        point = point,
+        id = id,
+    ), SimpleCard
 
-class QueenCard(
-    override val rank: Rank = Rank.QUEEN,
-    val suit: Suit,
-    override val point: Int = 0,
-    override val id: Int,
-    override val icon: Int,
-) : Card(
-    point,
-    id = id,
-), CardWithRank, CardBack {
+    data class QueenCard(
+        override val rank: Rank = Rank.QUEEN,
+        override val suit: Suit,
+        override val icon: Int,
+        override val point: Int = 0,
+        override val id: Int,
+    ) : Card(
+        point,
+        id = id,
+    ), SimpleCard
 
-}
+    sealed class AnyArithmeticCard(
+        override val point: Int = 0,
+        override val id: Int,
+    ) : Card(
+        point,
+        id = id,
+    ), ArithmeticCardInterface {
+        data class ArithmeticCard(
+            override val rank: Rank,
+            override val suit: Suit,
+            override val arithmeticValue: Int,
+            override val point: Int = 0,
+            override val id: Int,
+            override val icon: Int,
+        ) : AnyArithmeticCard(point = point, id = id), SimpleCard, ArithmeticCardInterface
 
-class KingCard(
-    override val rank: Rank = Rank.KING,
-    val suit: Suit,
-    override val point: Int = 0,
-    override val id: Int,
-    override val icon: Int,
-) : Card(
-    point,
-    id = id,
-), CardWithRank, CardBack {
-
-}
-
-class JackCard(
-    override val rank: Rank = Rank.JACK,
-    val suit: Suit,
-    override val point: Int = 1,
-    override val id: Int,
-    override val icon: Int,
-) : Card(
-    point = point,
-    id = id,
-), CardWithRank, CardBack {
-
-}
-
-class BundleCard(
-    val cardList: List<Card>,
-    override val point: Int,
-    override val arithmeticValue: Int,
-    val playerId: Int,
-    val bundleStage: Int = 1,
-) : Card(
-    point = point,
-), AnyArithmeticCard {
-
-}
-
-val Card.safeRank: Rank?
-    get() = when (this) {
-        is ArithmeticCard -> this.rank
-        is QueenCard -> this.rank
-        is KingCard -> this.rank
-        is JackCard -> this.rank
-        else -> null
+        data class BundleCard(
+            // TODO: Должно быть просто ArithmeticCard
+            val cardList: List<AnyArithmeticCard>,
+            val playerId: Int,
+            val bundleStage: Int = 1,
+            override val arithmeticValue: Int,
+            override val point: Int,
+            // TODO: BundleCard тоже должен иметь id уникальный
+        ) : AnyArithmeticCard(point = point, id = 0), ArithmeticCardInterface
     }
-
-val Card.safeSuit: Suit?
-    get() = when (this) {
-        is ArithmeticCard -> this.suit
-        is QueenCard -> this.suit
-        is KingCard -> this.suit
-        is JackCard -> this.suit
-        else -> null
-    }
-
-val Card.safeValue: Int
-    get() = when (this) {
-        is ArithmeticCard -> this.arithmeticValue
-        is BundleCard -> this.arithmeticValue
-        else -> 0
-    }
-
-val Card.safePoint: Int
-    get() = when (this) {
-        is ArithmeticCard -> this.point
-        is BundleCard -> this.point
-        else -> 0
-    }
+}

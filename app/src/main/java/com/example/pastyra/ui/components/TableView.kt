@@ -1,5 +1,6 @@
 package com.example.pastyra.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,6 +50,9 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
         4
     )
 
+    Log.d("GAME_SHOULD_RENDER", "TableView")
+    Log.d("GAME_SHOULD_RENDER", rowsCard.toString())
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -59,14 +63,12 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
         LazyRow(
             modifier = Modifier
                 .clickable(
-                    onClick = { showDialog = true }
-                )
+                    onClick = { showDialog = true })
                 .background(color = Color.Transparent)
         ) {
             items(onTableDisplayListOfCard) { card ->
                 ShortCardUIView(
-                    card,
-                    onClick = {
+                    card, onClick = {
                         showDialog = true
                     })
             }
@@ -91,13 +93,11 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
             },
             clickListener = { card ->
                 viewModel.selectCardForDeleteFromDisplay(card)
-            }
-        )
+            })
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        Column(
-        ) {
+        Column {
             rowsCard.forEach { rowCards ->
                 Row(
                     horizontalArrangement = Arrangement.SpaceAround,
@@ -119,7 +119,8 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
                                         )
                                     }
                                 }
-                            }, viewModel = viewModel
+                            },
+                            viewModel = viewModel
                         )
                     }
                 }

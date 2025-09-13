@@ -19,15 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.Card
-import com.example.pastyra.domain.model.CardBack
+import com.example.pastyra.domain.model.SimpleCard
 
 @Composable
 fun ShortCardUIView(
-    card: Card,
-    isSelected: Boolean = false,
-    onClick: (Card) -> Unit
+    card: Card, isSelected: Boolean = false, onClick: (Card) -> Unit
 ) {
     val borderColor = if (isSelected) Color.Green else Color.Transparent
 
@@ -37,16 +34,15 @@ fun ShortCardUIView(
             .size(50.dp)
             .border(1.5.dp, borderColor, RoundedCornerShape(8.dp))
             .clickable { onClick(card) }
-            .background(color = Color.Transparent)
-    ) {
-        if (card is CardBack) {
+            .background(color = Color.Transparent)) {
+        if (card is SimpleCard) {
             Image(
                 modifier = Modifier.fillMaxSize(),
                 painter = painterResource(card.icon),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
-        } else if (card is BundleCard) {
+        } else if (card is Card.AnyArithmeticCard.BundleCard) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
