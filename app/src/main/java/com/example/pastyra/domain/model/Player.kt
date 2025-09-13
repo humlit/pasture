@@ -7,5 +7,6 @@ data class Player(
     val bundlingCard: Card.AnyArithmeticCard.BundleCard? = null,
     val cardsHand: List<Card> = emptyList(),
     val cardsTaken: List<Card> = emptyList(),
+    val pastyrs: Int = 0,
     val isActive: Boolean = false,
 )
