@@ -1,12 +1,12 @@
-package com.example.pastyra.domain.usercase
+package com.example.pastyra.domain.usercase.takeCardTests
 
 import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card
+import com.example.pastyra.domain.usercase.isPlayerCanTakeCard
 import org.junit.Assert
 import org.junit.Test
 
-
-class TakeUtilsTest {
+class IsPlayerCanTakeCardTests {
     @Test
     fun isPlayerCanTakeCard_test1() {
         val playerHand = listOf<Card>(

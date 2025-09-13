@@ -31,7 +31,7 @@ class GetPlayerBundlingCardsTests {
 
         val tableActiveCards = emptyList<Card>()
 
-        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck,tableActiveCards)
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
         val expectedPlayerBundlingCards = listOf<Card>()
 
@@ -65,7 +65,7 @@ class GetPlayerBundlingCardsTests {
 
         val tableActiveCards = emptyList<Card>()
 
-        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck,tableActiveCards)
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
         val expectedPlayerBundlingCards = listOf<Card>(
             CARDS.THREE.DIAMONDS
@@ -97,7 +97,7 @@ class GetPlayerBundlingCardsTests {
 
         val tableActiveCards = emptyList<Card>()
 
-        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck,tableActiveCards)
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
         val expectedPlayerBundlingCards = listOf<Card>(
             CARDS.EIGHT.DIAMONDS,
@@ -135,7 +135,7 @@ class GetPlayerBundlingCardsTests {
 
         val tableActiveCards = emptyList<Card>()
 
-        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck,tableActiveCards)
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
         val expectedPlayerBundlingCards = listOf<Card>(
             CARDS.EIGHT.DIAMONDS,
@@ -170,7 +170,7 @@ class GetPlayerBundlingCardsTests {
 
         val tableActiveCards = emptyList<Card>()
 
-        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck,tableActiveCards)
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
         val expectedPlayerBundlingCards = listOf<Card>()
 
@@ -205,7 +205,7 @@ class GetPlayerBundlingCardsTests {
 
         val tableActiveCards = emptyList<Card>()
 
-        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck,tableActiveCards)
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
         val expectedPlayerBundlingCards = listOf<Card>(
             CARDS.EIGHT.DIAMONDS,
@@ -242,7 +242,7 @@ class GetPlayerBundlingCardsTests {
 
         val tableActiveCards = emptyList<Card>()
 
-        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck,tableActiveCards)
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
         val expectedPlayerBundlingCards = listOf<Card>()
 
@@ -277,7 +277,7 @@ class GetPlayerBundlingCardsTests {
 
         val tableActiveCards = emptyList<Card>()
 
-        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck,tableActiveCards)
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
         val expectedPlayerBundlingCards = listOf<Card>(CARDS.EIGHT.DIAMONDS)
 
@@ -285,6 +285,31 @@ class GetPlayerBundlingCardsTests {
             "Можем перевязать завязку на свою карту, с картой из руки",
             expectedPlayerBundlingCards,
             playerBundlingCards
+        )
+    }
+
+    @Test
+    fun should_work_correct_test8() {
+        val playerHand = listOf(
+            CARDS.TWO.DIAMONDS, CARDS.TWO.CLUBS
+        )
+
+        val tableDeck = listOf<Card>(
+            CARDS.TWO.HEARTS
+        )
+
+        val activePlayerCard = CARDS.TWO.DIAMONDS
+
+        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+
+        val tableActiveCards = emptyList<Card>()
+
+        val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
+
+        val expectedPlayerBundlingCards = listOf<Card>(CARDS.TWO.CLUBS)
+
+        Assert.assertEquals(
+            "Мы можем завязать 2 двойки", expectedPlayerBundlingCards, playerBundlingCards
         )
     }
 

@@ -14,7 +14,7 @@ fun isPlayerCanBundleCard(
 ): Boolean {
     if (cardThatBundles.arithmeticValue == cardToBeBundled.arithmeticValue) {
         return isPlayerCanGetValueFromDeck(
-            deck, tableActiveCards,cardToBeBundled.arithmeticValue
+            deck, tableActiveCards, cardToBeBundled.arithmeticValue
         )
     }
 

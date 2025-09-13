@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pastyra.R
 import com.example.pastyra.domain.model.Card
+import com.example.pastyra.domain.usercase.isPlayerCanFinishTakingCard
 import com.example.pastyra.ui.components.smart.PutCardOnTableButtonSmart
 import com.example.pastyra.ui.components.smart.TakeCardButtonSmart
 import com.example.pastyra.ui.viewmodel.GameViewModel
@@ -219,7 +220,13 @@ fun DefaultButtonPosition(viewModel: GameViewModel) {
 @Composable
 fun PlayerTakeCard(viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    val activePlayerCard = viewModel.requiredActivePlayerCard
     val game = state.value.game
+    val tableDeck = state.value.game.tableDeck
+
+    val canFinish = isPlayerCanFinishTakingCard(
+        game.tableActiveCards, game.temporaryPlayerTakenCards, tableDeck, activePlayerCard
+    )
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -233,8 +240,7 @@ fun PlayerTakeCard(viewModel: GameViewModel) {
                 viewModel.takeCard()
                 viewModel.finishMove()
 
-            },
-            enabledCondition = game.tableActiveCards.isEmpty() && game.temporaryPlayerTakenCards.isNotEmpty()
+            }, enabledCondition = canFinish
         )
 
         CancelButton(clickListener = {
