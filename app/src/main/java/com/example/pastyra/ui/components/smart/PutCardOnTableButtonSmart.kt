@@ -9,11 +9,18 @@ import com.example.pastyra.ui.viewmodel.GameViewModel
 @Composable
 fun PutCardOnTableButtonSmart(viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val tableDeck = state.value.game.tableDeck
+    val game = state.value.game
+    val tableDeck = game.tableDeck
+    val tableActiveCards = game.tableActiveCards
     val activePlayerCard = viewModel.requiredActivePlayerCard
     val isActivePlayerHasBundleCard = viewModel.requiredActivePlayer.bundlingCard == null
 
-    if (isPlayerCanPutCardOnTable(tableDeck, activePlayerCard) && isActivePlayerHasBundleCard) {
+    if (isPlayerCanPutCardOnTable(
+            tableDeck,
+            tableActiveCards,
+            activePlayerCard
+        ) && isActivePlayerHasBundleCard
+    ) {
         PutCardOnTableButton(clickListener = {
             viewModel.putCardOnTable()
         })

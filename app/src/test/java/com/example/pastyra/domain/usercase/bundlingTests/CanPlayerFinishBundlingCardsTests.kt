@@ -21,6 +21,8 @@ class CanPlayerFinishBundlingCardsTests {
             CARDS.FOUR.CLUBS,
         )
 
+        val tableActiveCards = emptyList<Card>()
+
         val cardThatBundles = CARDS.ACE.CLUBS
         val cardToBeBundled = CARDS.FIVE.DIAMONDS
 
@@ -28,7 +30,10 @@ class CanPlayerFinishBundlingCardsTests {
 
         val temporaryBundlingDeck = listOf<BundleCard>(
             BundleCard(
-                cardList = listOf<Card>(CARDS.FOUR.CLUBS, cardThatBundles),
+                cardList = listOf<Card>(
+                    CARDS.FOUR.CLUBS,
+                    cardThatBundles
+                ), //TODO: Этот параметр нам не нужен, но я оставил пока что его тут
                 point = 0,
                 arithmeticValue = 5,
                 playerId = player.playerId,
@@ -36,7 +41,11 @@ class CanPlayerFinishBundlingCardsTests {
         )
 
         val canPlayerFinishBundling =
-            canPlayerFinishBundlingCards(cardToBeBundled, tableDeck, temporaryBundlingDeck)
+            canPlayerFinishBundlingCards(
+                cardToBeBundled,
+                tableDeck,
+                tableActiveCards,
+            )
 
         Assert.assertEquals(
             "Игрок не может закончить завязку, если еще есть карты для завязки",

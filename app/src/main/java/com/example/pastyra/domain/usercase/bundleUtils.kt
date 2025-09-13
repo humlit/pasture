@@ -1,4 +1,3 @@
-import com.example.pastyra.domain.model.AnyArithmeticCard
 import com.example.pastyra.domain.model.ArithmeticCard
 import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.Card
@@ -10,11 +9,14 @@ import com.example.pastyra.domain.model.Player
  * @param cardToBeBundled - Карта, которую хотим завязать.
  */
 fun isPlayerCanBundleCard(
-    deck: List<Card>, cardThatBundles: ArithmeticCard, cardToBeBundled: ArithmeticCard
+    deck: List<Card>,
+    tableActiveCards: List<Card>,
+    cardThatBundles: ArithmeticCard,
+    cardToBeBundled: ArithmeticCard
 ): Boolean {
     if (cardThatBundles.arithmeticValue == cardToBeBundled.arithmeticValue) {
         return isPlayerCanGetValueFromDeck(
-            deck, cardToBeBundled.arithmeticValue
+            deck, tableActiveCards, cardToBeBundled.arithmeticValue
         )
     }
 
@@ -27,7 +29,9 @@ fun isPlayerCanBundleCard(
     }
 
     return isPlayerCanGetValueFromDeck(
-        filterCardToBundle, cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue
+        filterCardToBundle,
+        tableActiveCards,
+        cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue
     )
 }
 
@@ -37,6 +41,7 @@ fun isPlayerCanBundleCard(
 fun getPlayerBundlingCards(
     player: Player,
     tableDeck: List<Card>,
+    tableActiveCards: List<Card>,
 ): List<Card> {
     if (player.activeCard == null) return listOf()
 
@@ -48,7 +53,7 @@ fun getPlayerBundlingCards(
 
     filteredPlayerHand.forEach { card ->
         if (card is ArithmeticCard && playerActiveCard is ArithmeticCard && isPlayerCanBundleCard(
-                tableDeck, playerActiveCard, card
+                tableDeck, tableActiveCards, playerActiveCard, card
             )
         ) {
             cardsToBeBundled.add(card)
@@ -61,7 +66,12 @@ fun getPlayerBundlingCards(
 fun canPlayerFinishBundlingCards(
     cardToBeBundled: ArithmeticCard,
     tableDeck: List<Card>,
-    temporaryBundlingCards: List<BundleCard>
+    tableActiveCards: List<Card>,
 ): Boolean {
-    return true
+
+    return !isPlayerCanGetValueFromDeck(
+        tableDeck = tableDeck,
+        tableActiveCards = tableActiveCards,
+        findCardValue = cardToBeBundled.arithmeticValue
+    )
 }

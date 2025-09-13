@@ -14,8 +14,11 @@ fun TakeCardButtonSmart(viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val game = state.value.game
 
+    val tableDeck = game.tableDeck
+    val tableActiveCards = game.tableActiveCards
+
     if (isPlayerCanTakeCard(
-            game.tableDeck, viewModel.requiredActivePlayerCard
+            tableDeck, tableActiveCards, viewModel.requiredActivePlayerCard
         )
     ) {
         TakeCardButton(clickListener = {
