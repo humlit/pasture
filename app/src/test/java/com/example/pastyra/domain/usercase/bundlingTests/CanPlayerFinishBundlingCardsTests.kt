@@ -1,7 +1,6 @@
 package com.example.pastyra.domain.usercase.bundlingTests
 
 import canPlayerFinishBundlingCards
-import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.Player
@@ -24,15 +23,10 @@ class CanPlayerFinishBundlingCardsTests {
         val cardThatBundles = CARDS.ACE.CLUBS
         val cardToBeBundled = CARDS.FIVE.DIAMONDS
 
-        val player = Player(playerId = 1, activeCard = cardThatBundles, cardsHand = playerHand)
+        Player(playerId = 1, activeCard = cardThatBundles, cardsHand = playerHand)
 
-        val temporaryBundlingDeck = listOf<BundleCard>(
-            BundleCard(
-                cardList = listOf<Card>(CARDS.FOUR.CLUBS, cardThatBundles),
-                point = 0,
-                arithmeticValue = 5,
-                playerId = player.playerId,
-            )
+        val temporaryBundlingDeck = listOf<List<Card>>(
+            listOf(CARDS.FOUR.CLUBS, cardThatBundles)
         )
 
         val canPlayerFinishBundling =

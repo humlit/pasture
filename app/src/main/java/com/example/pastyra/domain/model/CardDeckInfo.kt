@@ -12,7 +12,7 @@ enum class Rank {
 
 object CARDS {
     object ACE {
-        val DIAMONDS = ArithmeticCard(
+        val DIAMONDS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.ACE,
             Suit.DIAMONDS,
             point = 1,
@@ -21,7 +21,7 @@ object CARDS {
             icon = R.drawable.ic_ace_of_diamonds,
         )
 
-        val CLUBS = ArithmeticCard(
+        val CLUBS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.ACE,
             Suit.CLUBS,
             point = 1,
@@ -30,7 +30,7 @@ object CARDS {
             icon = R.drawable.ic_ace_of_clubs,
         )
 
-        val SPADES = ArithmeticCard(
+        val SPADES = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.ACE,
             Suit.SPADES,
             point = 1,
@@ -39,7 +39,7 @@ object CARDS {
             icon = R.drawable.ic_ace_of_spades,
         )
 
-        val HEARTS = ArithmeticCard(
+        val HEARTS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.ACE,
             Suit.HEARTS,
             point = 1,
@@ -50,7 +50,7 @@ object CARDS {
     }
 
     object TWO {
-        val DIAMONDS = ArithmeticCard(
+        val DIAMONDS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.TWO,
             Suit.DIAMONDS,
             arithmeticValue = 2,
@@ -58,7 +58,7 @@ object CARDS {
             icon = R.drawable.ic_two_of_diamonds,
         )
 
-        val CLUBS = ArithmeticCard(
+        val CLUBS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.TWO,
             Suit.CLUBS,
             point = 2,
@@ -67,7 +67,7 @@ object CARDS {
             icon = R.drawable.ic_two_of_clubs,
         )
 
-        val SPADES = ArithmeticCard(
+        val SPADES = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.TWO,
             Suit.SPADES,
             arithmeticValue = 2,
@@ -75,7 +75,7 @@ object CARDS {
             icon = R.drawable.ic_two_of_spades,
         )
 
-        val HEARTS = ArithmeticCard(
+        val HEARTS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.TWO,
             Suit.HEARTS,
             arithmeticValue = 2,
@@ -85,7 +85,7 @@ object CARDS {
     }
 
     object THREE {
-        val DIAMONDS = ArithmeticCard(
+        val DIAMONDS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.THREE,
             Suit.DIAMONDS,
             arithmeticValue = 3,
@@ -93,7 +93,7 @@ object CARDS {
             icon = R.drawable.ic_three_of_diamonds,
         )
 
-        val CLUBS = ArithmeticCard(
+        val CLUBS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.THREE,
             Suit.CLUBS,
             arithmeticValue = 3,
@@ -101,7 +101,7 @@ object CARDS {
             icon = R.drawable.ic_three_of_clubs,
         )
 
-        val SPADES = ArithmeticCard(
+        val SPADES = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.THREE,
             Suit.SPADES,
             arithmeticValue = 3,
@@ -109,7 +109,7 @@ object CARDS {
             icon = R.drawable.ic_three_of_spades,
         )
 
-        val HEARTS = ArithmeticCard(
+        val HEARTS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.THREE,
             Suit.HEARTS,
             arithmeticValue = 3,
@@ -119,7 +119,7 @@ object CARDS {
     }
 
     object FOUR {
-        val DIAMONDS = ArithmeticCard(
+        val DIAMONDS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.FOUR,
             Suit.DIAMONDS,
             arithmeticValue = 4,
@@ -127,7 +127,7 @@ object CARDS {
             icon = R.drawable.ic_four_of_diamonds,
         )
 
-        val CLUBS = ArithmeticCard(
+        val CLUBS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.FOUR,
             Suit.CLUBS,
             arithmeticValue = 4,
@@ -135,7 +135,7 @@ object CARDS {
             icon = R.drawable.ic_four_of_clubs,
         )
 
-        val SPADES = ArithmeticCard(
+        val SPADES = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.FOUR,
             Suit.SPADES,
             arithmeticValue = 4,
@@ -143,7 +143,7 @@ object CARDS {
             icon = R.drawable.ic_four_of_spades,
         )
 
-        val HEARTS = ArithmeticCard(
+        val HEARTS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.FOUR,
             Suit.HEARTS,
             arithmeticValue = 4,
@@ -153,7 +153,7 @@ object CARDS {
     }
 
     object FIVE {
-        val DIAMONDS = ArithmeticCard(
+        val DIAMONDS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.FIVE,
             Suit.DIAMONDS,
             arithmeticValue = 5,
@@ -161,7 +161,7 @@ object CARDS {
             icon = R.drawable.ic_five_of_diamonds,
         )
 
-        val CLUBS = ArithmeticCard(
+        val CLUBS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.FIVE,
             Suit.CLUBS,
             arithmeticValue = 5,
@@ -169,7 +169,7 @@ object CARDS {
             icon = R.drawable.ic_five_of_clubs,
         )
 
-        val SPADES = ArithmeticCard(
+        val SPADES = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.FIVE,
             Suit.SPADES,
             arithmeticValue = 5,
@@ -177,7 +177,7 @@ object CARDS {
             icon = R.drawable.ic_five_of_spades,
         )
 
-        val HEARTS = ArithmeticCard(
+        val HEARTS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.FIVE,
             Suit.HEARTS,
             arithmeticValue = 5,
@@ -187,7 +187,7 @@ object CARDS {
     }
 
     object SIX {
-        val DIAMONDS = ArithmeticCard(
+        val DIAMONDS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.SIX,
             Suit.DIAMONDS,
             arithmeticValue = 6,
@@ -195,7 +195,7 @@ object CARDS {
             icon = R.drawable.ic_six_of_diamonds,
         )
 
-        val CLUBS = ArithmeticCard(
+        val CLUBS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.SIX,
             Suit.CLUBS,
             arithmeticValue = 6,
@@ -203,7 +203,7 @@ object CARDS {
             icon = R.drawable.ic_six_of_clubs,
         )
 
-        val SPADES = ArithmeticCard(
+        val SPADES = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.SIX,
             Suit.SPADES,
             arithmeticValue = 6,
@@ -211,7 +211,7 @@ object CARDS {
             icon = R.drawable.ic_six_of_spades,
         )
 
-        val HEARTS = ArithmeticCard(
+        val HEARTS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.SIX,
             Suit.HEARTS,
             arithmeticValue = 6,
@@ -221,7 +221,7 @@ object CARDS {
     }
 
     object SEVEN {
-        val DIAMONDS = ArithmeticCard(
+        val DIAMONDS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.SEVEN,
             Suit.DIAMONDS,
             arithmeticValue = 7,
@@ -229,7 +229,7 @@ object CARDS {
             icon = R.drawable.ic_seven_of_diamonds,
         )
 
-        val CLUBS = ArithmeticCard(
+        val CLUBS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.SEVEN,
             Suit.CLUBS,
             arithmeticValue = 7,
@@ -237,7 +237,7 @@ object CARDS {
             icon = R.drawable.ic_seven_of_clubs,
         )
 
-        val SPADES = ArithmeticCard(
+        val SPADES = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.SEVEN,
             Suit.SPADES,
             arithmeticValue = 7,
@@ -245,7 +245,7 @@ object CARDS {
             icon = R.drawable.ic_seven_of_spades,
         )
 
-        val HEARTS = ArithmeticCard(
+        val HEARTS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.SEVEN,
             Suit.HEARTS,
             arithmeticValue = 7,
@@ -255,7 +255,7 @@ object CARDS {
     }
 
     object EIGHT {
-        val DIAMONDS = ArithmeticCard(
+        val DIAMONDS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.EIGHT,
             Suit.DIAMONDS,
             arithmeticValue = 8,
@@ -263,7 +263,7 @@ object CARDS {
             icon = R.drawable.ic_eight_of_diamonds,
         )
 
-        val CLUBS = ArithmeticCard(
+        val CLUBS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.EIGHT,
             Suit.CLUBS,
             arithmeticValue = 8,
@@ -271,7 +271,7 @@ object CARDS {
             icon = R.drawable.ic_eight_of_clubs,
         )
 
-        val SPADES = ArithmeticCard(
+        val SPADES = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.EIGHT,
             Suit.SPADES,
             arithmeticValue = 8,
@@ -279,7 +279,7 @@ object CARDS {
             icon = R.drawable.ic_eight_of_spades,
         )
 
-        val HEARTS = ArithmeticCard(
+        val HEARTS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.EIGHT,
             Suit.HEARTS,
             arithmeticValue = 8,
@@ -289,7 +289,7 @@ object CARDS {
     }
 
     object NINE {
-        val DIAMONDS = ArithmeticCard(
+        val DIAMONDS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.NINE,
             Suit.DIAMONDS,
             arithmeticValue = 9,
@@ -297,7 +297,7 @@ object CARDS {
             icon = R.drawable.ic_nine_of_diamonds,
         )
 
-        val CLUBS = ArithmeticCard(
+        val CLUBS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.NINE,
             Suit.CLUBS,
             arithmeticValue = 9,
@@ -305,7 +305,7 @@ object CARDS {
             icon = R.drawable.ic_nine_of_clubs,
         )
 
-        val SPADES = ArithmeticCard(
+        val SPADES = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.NINE,
             Suit.SPADES,
             arithmeticValue = 9,
@@ -313,7 +313,7 @@ object CARDS {
             icon = R.drawable.ic_nine_of_spades,
         )
 
-        val HEARTS = ArithmeticCard(
+        val HEARTS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.NINE,
             Suit.HEARTS,
             arithmeticValue = 9,
@@ -323,7 +323,7 @@ object CARDS {
     }
 
     object TEN {
-        val DIAMONDS = ArithmeticCard(
+        val DIAMONDS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.TEN,
             Suit.DIAMONDS,
             point = 3,
@@ -332,7 +332,7 @@ object CARDS {
             icon = R.drawable.ic_ten_of_diamonds,
         )
 
-        val CLUBS = ArithmeticCard(
+        val CLUBS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.TEN,
             Suit.CLUBS,
             arithmeticValue = 10,
@@ -340,7 +340,7 @@ object CARDS {
             icon = R.drawable.ic_ten_of_clubs,
         )
 
-        val SPADES = ArithmeticCard(
+        val SPADES = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.TEN,
             Suit.SPADES,
             arithmeticValue = 10,
@@ -348,7 +348,7 @@ object CARDS {
             icon = R.drawable.ic_ten_of_spades,
         )
 
-        val HEARTS = ArithmeticCard(
+        val HEARTS = Card.AnyArithmeticCard.ArithmeticCard(
             Rank.TEN,
             Suit.HEARTS,
             arithmeticValue = 10,
@@ -358,117 +358,75 @@ object CARDS {
     }
 
     object JACK {
-        val DIAMONDS =
-            JackCard(
-                suit = Suit.DIAMONDS, id = 41, icon = R.drawable.ic_jack_of_diamonds,
-            )
-        val CLUBS = JackCard(
+        val DIAMONDS = Card.JackCard(
+            suit = Suit.DIAMONDS, id = 41, icon = R.drawable.ic_jack_of_diamonds,
+        )
+        val CLUBS = Card.JackCard(
             suit = Suit.CLUBS, id = 42, icon = R.drawable.ic_jack_of_clubs,
         )
-        val SPADES = JackCard(
+        val SPADES = Card.JackCard(
             suit = Suit.SPADES, id = 43, icon = R.drawable.ic_jack_of_spades,
         )
-        val HEARTS = JackCard(
+        val HEARTS = Card.JackCard(
             suit = Suit.HEARTS, id = 44, icon = R.drawable.ic_jack_of_hearts,
         )
     }
 
     object QUEEN {
-        val DIAMONDS =
-            QueenCard(
-                suit = Suit.DIAMONDS, id = 45, icon = R.drawable.ic_queen_of_diamonds,
-            )
-        val CLUBS = QueenCard(
+        val DIAMONDS = Card.QueenCard(
+            suit = Suit.DIAMONDS, id = 45, icon = R.drawable.ic_queen_of_diamonds,
+        )
+        val CLUBS = Card.QueenCard(
             suit = Suit.CLUBS, id = 46, icon = R.drawable.ic_queen_of_clubs,
         )
-        val SPADES = QueenCard(
+        val SPADES = Card.QueenCard(
             suit = Suit.SPADES, id = 47, icon = R.drawable.ic_queen_of_spades,
         )
-        val HEARTS = QueenCard(
+        val HEARTS = Card.QueenCard(
             suit = Suit.HEARTS, id = 48, icon = R.drawable.ic_queen_of_hearts,
         )
     }
 
     object KING {
-        val DIAMONDS =
-            KingCard(
-                suit = Suit.DIAMONDS, id = 49, icon = R.drawable.ic_king_of_diamonds,
-            )
-        val CLUBS = KingCard(
+        val DIAMONDS = Card.KingCard(
+            suit = Suit.DIAMONDS, id = 49, icon = R.drawable.ic_king_of_diamonds,
+        )
+        val CLUBS = Card.KingCard(
             suit = Suit.CLUBS, id = 50, icon = R.drawable.ic_king_of_clubs,
         )
-        val SPADES = KingCard(
+        val SPADES = Card.KingCard(
             suit = Suit.SPADES, id = 51, icon = R.drawable.ic_king_of_spades,
         )
-        val HEARTS = KingCard(
+        val HEARTS = Card.KingCard(
             suit = Suit.HEARTS, id = 52, icon = R.drawable.ic_king_of_hearts,
         )
     }
 }
 
 val DECK: MutableList<Card> = mutableListOf(
-    CARDS.ACE.DIAMONDS,
-    CARDS.ACE.CLUBS,
-    CARDS.ACE.SPADES,
-    CARDS.ACE.HEARTS,
+    CARDS.ACE.DIAMONDS, CARDS.ACE.CLUBS, CARDS.ACE.SPADES, CARDS.ACE.HEARTS,
 
-    CARDS.TWO.DIAMONDS,
-    CARDS.TWO.CLUBS,
-    CARDS.TWO.SPADES,
-    CARDS.TWO.HEARTS,
+    CARDS.TWO.DIAMONDS, CARDS.TWO.CLUBS, CARDS.TWO.SPADES, CARDS.TWO.HEARTS,
 
-    CARDS.THREE.DIAMONDS,
-    CARDS.THREE.CLUBS,
-    CARDS.THREE.SPADES,
-    CARDS.THREE.HEARTS,
+    CARDS.THREE.DIAMONDS, CARDS.THREE.CLUBS, CARDS.THREE.SPADES, CARDS.THREE.HEARTS,
 
-    CARDS.FOUR.DIAMONDS,
-    CARDS.FOUR.CLUBS,
-    CARDS.FOUR.SPADES,
-    CARDS.FOUR.HEARTS,
+    CARDS.FOUR.DIAMONDS, CARDS.FOUR.CLUBS, CARDS.FOUR.SPADES, CARDS.FOUR.HEARTS,
 
-    CARDS.FIVE.DIAMONDS,
-    CARDS.FIVE.CLUBS,
-    CARDS.FIVE.SPADES,
-    CARDS.FIVE.HEARTS,
+    CARDS.FIVE.DIAMONDS, CARDS.FIVE.CLUBS, CARDS.FIVE.SPADES, CARDS.FIVE.HEARTS,
 
-    CARDS.SIX.DIAMONDS,
-    CARDS.SIX.CLUBS,
-    CARDS.SIX.SPADES,
-    CARDS.SIX.HEARTS,
+    CARDS.SIX.DIAMONDS, CARDS.SIX.CLUBS, CARDS.SIX.SPADES, CARDS.SIX.HEARTS,
 
-    CARDS.SEVEN.DIAMONDS,
-    CARDS.SEVEN.CLUBS,
-    CARDS.SEVEN.SPADES,
-    CARDS.SEVEN.HEARTS,
+    CARDS.SEVEN.DIAMONDS, CARDS.SEVEN.CLUBS, CARDS.SEVEN.SPADES, CARDS.SEVEN.HEARTS,
 
-    CARDS.EIGHT.DIAMONDS,
-    CARDS.EIGHT.CLUBS,
-    CARDS.EIGHT.SPADES,
-    CARDS.EIGHT.HEARTS,
+    CARDS.EIGHT.DIAMONDS, CARDS.EIGHT.CLUBS, CARDS.EIGHT.SPADES, CARDS.EIGHT.HEARTS,
 
-    CARDS.NINE.DIAMONDS,
-    CARDS.NINE.CLUBS,
-    CARDS.NINE.SPADES,
-    CARDS.NINE.HEARTS,
+    CARDS.NINE.DIAMONDS, CARDS.NINE.CLUBS, CARDS.NINE.SPADES, CARDS.NINE.HEARTS,
 
-    CARDS.TEN.DIAMONDS,
-    CARDS.TEN.CLUBS,
-    CARDS.TEN.SPADES,
-    CARDS.TEN.HEARTS,
+    CARDS.TEN.DIAMONDS, CARDS.TEN.CLUBS, CARDS.TEN.SPADES, CARDS.TEN.HEARTS,
 
-    CARDS.JACK.DIAMONDS,
-    CARDS.JACK.CLUBS,
-    CARDS.JACK.SPADES,
-    CARDS.JACK.HEARTS,
+    CARDS.JACK.DIAMONDS, CARDS.JACK.CLUBS, CARDS.JACK.SPADES, CARDS.JACK.HEARTS,
 
-    CARDS.QUEEN.DIAMONDS,
-    CARDS.QUEEN.CLUBS,
-    CARDS.QUEEN.SPADES,
-    CARDS.QUEEN.HEARTS,
+    CARDS.QUEEN.DIAMONDS, CARDS.QUEEN.CLUBS, CARDS.QUEEN.SPADES, CARDS.QUEEN.HEARTS,
 
-    CARDS.KING.DIAMONDS,
-    CARDS.KING.CLUBS,
-    CARDS.KING.SPADES,
-    CARDS.KING.HEARTS
+    CARDS.KING.DIAMONDS, CARDS.KING.CLUBS, CARDS.KING.SPADES, CARDS.KING.HEARTS
 ).shuffled().toMutableList()

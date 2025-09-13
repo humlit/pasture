@@ -1,6 +1,3 @@
-import com.example.pastyra.domain.model.AnyArithmeticCard
-import com.example.pastyra.domain.model.ArithmeticCard
-import com.example.pastyra.domain.model.BundleCard
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.Player
 
@@ -10,7 +7,9 @@ import com.example.pastyra.domain.model.Player
  * @param cardToBeBundled - Карта, которую хотим завязать.
  */
 fun isPlayerCanBundleCard(
-    deck: List<Card>, cardThatBundles: ArithmeticCard, cardToBeBundled: ArithmeticCard
+    deck: List<Card>,
+    cardThatBundles: Card.AnyArithmeticCard.ArithmeticCard,
+    cardToBeBundled: Card.AnyArithmeticCard.ArithmeticCard
 ): Boolean {
     if (cardThatBundles.arithmeticValue == cardToBeBundled.arithmeticValue) {
         return isPlayerCanGetValueFromDeck(
@@ -19,7 +18,7 @@ fun isPlayerCanBundleCard(
     }
 
     val filterCardToBundle = deck.filter {
-        if (it is BundleCard) {
+        if (it is Card.AnyArithmeticCard.BundleCard) {
             it.bundleStage == 1
         } else {
             true
@@ -47,7 +46,7 @@ fun getPlayerBundlingCards(
     val filteredPlayerHand = player.cardsHand.filter { it.id != playerActiveCard.id }
 
     filteredPlayerHand.forEach { card ->
-        if (card is ArithmeticCard && playerActiveCard is ArithmeticCard && isPlayerCanBundleCard(
+        if (card is Card.AnyArithmeticCard.ArithmeticCard && playerActiveCard is Card.AnyArithmeticCard.ArithmeticCard && isPlayerCanBundleCard(
                 tableDeck, playerActiveCard, card
             )
         ) {
@@ -59,9 +58,9 @@ fun getPlayerBundlingCards(
 }
 
 fun canPlayerFinishBundlingCards(
-    cardToBeBundled: ArithmeticCard,
+    cardToBeBundled: Card.AnyArithmeticCard.ArithmeticCard,
     tableDeck: List<Card>,
-    temporaryBundlingCards: List<BundleCard>
+    temporaryBundlingCards: List<List<Card>>
 ): Boolean {
     return true
 }
