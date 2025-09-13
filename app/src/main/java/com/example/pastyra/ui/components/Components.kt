@@ -1,22 +1,28 @@
 package com.example.pastyra.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -30,6 +36,33 @@ import com.example.pastyra.domain.model.Card
 import com.example.pastyra.ui.components.smart.PutCardOnTableButtonSmart
 import com.example.pastyra.ui.components.smart.TakeCardButtonSmart
 import com.example.pastyra.ui.viewmodel.GameViewModel
+
+@Composable
+fun StyledButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    containerColor: Color = Color.Gray,
+    contentColor: Color = Color.White,
+    shape: Shape = RectangleShape,
+    border: BorderStroke? = null,
+    contentPadding: PaddingValues = PaddingValues(all = 0.dp),
+    content: @Composable RowScope.() -> Unit,
+) {
+    Button(
+        modifier = modifier,
+        onClick = onClick,
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+        ),
+        shape = shape,
+        border = border,
+        contentPadding = contentPadding,
+        content = content
+    )
+}
 
 @Composable
 fun DisplayCards(

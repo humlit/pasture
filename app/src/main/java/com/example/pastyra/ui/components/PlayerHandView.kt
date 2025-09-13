@@ -27,18 +27,26 @@ import getPlayerBundlingCards
 @Preview
 @Composable
 fun PreviewPlayerUIView() {
-    val player = Player(playerId = 1, isActive = true, cardsHand = listOf(CARDS.TEN.DIAMONDS, CARDS.TWO.HEARTS))
+    val player = Player(
+        playerId = 1,
+        isActive = true,
+        cardsHand = listOf(CARDS.TEN.DIAMONDS, CARDS.TWO.HEARTS)
+    )
     PlayerUIView(player = player, viewModel = viewModel())
 }
 
 @Composable
 fun PlayerUIView(player: Player, viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    val game = state.value.game
+
     val scope = rememberCoroutineScope()
-    val tableDeck = state.value.game.tableDeck
+
+    val tableDeck = game.tableDeck
+    val tableActiveCards = game.tableActiveCards
 
     val cardsForBundleCheckList =
-        getPlayerBundlingCards(player, tableDeck)
+        getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
@@ -78,7 +86,7 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                 player.cardsHand.sortedCard().forEachIndexed { index, card ->
                     CardUIView(
                         card = card,
-                        isSelected = card == player.activeCard || card == player.cardToTheBundle,
+                        isSelected = card == player.activeCard || card == player.cardToBeBundled,
                         isReadyForBundle = cardsForBundleCheckList.any { it.id == card.id },
                         onClick = {
                             viewModel.selectCard(

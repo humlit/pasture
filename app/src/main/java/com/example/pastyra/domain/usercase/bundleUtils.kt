@@ -8,12 +8,13 @@ import com.example.pastyra.domain.model.Player
  */
 fun isPlayerCanBundleCard(
     deck: List<Card>,
+    tableActiveCards: List<Card>,
     cardThatBundles: Card.AnyArithmeticCard.ArithmeticCard,
     cardToBeBundled: Card.AnyArithmeticCard.ArithmeticCard
 ): Boolean {
     if (cardThatBundles.arithmeticValue == cardToBeBundled.arithmeticValue) {
         return isPlayerCanGetValueFromDeck(
-            deck, cardToBeBundled.arithmeticValue
+            deck, tableActiveCards,cardToBeBundled.arithmeticValue
         )
     }
 
@@ -26,7 +27,9 @@ fun isPlayerCanBundleCard(
     }
 
     return isPlayerCanGetValueFromDeck(
-        filterCardToBundle, cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue
+        filterCardToBundle,
+        tableActiveCards,
+        cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue
     )
 }
 
@@ -36,6 +39,7 @@ fun isPlayerCanBundleCard(
 fun getPlayerBundlingCards(
     player: Player,
     tableDeck: List<Card>,
+    tableActiveCards: List<Card>,
 ): List<Card> {
     if (player.activeCard == null) return listOf()
 
@@ -47,7 +51,7 @@ fun getPlayerBundlingCards(
 
     filteredPlayerHand.forEach { card ->
         if (card is Card.AnyArithmeticCard.ArithmeticCard && playerActiveCard is Card.AnyArithmeticCard.ArithmeticCard && isPlayerCanBundleCard(
-                tableDeck, playerActiveCard, card
+                tableDeck, tableActiveCards, playerActiveCard, card
             )
         ) {
             cardsToBeBundled.add(card)
@@ -60,7 +64,12 @@ fun getPlayerBundlingCards(
 fun canPlayerFinishBundlingCards(
     cardToBeBundled: Card.AnyArithmeticCard.ArithmeticCard,
     tableDeck: List<Card>,
-    temporaryBundlingCards: List<List<Card>>
+    tableActiveCards: List<Card>,
 ): Boolean {
-    return true
+
+    return !isPlayerCanGetValueFromDeck(
+        tableDeck = tableDeck,
+        tableActiveCards = tableActiveCards,
+        findCardValue = cardToBeBundled.arithmeticValue
+    )
 }

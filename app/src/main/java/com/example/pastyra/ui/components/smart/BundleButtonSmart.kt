@@ -10,10 +10,12 @@ import getPlayerBundlingCards
 @Composable
 fun BundleButtonSmart(viewModel: GameViewModel, card: Card.AnyArithmeticCard.ArithmeticCard) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    val game = state.value.game
     val activePlayer = viewModel.requiredActivePlayer
-    val tableDeck = state.value.game.tableDeck
+    val tableDeck = game.tableDeck
+    val tableActiveCards = game.tableActiveCards
 
-    if (getPlayerBundlingCards(activePlayer, tableDeck).isNotEmpty()) {
+    if (getPlayerBundlingCards(activePlayer, tableDeck, tableActiveCards).isNotEmpty()) {
         BundleButton(clickListener = {
             viewModel.startBundling(card)
             viewModel.waitToBundleCardStage()

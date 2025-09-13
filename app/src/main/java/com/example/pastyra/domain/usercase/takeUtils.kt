@@ -3,9 +3,9 @@ package com.example.pastyra.domain.usercase
 import com.example.pastyra.domain.model.Card
 import isPlayerCanGetValueFromDeckForTakeCard
 
-fun isPlayerCanTakeCard(deck: List<Card>, findCard: Card): Boolean {
+fun isPlayerCanTakeCard(deck: List<Card>, tableActiveCards: List<Card>, findCard: Card): Boolean {
     return when (findCard) {
-        is Card.AnyArithmeticCard.ArithmeticCard -> isPlayerCanTakeArithmeticCard(deck, findCard)
+        is Card.AnyArithmeticCard.ArithmeticCard -> isPlayerCanTakeArithmeticCard(deck, tableActiveCards, findCard)
         is Card.KingCard -> isPlayerCanTakeKing(deck)
         is Card.QueenCard -> isPlayerCanTakeQueen(deck)
         is Card.JackCard -> isPlayerCanTakeJackCard(deck)
@@ -14,9 +14,9 @@ fun isPlayerCanTakeCard(deck: List<Card>, findCard: Card): Boolean {
 }
 
 fun isPlayerCanTakeArithmeticCard(
-    deck: List<Card>, findCard: Card.AnyArithmeticCard.ArithmeticCard
+    deck: List<Card>, tableActiveCards: List<Card>, findCard: Card.AnyArithmeticCard.ArithmeticCard
 ): Boolean {
-    return isPlayerCanGetValueFromDeckForTakeCard(deck, findCard.arithmeticValue)
+    return isPlayerCanGetValueFromDeckForTakeCard(deck, tableActiveCards,findCard.arithmeticValue)
 }
 
 fun isPlayerCanTakeKing(deck: List<Card>): Boolean {

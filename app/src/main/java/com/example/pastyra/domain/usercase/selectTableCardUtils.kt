@@ -48,7 +48,7 @@ fun selectCardForBundle(
     }
 
     val cardVerificationToTake = isPlayerCanTakeAnyoneCard(
-        player.cardToTheBundle as Card.AnyArithmeticCard.ArithmeticCard, newTableActiveCard
+        player.cardToBeBundled as Card.AnyArithmeticCard.ArithmeticCard, newTableActiveCard
     )
 
     if (!cardVerificationToTake && newTableActiveCard.isNotEmpty()) {

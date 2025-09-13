@@ -1,10 +1,16 @@
 import com.example.pastyra.domain.model.Card
 
-fun isPlayerCanGetValueFromDeck(deck: List<Card>, findCardValue: Int): Boolean {
+fun isPlayerCanGetValueFromDeck(
+    tableDeck: List<Card>,
+    tableActiveCards: List<Card>,
+    findCardValue: Int
+): Boolean {
+    val inspectedListOfCards = tableDeck + tableActiveCards
+
     if (findCardValue < 1) return false
 
     val filterDeckNums =
-        deck.filterIsInstance<Card.AnyArithmeticCard>().map { card -> card.arithmeticValue }
+        inspectedListOfCards.filterIsInstance<Card.AnyArithmeticCard>().map { card -> card.arithmeticValue }
 
     val dp = BooleanArray(findCardValue + 1) { false }
     dp[0] = true
@@ -20,9 +26,13 @@ fun isPlayerCanGetValueFromDeck(deck: List<Card>, findCardValue: Int): Boolean {
     return dp[findCardValue]
 }
 
-fun isPlayerCanGetValueFromDeckForTakeCard(deck: List<Card>, findCardValue: Int): Boolean {
+fun isPlayerCanGetValueFromDeckForTakeCard(tableDeck: List<Card>, tableActiveCards: List<Card>, findCardValue: Int): Boolean {
+    val filteredTableDeck = tableDeck.filter { card -> card is Card.AnyArithmeticCard.ArithmeticCard || (card is Card.AnyArithmeticCard.BundleCard && card.arithmeticValue == findCardValue) }
+    val filteredTableActiveCards = tableActiveCards.filter { card -> card is Card.AnyArithmeticCard.ArithmeticCard || (card is Card.AnyArithmeticCard.BundleCard && card.arithmeticValue == findCardValue) }
+
     return isPlayerCanGetValueFromDeck(
-        deck.filter { card -> card is Card.AnyArithmeticCard.ArithmeticCard || (card is Card.AnyArithmeticCard.BundleCard && card.arithmeticValue == findCardValue) },
+        tableDeck = filteredTableDeck,
+        tableActiveCards = filteredTableActiveCards,
         findCardValue = findCardValue
     )
 }
