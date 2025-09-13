@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.example.pastyra.ui.components.PastyraGameStart
 import com.example.pastyra.ui.theme.PastyraTheme
 import com.example.pastyra.ui.viewmodel.GameViewModel
@@ -33,4 +32,10 @@ class MainActivity : ComponentActivity() {
 ПРИМЕРНЫЙ ФИКС
 
 СДЕЛАТЬ УСЛОВИЕ, ПРИ КОТОРОМ ЕСЛИ КАРТ В АКТИВНОМ МАССИВЕ НЕТ, СТАДИЯ ИГРЫ СТАНОВИТСЯ -> DefaultStage
+
+
+
+ПОЧЕМУ ТО МОЖНО СВЯЗАТЬ 7 СВЯЗАННУЮ НА СТОЛЕ + ТУЗ СО СТОЛА КОГДА В РУКЕ ДВЕ 8
+
+ПОЧЕМУ
  */

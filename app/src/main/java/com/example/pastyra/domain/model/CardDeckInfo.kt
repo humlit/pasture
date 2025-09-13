@@ -430,3 +430,4 @@ val DECK: MutableList<Card> = mutableListOf(
 
     CARDS.KING.DIAMONDS, CARDS.KING.CLUBS, CARDS.KING.SPADES, CARDS.KING.HEARTS
 ).shuffled().toMutableList()
+

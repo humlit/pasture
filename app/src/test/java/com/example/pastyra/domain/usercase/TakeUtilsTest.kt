@@ -1,12 +1,62 @@
 package com.example.pastyra.domain.usercase
 
-import org.junit.Assert.assertEquals
+import com.example.pastyra.domain.model.CARDS
+import com.example.pastyra.domain.model.Card
+import org.junit.Assert
 import org.junit.Test
 
 
 class TakeUtilsTest {
     @Test
     fun isPlayerCanTakeCard_test1() {
-        assertEquals(4, 2 + 2)
+        val playerHand = listOf<Card>(
+            CARDS.EIGHT.HEARTS
+        )
+
+        val tableCards = listOf<Card>(
+            CARDS.TWO.DIAMONDS, Card.AnyArithmeticCard.BundleCard(
+                cardList = listOf(
+                    CARDS.FIVE.DIAMONDS, CARDS.ACE.CLUBS
+                ), playerId = 1, arithmeticValue = 6, point = 0
+            )
+        )
+
+        val playerCanTakeCard = isPlayerCanTakeCard(
+            deck = tableCards, tableActiveCards = emptyList(), findCard = playerHand[0]
+        )
+
+        val expected = false
+
+        Assert.assertEquals(
+            "Не можем ничего взять со стола", expected, playerCanTakeCard,
+        )
+    }
+
+    @Test
+    fun isPlayerCanTakeCard_test2() {
+        val playerHand = listOf<Card>(
+            CARDS.EIGHT.HEARTS
+        )
+
+        val tableCards = listOf<Card>(
+            CARDS.TWO.DIAMONDS,
+            CARDS.ACE.CLUBS,
+            CARDS.FIVE.SPADES,
+            Card.AnyArithmeticCard.BundleCard(
+                cardList = listOf(
+                    CARDS.FIVE.DIAMONDS, CARDS.ACE.CLUBS
+                ), playerId = 1, arithmeticValue = 6, point = 0
+            )
+        )
+
+        val playerCanTakeCard = isPlayerCanTakeCard(
+            deck = tableCards, tableActiveCards = emptyList(), findCard = playerHand[0]
+        )
+
+        val expected = true
+
+        Assert.assertEquals(
+            "Не можем ничего взять со стола", expected, playerCanTakeCard,
+        )
     }
 }
