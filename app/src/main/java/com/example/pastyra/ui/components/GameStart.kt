@@ -15,17 +15,15 @@ fun GameStart(viewModel: GameViewModel) {
     Card(
         modifier = Modifier.fillMaxSize(),
         colors = CardDefaults.cardColors(containerColor = Color.Gray),
-
-        ) {
+    ) {
         TextButton(
             modifier = Modifier.fillMaxSize(),
             onClick = {
-
-            }
+            },
         ) {
             Text(
                 text = "Начать игру",
-                color = Color.Black
+                color = Color.Black,
             )
         }
     }

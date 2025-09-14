@@ -30,7 +30,10 @@ import com.example.pastyra.ui.viewmodel.GameViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
+fun TableUIView(
+    deck: List<Card>,
+    viewModel: GameViewModel,
+) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val game = state.value.game
 
@@ -40,37 +43,38 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
 
     var showDialog by remember { mutableStateOf(false) }
 
-    onTableDisplayListOfCard = when (game.gameStage) {
-        Stage.DefaultStage -> emptyList()
-        Stage.WaitToBundle -> game.temporaryPlayerBundlingCards.flatten() + game.tableActiveCards
-        Stage.TakeArithmeticCard, Stage.TakeQueenOrKingCard -> game.temporaryPlayerTakenCards + game.tableActiveCards
-    }
+    onTableDisplayListOfCard =
+        when (game.gameStage) {
+            Stage.DefaultStage -> emptyList()
+            Stage.WaitToBundle -> game.temporaryPlayerBundlingCards.flatten() + game.tableActiveCards
+            Stage.TakeArithmeticCard, Stage.TakeQueenOrKingCard -> game.temporaryPlayerTakenCards + game.tableActiveCards
+        }
 
-    val rowsCard = deck.sortedCard().chunked(
-        4
-    )
+    val rowsCard =
+        deck.sortedCard().chunked(
+            4,
+        )
 
     Log.d("GAME_SHOULD_RENDER", "TableView")
     Log.d("GAME_SHOULD_RENDER", rowsCard.toString())
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(300.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
     ) {
-
         LazyRow(
-            modifier = Modifier
-                .clickable(
-                    onClick = { showDialog = true })
-                .background(color = Color.Transparent)
+            modifier =
+                Modifier
+                    .clickable(onClick = { showDialog = true })
+                    .background(color = Color.Transparent),
         ) {
             items(onTableDisplayListOfCard) { card ->
-                ShortCardUIView(
-                    card, onClick = {
-                        showDialog = true
-                    })
+                ShortCardUIView(card, onClick = {
+                    showDialog = true
+                })
             }
         }
 
@@ -78,11 +82,12 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
             viewModel = viewModel,
             showDialog = showDialog,
             beingCollectedList = game.tableActiveCards,
-            readyList = if (game.gameStage == Stage.WaitToBundle) {
-                game.temporaryPlayerBundlingCards.flatten()
-            } else {
-                game.temporaryPlayerTakenCards
-            },
+            readyList =
+                if (game.gameStage == Stage.WaitToBundle) {
+                    game.temporaryPlayerBundlingCards.flatten()
+                } else {
+                    game.temporaryPlayerTakenCards
+                },
             onConfirm = {
                 viewModel.confirmDeleteCardFromDisplay()
                 showDialog = false
@@ -93,7 +98,8 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
             },
             clickListener = { card ->
                 viewModel.selectCardForDeleteFromDisplay(card)
-            })
+            },
+        )
 
         Spacer(modifier = Modifier.height(5.dp))
 
@@ -101,12 +107,14 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
             rowsCard.forEach { rowCards ->
                 Row(
                     horizontalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     rowCards.forEach { card ->
                         CardUIView(
                             card = card,
-                            isSelected = state.value.game.tableActiveCards.any { it.id == card.id },
+                            isSelected =
+                                state.value.game.tableActiveCards
+                                    .any { it.id == card.id },
                             onClick = {
                                 scope.launch {
                                     if (game.gameStage == Stage.TakeArithmeticCard || game.gameStage == Stage.TakeQueenOrKingCard) {
@@ -115,12 +123,12 @@ fun TableUIView(deck: List<Card>, viewModel: GameViewModel) {
                                         )
                                     } else if (game.gameStage == Stage.WaitToBundle) {
                                         viewModel.selectTableCardForBundle(
-                                            card = card
+                                            card = card,
                                         )
                                     }
                                 }
                             },
-                            viewModel = viewModel
+                            viewModel = viewModel,
                         )
                     }
                 }

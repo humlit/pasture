@@ -10,25 +10,30 @@ class IsPlayerCanFinishTakingCardTests {
     @Test
     fun isPlayerCanFinishTakingCard_test1() {
         listOf<Card>(
-            CARDS.EIGHT.HEARTS
+            CARDS.EIGHT.HEARTS,
         )
 
-        val tableDeck = listOf<Card>(
-            CARDS.TWO.DIAMONDS, CARDS.SIX.DIAMONDS, CARDS.EIGHT.DIAMONDS,
-        )
+        val tableDeck =
+            listOf<Card>(
+                CARDS.TWO.DIAMONDS,
+                CARDS.SIX.DIAMONDS,
+                CARDS.EIGHT.DIAMONDS,
+            )
 
         val tableActiveCards = listOf<Card>()
 
-        val temporaryPlayerTakenCards = listOf<Card>(
-            CARDS.EIGHT.DIAMONDS,
-        )
+        val temporaryPlayerTakenCards =
+            listOf<Card>(
+                CARDS.EIGHT.DIAMONDS,
+            )
 
-        val playerCanFinishTakingCard = isPlayerCanFinishTakingCard(
-            tableActiveCards = tableActiveCards,
-            temporaryPlayerTakenCards = temporaryPlayerTakenCards,
-            tableDeck = tableDeck,
-            cardThatTakes = CARDS.EIGHT.HEARTS
-        )
+        val playerCanFinishTakingCard =
+            isPlayerCanFinishTakingCard(
+                tableActiveCards = tableActiveCards,
+                temporaryPlayerTakenCards = temporaryPlayerTakenCards,
+                tableDeck = tableDeck,
+                cardThatTakes = CARDS.EIGHT.HEARTS,
+            )
 
         val expected = false
 

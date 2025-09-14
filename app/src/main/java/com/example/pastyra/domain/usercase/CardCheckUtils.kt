@@ -4,7 +4,7 @@ import com.example.pastyra.domain.model.Card
 
 fun isPlayerCanTakeAnyoneCard(
     checkedCard: Card.AnyArithmeticCard.ArithmeticCard,
-    tableActiveCards: List<Card.AnyArithmeticCard>
+    tableActiveCards: List<Card.AnyArithmeticCard>,
 ): Boolean {
     val tableSum = tableActiveCards.sumOf { it.arithmeticValue }
 
@@ -12,9 +12,9 @@ fun isPlayerCanTakeAnyoneCard(
 }
 
 fun activeTableCardEqualsPlayerCard(
-    checkedCard: Card.AnyArithmeticCard.ArithmeticCard, tableActiveCard: List<Card>
+    checkedCard: Card.AnyArithmeticCard.ArithmeticCard,
+    tableActiveCard: List<Card>,
 ): Boolean {
-
     val tableSum =
         tableActiveCard.filterIsInstance<Card.AnyArithmeticCard>().sumOf { it.arithmeticValue }
 

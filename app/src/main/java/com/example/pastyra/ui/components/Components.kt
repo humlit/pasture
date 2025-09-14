@@ -53,14 +53,15 @@ fun StyledButton(
         modifier = modifier,
         onClick = onClick,
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
-            contentColor = contentColor,
-        ),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = containerColor,
+                contentColor = contentColor,
+            ),
         shape = shape,
         border = border,
         contentPadding = contentPadding,
-        content = content
+        content = content,
     )
 }
 
@@ -72,55 +73,56 @@ fun DisplayCards(
     readyList: List<Card>,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
-    clickListener: (Card) -> Unit
+    clickListener: (Card) -> Unit,
 ) {
     if (showDialog) {
         AlertDialog(
             onDismissRequest = onDismiss,
-
             title = {
                 Text(
                     text = "Выбранные карты: ",
                     fontSize = 16.sp,
                 )
             },
-
             text = {
                 Column {
                     Text(
-                        text = if (beingCollectedList.isNotEmpty()) {
-                            "Они только растут"
-                        } else {
-                            ""
-                        }
+                        text =
+                            if (beingCollectedList.isNotEmpty()) {
+                                "Они только растут"
+                            } else {
+                                ""
+                            },
                     )
 
                     LazyRow(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Absolute.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         items(beingCollectedList) { card ->
                             CardUIView(
                                 card = card,
                                 onClick = { clickListener(card) },
                                 viewModel = viewModel,
-                                isSelected = viewModel.cardForDeleteFromDisplay.any { it.id == card.id })
+                                isSelected = viewModel.cardForDeleteFromDisplay.any { it.id == card.id },
+                            )
                         }
                     }
 
                     Spacer(modifier = Modifier.height(15.dp))
 
                     Text(
-                        text = if (readyList.isNotEmpty()) {
-                            "Эти карты уже у вас в кармане"
-                        } else {
-                            "Карман пуст"
-                        }
+                        text =
+                            if (readyList.isNotEmpty()) {
+                                "Эти карты уже у вас в кармане"
+                            } else {
+                                "Карман пуст"
+                            },
                     )
 
                     LazyRow(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         items(readyList) { card ->
                             CardUIView(
@@ -132,17 +134,16 @@ fun DisplayCards(
                     }
                 }
             },
-
             confirmButton = {
                 Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     TextButton(
-                        onClick = onDismiss
+                        onClick = onDismiss,
                     ) { Text(text = stringResource(R.string.cancel_button)) }
 
                     TextButton(
-                        onClick = onConfirm
+                        onClick = onConfirm,
                     ) { Text(text = stringResource(R.string.confirm_button)) }
                 }
             },
@@ -151,7 +152,10 @@ fun DisplayCards(
 }
 
 @Composable
-fun FinishMoveButton(clickListener: () -> Unit, enabledCondition: Boolean) {
+fun FinishMoveButton(
+    clickListener: () -> Unit,
+    enabledCondition: Boolean,
+) {
     Button(
         onClick = clickListener,
         enabled = enabledCondition,
@@ -161,7 +165,8 @@ fun FinishMoveButton(clickListener: () -> Unit, enabledCondition: Boolean) {
 @Composable
 fun BundleButton(clickListener: () -> Unit) {
     Button(
-        onClick = clickListener, shape = RectangleShape,
+        onClick = clickListener,
+        shape = RectangleShape,
         contentPadding = PaddingValues(all = 0.dp),
     ) {
         Text(
@@ -172,7 +177,7 @@ fun BundleButton(clickListener: () -> Unit) {
             maxLines = 1,
             overflow = TextOverflow.Visible,
             fontStyle = FontStyle.Italic,
-            fontFamily = FontFamily.SansSerif
+            fontFamily = FontFamily.SansSerif,
         )
     }
 }
@@ -180,7 +185,7 @@ fun BundleButton(clickListener: () -> Unit) {
 @Composable
 fun PutCardOnTableButton(clickListener: () -> Unit) {
     Button(
-        onClick = clickListener
+        onClick = clickListener,
     ) {
         Text(stringResource(R.string.cards_put))
     }
@@ -189,7 +194,7 @@ fun PutCardOnTableButton(clickListener: () -> Unit) {
 @Composable
 fun TakeCardButton(clickListener: () -> Unit) {
     Button(
-        onClick = clickListener
+        onClick = clickListener,
     ) {
         Text(stringResource(R.string.cards_take))
     }
@@ -198,7 +203,7 @@ fun TakeCardButton(clickListener: () -> Unit) {
 @Composable
 fun CancelButton(clickListener: () -> Unit) {
     Button(
-        onClick = clickListener
+        onClick = clickListener,
     ) {
         Text(stringResource(R.string.cancel_button))
     }
@@ -209,7 +214,7 @@ fun DefaultButtonPosition(viewModel: GameViewModel) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         PutCardOnTableButtonSmart(viewModel)
 
@@ -224,14 +229,18 @@ fun PlayerTakeCard(viewModel: GameViewModel) {
     val game = state.value.game
     val tableDeck = state.value.game.tableDeck
 
-    val canFinish = isPlayerCanFinishTakingCard(
-        game.tableActiveCards, game.temporaryPlayerTakenCards, tableDeck, activePlayerCard
-    )
+    val canFinish =
+        isPlayerCanFinishTakingCard(
+            game.tableActiveCards,
+            game.temporaryPlayerTakenCards,
+            tableDeck,
+            activePlayerCard,
+        )
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         FinishMoveButton(
             clickListener = {
@@ -239,13 +248,11 @@ fun PlayerTakeCard(viewModel: GameViewModel) {
                 // В нем будут поочередно выполняться нужные действия, см пример во viewModel
                 viewModel.takeCard()
                 viewModel.finishMove()
-
-            }, enabledCondition = canFinish
+            },
+            enabledCondition = canFinish,
         )
 
-        CancelButton(clickListener = {
-
-        })
+        CancelButton(clickListener = {})
     }
 }
 
@@ -257,17 +264,15 @@ fun PlayerBundleCard(viewModel: GameViewModel) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
-        CancelButton(clickListener = {
-
-        })
+        CancelButton(clickListener = {})
         FinishMoveButton(
             clickListener = {
                 viewModel.bundleCard()
                 viewModel.finishMove()
             },
-            enabledCondition = game.tableActiveCards.isEmpty() && game.temporaryPlayerBundlingCards.isNotEmpty()
+            enabledCondition = game.tableActiveCards.isEmpty() && game.temporaryPlayerBundlingCards.isNotEmpty(),
         )
     }
 }

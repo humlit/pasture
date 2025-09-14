@@ -28,8 +28,9 @@ sealed class Card(
         override val rank: Rank = Rank.KING,
         override val point: Int = 0,
     ) : Card(
-        point,
-    ), SimpleCard
+            point,
+        ),
+        SimpleCard
 
     data class JackCard(
         override val rank: Rank = Rank.JACK,
@@ -37,8 +38,9 @@ sealed class Card(
         override val icon: Int,
         override val point: Int = 1,
     ) : Card(
-        point = point,
-    ), SimpleCard
+            point = point,
+        ),
+        SimpleCard
 
     data class QueenCard(
         override val rank: Rank = Rank.QUEEN,
@@ -46,21 +48,25 @@ sealed class Card(
         override val icon: Int,
         override val point: Int = 0,
     ) : Card(
-        point,
-    ), SimpleCard
+            point,
+        ),
+        SimpleCard
 
     sealed class AnyArithmeticCard(
         override val point: Int = 0,
     ) : Card(
-        point,
-    ), ArithmeticCardInterface {
+            point,
+        ),
+        ArithmeticCardInterface {
         data class ArithmeticCard(
             override val rank: Rank,
             override val suit: Suit,
             override val arithmeticValue: Int,
             override val point: Int = 0,
             override val icon: Int,
-        ) : AnyArithmeticCard(point = point), SimpleCard, ArithmeticCardInterface
+        ) : AnyArithmeticCard(point = point),
+            SimpleCard,
+            ArithmeticCardInterface
 
         data class BundleCard(
             // TODO: Должно быть просто ArithmeticCard
@@ -70,6 +76,7 @@ sealed class Card(
             override val arithmeticValue: Int,
             override val point: Int,
             // TODO: BundleCard тоже должен иметь id уникальный
-        ) : AnyArithmeticCard(point = point), ArithmeticCardInterface
+        ) : AnyArithmeticCard(point = point),
+            ArithmeticCardInterface
     }
 }
