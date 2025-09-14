@@ -8,7 +8,10 @@ import com.example.pastyra.ui.viewmodel.GameViewModel
 import getPlayerBundlingCards
 
 @Composable
-fun BundleButtonSmart(viewModel: GameViewModel, card: Card.AnyArithmeticCard.ArithmeticCard) {
+fun BundleButtonSmart(
+    viewModel: GameViewModel,
+    card: Card.AnyArithmeticCard.ArithmeticCard,
+) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val game = state.value.game
     val activePlayer = viewModel.requiredActivePlayer

@@ -27,14 +27,19 @@ import getPlayerBundlingCards
 @Preview
 @Composable
 fun PreviewPlayerUIView() {
-    val player = Player(
-        isActive = true, cardsHand = listOf(CARDS.TEN.DIAMONDS, CARDS.TWO.HEARTS)
-    )
+    val player =
+        Player(
+            isActive = true,
+            cardsHand = listOf(CARDS.TEN.DIAMONDS, CARDS.TWO.HEARTS),
+        )
     PlayerUIView(player = player, viewModel = viewModel())
 }
 
 @Composable
-fun PlayerUIView(player: Player, viewModel: GameViewModel) {
+fun PlayerUIView(
+    player: Player,
+    viewModel: GameViewModel,
+) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val game = state.value.game
 
@@ -46,28 +51,30 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
     val cardsForBundleCheckList = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             if (player.isActive) {
                 when {
                     // TODO: Мб кнопка "завершить ход" должна быть всегда, на случай если игрок передумает?
-                    state.value.game.gameStage == Stage.TakeArithmeticCard || state.value.game.gameStage == Stage.TakeQueenOrKingCard -> PlayerTakeCard(
-                        viewModel
-                    )
+                    state.value.game.gameStage == Stage.TakeArithmeticCard || state.value.game.gameStage == Stage.TakeQueenOrKingCard ->
+                        PlayerTakeCard(
+                            viewModel,
+                        )
 
-                    state.value.game.gameStage == Stage.WaitToBundle -> PlayerBundleCard(
-                        viewModel
-                    )
+                    state.value.game.gameStage == Stage.WaitToBundle ->
+                        PlayerBundleCard(
+                            viewModel,
+                        )
 
                     player.activeCard != null -> DefaultButtonPosition(viewModel)
                 }
-
             } else {
                 return@Card
             }
@@ -77,7 +84,7 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 player.cardsHand.sortedCard().forEachIndexed { index, card ->
                     CardUIView(
@@ -86,7 +93,7 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
                         isReadyForBundle = cardsForBundleCheckList.any { it.id == card.id },
                         onClick = {
                             viewModel.selectCard(
-                                card = card
+                                card = card,
                             )
                         },
                         viewModel = viewModel,

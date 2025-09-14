@@ -16,7 +16,9 @@ fun TakeCardButtonSmart(viewModel: GameViewModel) {
     val tableActiveCards = game.tableActiveCards
 
     if (isPlayerCanTakeCard(
-            tableDeck, tableActiveCards, viewModel.requiredActivePlayerCard
+            tableDeck,
+            tableActiveCards,
+            viewModel.requiredActivePlayerCard,
         )
     ) {
         TakeCardButton(clickListener = {
@@ -26,7 +28,7 @@ fun TakeCardButtonSmart(viewModel: GameViewModel) {
                 }
 
                 is Card.QueenCard, is Card.KingCard -> {
-                    viewModel.waitToTakeQueenOrKingCardStage() //TODO: Переделать весь when
+                    viewModel.waitToTakeQueenOrKingCardStage() // TODO: Переделать весь when
                 }
 
                 else -> {

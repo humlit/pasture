@@ -40,7 +40,8 @@ fun PreviewCardUIView() {
         card = CARDS.TEN.DIAMONDS,
         isSelected = false,
         isReadyForBundle = true,
-        onClick = {})
+        onClick = {},
+    )
 }
 
 @Composable
@@ -56,36 +57,35 @@ fun CardUIView(
 
     val borderColor = if (isSelected) Color.Green else Color.Transparent
 
-
     Column(
-        modifier = Modifier
-            .size(width = 85.dp, height = 120.dp)
-            .border(1.5.dp, borderColor, RoundedCornerShape(8.dp))
-            .clickable(onClick = onClick)
-            .background(Color.Transparent)
-            .clip(RoundedCornerShape(10.dp))
+        modifier =
+            Modifier
+                .size(width = 85.dp, height = 120.dp)
+                .border(1.5.dp, borderColor, RoundedCornerShape(8.dp))
+                .clickable(onClick = onClick)
+                .background(Color.Transparent)
+                .clip(RoundedCornerShape(10.dp)),
     ) {
-
         Box {
             Row(
-                modifier = Modifier.align(alignment = Alignment.TopCenter)
+                modifier = Modifier.align(alignment = Alignment.TopCenter),
             ) {
                 if (card is SimpleCard) {
                     Image(
                         modifier = Modifier.fillMaxSize(),
                         painter = painterResource(card.icon),
                         contentDescription = null,
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
                     )
                 } else if (card is Card.AnyArithmeticCard.BundleCard) {
-
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.White)
-                            .padding(2.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .background(Color.White)
+                                .padding(2.dp),
                         verticalArrangement = Arrangement.SpaceEvenly,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(text = "V-> ${card.arithmeticValue}")
 
@@ -101,12 +101,17 @@ fun CardUIView(
             }
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(alignment = Alignment.BottomCenter)
-                    .padding(horizontal = 6.dp, vertical = 6.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .align(alignment = Alignment.BottomCenter)
+                        .padding(horizontal = 6.dp, vertical = 6.dp),
             ) {
-                if (isReadyForBundle && game.gameStage == Stage.DefaultStage && game.tableActiveCards.isEmpty() && game.temporaryPlayerBundlingCards.isEmpty()) {
+                if (isReadyForBundle &&
+                    game.gameStage == Stage.DefaultStage &&
+                    game.tableActiveCards.isEmpty() &&
+                    game.temporaryPlayerBundlingCards.isEmpty()
+                ) {
                     BundleButtonSmart(viewModel, card as Card.AnyArithmeticCard.ArithmeticCard)
                 }
             }
