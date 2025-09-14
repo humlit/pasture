@@ -6,6 +6,7 @@ import com.example.pastyra.domain.model.Player
 import getPlayerBundlingCards
 import org.junit.Assert
 import org.junit.Test
+import java.util.UUID
 
 class GetPlayerBundlingCardsTests {
     @Test
@@ -27,7 +28,9 @@ class GetPlayerBundlingCardsTests {
 
         val activePlayerCard = CARDS.TWO.CLUBS
 
-        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+        val player = Player(
+            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
+        )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -61,7 +64,9 @@ class GetPlayerBundlingCardsTests {
 
         val activePlayerCard = CARDS.ACE.HEARTS
 
-        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+        val player = Player(
+            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
+        )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -93,7 +98,9 @@ class GetPlayerBundlingCardsTests {
 
         val activePlayerCard = CARDS.EIGHT.HEARTS
 
-        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+        val player = Player(
+            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
+        )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -125,13 +132,15 @@ class GetPlayerBundlingCardsTests {
                 ),
                 point = 1,
                 arithmeticValue = 6,
-                playerId = 1,
+                playerId = UUID.randomUUID(),
             ), CARDS.TEN.DIAMONDS
         )
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+        val player = Player(
+            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
+        )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -160,13 +169,15 @@ class GetPlayerBundlingCardsTests {
                     CARDS.ACE.DIAMONDS,
                     CARDS.FIVE.DIAMONDS,
                     CARDS.SIX.DIAMONDS,
-                ), point = 1, arithmeticValue = 6, playerId = 1, bundleStage = 2
+                ), point = 1, arithmeticValue = 6, playerId = UUID.randomUUID(), bundleStage = 2
             )
         )
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+        val player = Player(
+            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
+        )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -195,13 +206,15 @@ class GetPlayerBundlingCardsTests {
                 ),
                 point = 1,
                 arithmeticValue = 5,
-                playerId = 2,
+                playerId = UUID.randomUUID(),
             ), CARDS.ACE.HEARTS
         )
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+        val player = Player(
+            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
+        )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -232,13 +245,15 @@ class GetPlayerBundlingCardsTests {
                 ),
                 point = 1,
                 arithmeticValue = 5,
-                playerId = 2,
+                playerId = UUID.randomUUID(),
             ), CARDS.TWO.HEARTS
         )
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+        val player = Player(
+            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
+        )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -266,14 +281,16 @@ class GetPlayerBundlingCardsTests {
                 ),
                 point = 1,
                 arithmeticValue = 7,
-                playerId = 1,
+                playerId = UUID.randomUUID(),
                 bundleStage = 1,
             ), CARDS.TEN.SPADES
         )
 
         val activePlayerCard = CARDS.ACE.DIAMONDS
 
-        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+        val player = Player(
+            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
+        )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -300,7 +317,9 @@ class GetPlayerBundlingCardsTests {
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val player = Player(playerId = 1, activeCard = activePlayerCard, cardsHand = playerHand)
+        val player = Player(
+            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
+        )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -327,7 +346,7 @@ class GetPlayerBundlingCardsTests {
 //                            ),
 //                            point = 0,
 //                            arithmeticValue = 6,
-//                            playerId = 1,
+//                            playerId = UUID.randomUUID(),
 //                            bundleStage = 1
 //                        ),
 //                        CARDS.THREE.SPADES

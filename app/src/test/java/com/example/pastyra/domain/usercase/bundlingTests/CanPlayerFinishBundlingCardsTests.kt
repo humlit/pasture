@@ -6,6 +6,7 @@ import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.model.Player
 import org.junit.Assert
 import org.junit.Test
+import java.util.UUID
 
 class CanPlayerFinishBundlingCardsTests {
     @Test
@@ -25,13 +26,14 @@ class CanPlayerFinishBundlingCardsTests {
         val cardThatBundles = CARDS.ACE.CLUBS
         val cardToBeBundled = CARDS.FIVE.DIAMONDS
 
-        val player = Player(playerId = 1, activeCard = cardThatBundles, cardsHand = playerHand)
+        val player = Player(
+            playerId = UUID.randomUUID(), activeCard = cardThatBundles, cardsHand = playerHand
+        )
 
-        val temporaryBundlingDeck = listOf(
+        listOf(
             Card.AnyArithmeticCard.BundleCard(
                 cardList = listOf(
-                    CARDS.FOUR.CLUBS,
-                    cardThatBundles
+                    CARDS.FOUR.CLUBS, cardThatBundles
                 ), //TODO: Этот параметр нам не нужен, но я оставил пока что его тут
                 point = 0,
                 arithmeticValue = 5,
@@ -39,12 +41,11 @@ class CanPlayerFinishBundlingCardsTests {
             )
         )
 
-        val canPlayerFinishBundling =
-            canPlayerFinishBundlingCards(
-                cardToBeBundled,
-                tableDeck,
-                tableActiveCards,
-            )
+        val canPlayerFinishBundling = canPlayerFinishBundlingCards(
+            cardToBeBundled,
+            tableDeck,
+            tableActiveCards,
+        )
 
         Assert.assertEquals(
             "Игрок не может закончить завязку, если еще есть карты для завязки",

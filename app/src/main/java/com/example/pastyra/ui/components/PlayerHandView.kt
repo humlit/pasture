@@ -28,9 +28,7 @@ import getPlayerBundlingCards
 @Composable
 fun PreviewPlayerUIView() {
     val player = Player(
-        playerId = 1,
-        isActive = true,
-        cardsHand = listOf(CARDS.TEN.DIAMONDS, CARDS.TWO.HEARTS)
+        isActive = true, cardsHand = listOf(CARDS.TEN.DIAMONDS, CARDS.TWO.HEARTS)
     )
     PlayerUIView(player = player, viewModel = viewModel())
 }
@@ -40,13 +38,12 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val game = state.value.game
 
-    val scope = rememberCoroutineScope()
+    rememberCoroutineScope()
 
     val tableDeck = game.tableDeck
     val tableActiveCards = game.tableActiveCards
 
-    val cardsForBundleCheckList =
-        getPlayerBundlingCards(player, tableDeck, tableActiveCards)
+    val cardsForBundleCheckList = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
@@ -78,8 +75,7 @@ fun PlayerUIView(player: Player, viewModel: GameViewModel) {
             Spacer(modifier = Modifier.height(5.dp))
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
