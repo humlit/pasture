@@ -24,32 +24,36 @@ import com.example.pastyra.domain.model.SimpleCard
 
 @Composable
 fun ShortCardUIView(
-    card: Card, isSelected: Boolean = false, onClick: (Card) -> Unit
+    card: Card,
+    isSelected: Boolean = false,
+    onClick: (Card) -> Unit,
 ) {
     val borderColor = if (isSelected) Color.Green else Color.Transparent
 
-
     Box(
-        modifier = Modifier
-            .size(50.dp)
-            .border(1.5.dp, borderColor, RoundedCornerShape(8.dp))
-            .clickable { onClick(card) }
-            .background(color = Color.Transparent)) {
+        modifier =
+            Modifier
+                .size(50.dp)
+                .border(1.5.dp, borderColor, RoundedCornerShape(8.dp))
+                .clickable { onClick(card) }
+                .background(color = Color.Transparent),
+    ) {
         if (card is SimpleCard) {
             Image(
                 modifier = Modifier.fillMaxSize(),
                 painter = painterResource(card.icon),
                 contentDescription = null,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
             )
         } else if (card is Card.AnyArithmeticCard.BundleCard) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-                    .padding(2.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.White)
+                        .padding(2.dp),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(text = "V -> ${card.arithmeticValue}")
 

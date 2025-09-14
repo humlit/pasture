@@ -3,6 +3,7 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
 }
 
 tasks.register("installGitHooks") {
@@ -10,12 +11,27 @@ tasks.register("installGitHooks") {
         val preCommitHookFile = project.rootDir.resolve(".git/hooks/pre-commit")
         preCommitHookFile.writeText(
             """
-                #!/bin/sh
-                ./gradlew test
-                RESULT=${'$'}?
-                [ ${'$'}RESULT -ne 0 ] && exit 1
-                exit 0
-                """.trimIndent()
+            #!/bin/sh
+            set -e  # прерывать при любой неотловленной ошибке
+            
+            echo "→ Форматирование кода (ktlintFormat)..."
+            ./gradlew ktlintFormat
+            echo "✓ Форматирование завершено"
+            
+            # Если форматтер внёс изменения — добавляем их в индекс
+            # (добавляем только отслеживаемые файлы, чтобы не схватить мусор)
+            if ! git diff --quiet; then
+              echo "→ Добавляю отформатированные файлы в индекс..."
+              git add -u
+            fi
+            
+            echo "→ Запуск тестов..."
+            ./gradlew test
+            echo "✓ Все тесты прошли"
+            
+            echo "✓ Все проверки пройдены — коммит продолжается."
+            exit 0
+            """.trimIndent(),
         )
         preCommitHookFile.setExecutable(true)
         println("Git pre-commit hook installed successfully.")
@@ -40,7 +56,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
             )
         }
     }

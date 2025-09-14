@@ -11,26 +11,30 @@ import java.util.UUID
 class GetPlayerBundlingCardsTests {
     @Test
     fun should_work_correct_test1() {
-        val playerHand = listOf<Card>(
-            CARDS.FIVE.DIAMONDS,
-            CARDS.ACE.CLUBS,
-            CARDS.TWO.CLUBS,
-            CARDS.JACK.HEARTS,
-        )
+        val playerHand =
+            listOf<Card>(
+                CARDS.FIVE.DIAMONDS,
+                CARDS.ACE.CLUBS,
+                CARDS.TWO.CLUBS,
+                CARDS.JACK.HEARTS,
+            )
 
-        val tableDeck = listOf<Card>(
-            CARDS.ACE.HEARTS,
-            CARDS.QUEEN.CLUBS,
-            CARDS.NINE.SPADES,
-            CARDS.NINE.CLUBS,
-        )
-
+        val tableDeck =
+            listOf<Card>(
+                CARDS.ACE.HEARTS,
+                CARDS.QUEEN.CLUBS,
+                CARDS.NINE.SPADES,
+                CARDS.NINE.CLUBS,
+            )
 
         val activePlayerCard = CARDS.TWO.CLUBS
 
-        val player = Player(
-            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
-        )
+        val player =
+            Player(
+                playerId = UUID.randomUUID(),
+                activeCard = activePlayerCard,
+                cardsHand = playerHand,
+            )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -41,143 +45,175 @@ class GetPlayerBundlingCardsTests {
         Assert.assertEquals(
             "Карты, доступные для завязки должны соответствовать ожидаемым",
             expectedPlayerBundlingCards,
-            playerBundlingCards
+            playerBundlingCards,
         )
     }
 
     @Test
     fun should_work_correct_test2() {
-        val playerHand = listOf<Card>(
-            CARDS.THREE.DIAMONDS,
-            CARDS.TWO.SPADES,
-            CARDS.ACE.HEARTS,
-            CARDS.ACE.DIAMONDS,
-        )
+        val playerHand =
+            listOf<Card>(
+                CARDS.THREE.DIAMONDS,
+                CARDS.TWO.SPADES,
+                CARDS.ACE.HEARTS,
+                CARDS.ACE.DIAMONDS,
+            )
 
-        val tableDeck = listOf<Card>(
-            CARDS.NINE.DIAMONDS,
-            CARDS.QUEEN.SPADES,
-            CARDS.EIGHT.HEARTS,
-            CARDS.TWO.HEARTS,
-            CARDS.SEVEN.DIAMONDS,
-        )
+        val tableDeck =
+            listOf<Card>(
+                CARDS.NINE.DIAMONDS,
+                CARDS.QUEEN.SPADES,
+                CARDS.EIGHT.HEARTS,
+                CARDS.TWO.HEARTS,
+                CARDS.SEVEN.DIAMONDS,
+            )
 
         val activePlayerCard = CARDS.ACE.HEARTS
 
-        val player = Player(
-            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
-        )
+        val player =
+            Player(
+                playerId = UUID.randomUUID(),
+                activeCard = activePlayerCard,
+                cardsHand = playerHand,
+            )
 
         val tableActiveCards = emptyList<Card>()
 
         val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
-        val expectedPlayerBundlingCards = listOf<Card>(
-            CARDS.THREE.DIAMONDS
-        )
+        val expectedPlayerBundlingCards =
+            listOf<Card>(
+                CARDS.THREE.DIAMONDS,
+            )
 
         Assert.assertEquals(
             "Карты, доступные для завязки должны соответствовать ожидаемым",
             expectedPlayerBundlingCards,
-            playerBundlingCards
+            playerBundlingCards,
         )
     }
 
     @Test
     fun should_work_correct_test3() {
-        val playerHand = listOf<Card>(
-            CARDS.EIGHT.DIAMONDS,
-            CARDS.EIGHT.CLUBS,
-            CARDS.EIGHT.HEARTS,
-            CARDS.JACK.HEARTS,
-        )
+        val playerHand =
+            listOf<Card>(
+                CARDS.EIGHT.DIAMONDS,
+                CARDS.EIGHT.CLUBS,
+                CARDS.EIGHT.HEARTS,
+                CARDS.JACK.HEARTS,
+            )
 
-        val tableDeck = listOf<Card>(
-            CARDS.EIGHT.SPADES,
-        )
+        val tableDeck =
+            listOf<Card>(
+                CARDS.EIGHT.SPADES,
+            )
 
         val activePlayerCard = CARDS.EIGHT.HEARTS
 
-        val player = Player(
-            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
-        )
+        val player =
+            Player(
+                playerId = UUID.randomUUID(),
+                activeCard = activePlayerCard,
+                cardsHand = playerHand,
+            )
 
         val tableActiveCards = emptyList<Card>()
 
         val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
-        val expectedPlayerBundlingCards = listOf<Card>(
-            CARDS.EIGHT.DIAMONDS,
-            CARDS.EIGHT.CLUBS,
-        )
+        val expectedPlayerBundlingCards =
+            listOf<Card>(
+                CARDS.EIGHT.DIAMONDS,
+                CARDS.EIGHT.CLUBS,
+            )
 
         Assert.assertEquals(
             "Можно повысить уровень завязки, используя карту с таким же значением",
             expectedPlayerBundlingCards,
-            playerBundlingCards
+            playerBundlingCards,
         )
     }
 
     @Test
     fun should_work_correct_test4() {
-        val playerHand = listOf<Card>(
-            CARDS.EIGHT.DIAMONDS, CARDS.TWO.DIAMONDS
-        )
+        val playerHand =
+            listOf<Card>(
+                CARDS.EIGHT.DIAMONDS,
+                CARDS.TWO.DIAMONDS,
+            )
 
-        val tableDeck = listOf<Card>(
-            Card.AnyArithmeticCard.BundleCard(
-                cardList = listOf<Card.AnyArithmeticCard>(
-                    CARDS.ACE.DIAMONDS,
-                    CARDS.FIVE.DIAMONDS,
+        val tableDeck =
+            listOf<Card>(
+                Card.AnyArithmeticCard.BundleCard(
+                    cardList =
+                        listOf<Card.AnyArithmeticCard>(
+                            CARDS.ACE.DIAMONDS,
+                            CARDS.FIVE.DIAMONDS,
+                        ),
+                    point = 1,
+                    arithmeticValue = 6,
+                    playerId = UUID.randomUUID(),
                 ),
-                point = 1,
-                arithmeticValue = 6,
-                playerId = UUID.randomUUID(),
-            ), CARDS.TEN.DIAMONDS
-        )
+                CARDS.TEN.DIAMONDS,
+            )
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val player = Player(
-            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
-        )
+        val player =
+            Player(
+                playerId = UUID.randomUUID(),
+                activeCard = activePlayerCard,
+                cardsHand = playerHand,
+            )
 
         val tableActiveCards = emptyList<Card>()
 
         val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
-        val expectedPlayerBundlingCards = listOf<Card>(
-            CARDS.EIGHT.DIAMONDS,
-        )
+        val expectedPlayerBundlingCards =
+            listOf<Card>(
+                CARDS.EIGHT.DIAMONDS,
+            )
 
         Assert.assertEquals(
             "Должна быть возможность перевязать завязку 1 уровня со стола",
             expectedPlayerBundlingCards,
-            playerBundlingCards
+            playerBundlingCards,
         )
     }
 
     @Test
     fun should_work_correct_test5() {
-        val playerHand = listOf<Card>(
-            CARDS.EIGHT.DIAMONDS, CARDS.TWO.DIAMONDS
-        )
-
-        val tableDeck = listOf<Card>(
-            Card.AnyArithmeticCard.BundleCard(
-                cardList = listOf<Card.AnyArithmeticCard>(
-                    CARDS.ACE.DIAMONDS,
-                    CARDS.FIVE.DIAMONDS,
-                    CARDS.SIX.DIAMONDS,
-                ), point = 1, arithmeticValue = 6, playerId = UUID.randomUUID(), bundleStage = 2
+        val playerHand =
+            listOf<Card>(
+                CARDS.EIGHT.DIAMONDS,
+                CARDS.TWO.DIAMONDS,
             )
-        )
+
+        val tableDeck =
+            listOf<Card>(
+                Card.AnyArithmeticCard.BundleCard(
+                    cardList =
+                        listOf<Card.AnyArithmeticCard>(
+                            CARDS.ACE.DIAMONDS,
+                            CARDS.FIVE.DIAMONDS,
+                            CARDS.SIX.DIAMONDS,
+                        ),
+                    point = 1,
+                    arithmeticValue = 6,
+                    playerId = UUID.randomUUID(),
+                    bundleStage = 2,
+                ),
+            )
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val player = Player(
-            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
-        )
+        val player =
+            Player(
+                playerId = UUID.randomUUID(),
+                activeCard = activePlayerCard,
+                cardsHand = playerHand,
+            )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -188,72 +224,89 @@ class GetPlayerBundlingCardsTests {
         Assert.assertEquals(
             "Не должна быть возможность перевязать завязку 2 уровня со стола",
             expectedPlayerBundlingCards,
-            playerBundlingCards
+            playerBundlingCards,
         )
     }
 
     @Test
     fun should_work_correct_test6() {
-        val playerHand = listOf<Card>(
-            CARDS.EIGHT.DIAMONDS, CARDS.TWO.DIAMONDS
-        )
+        val playerHand =
+            listOf<Card>(
+                CARDS.EIGHT.DIAMONDS,
+                CARDS.TWO.DIAMONDS,
+            )
 
-        val tableDeck = listOf<Card>(
-            Card.AnyArithmeticCard.BundleCard(
-                cardList = listOf<Card.AnyArithmeticCard>(
-                    CARDS.ACE.DIAMONDS,
-                    CARDS.FOUR.DIAMONDS,
+        val tableDeck =
+            listOf<Card>(
+                Card.AnyArithmeticCard.BundleCard(
+                    cardList =
+                        listOf<Card.AnyArithmeticCard>(
+                            CARDS.ACE.DIAMONDS,
+                            CARDS.FOUR.DIAMONDS,
+                        ),
+                    point = 1,
+                    arithmeticValue = 5,
+                    playerId = UUID.randomUUID(),
                 ),
-                point = 1,
-                arithmeticValue = 5,
-                playerId = UUID.randomUUID(),
-            ), CARDS.ACE.HEARTS
-        )
+                CARDS.ACE.HEARTS,
+            )
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val player = Player(
-            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
-        )
+        val player =
+            Player(
+                playerId = UUID.randomUUID(),
+                activeCard = activePlayerCard,
+                cardsHand = playerHand,
+            )
 
         val tableActiveCards = emptyList<Card>()
 
         val playerBundlingCards = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
 
-        val expectedPlayerBundlingCards = listOf<Card>(
-            CARDS.EIGHT.DIAMONDS,
-        )
+        val expectedPlayerBundlingCards =
+            listOf<Card>(
+                CARDS.EIGHT.DIAMONDS,
+            )
 
         Assert.assertEquals(
             "Должна быть возможность перевязать завязку 1 уровня с использованием дополнительной карты со стола",
             expectedPlayerBundlingCards,
-            playerBundlingCards
+            playerBundlingCards,
         )
     }
 
     @Test
     fun should_work_correct_test7() {
-        val playerHand = listOf<Card>(
-            CARDS.EIGHT.DIAMONDS, CARDS.TWO.DIAMONDS
-        )
+        val playerHand =
+            listOf<Card>(
+                CARDS.EIGHT.DIAMONDS,
+                CARDS.TWO.DIAMONDS,
+            )
 
-        val tableDeck = listOf<Card>(
-            Card.AnyArithmeticCard.BundleCard(
-                cardList = listOf<Card.AnyArithmeticCard>(
-                    CARDS.ACE.DIAMONDS,
-                    CARDS.FOUR.DIAMONDS,
+        val tableDeck =
+            listOf<Card>(
+                Card.AnyArithmeticCard.BundleCard(
+                    cardList =
+                        listOf<Card.AnyArithmeticCard>(
+                            CARDS.ACE.DIAMONDS,
+                            CARDS.FOUR.DIAMONDS,
+                        ),
+                    point = 1,
+                    arithmeticValue = 5,
+                    playerId = UUID.randomUUID(),
                 ),
-                point = 1,
-                arithmeticValue = 5,
-                playerId = UUID.randomUUID(),
-            ), CARDS.TWO.HEARTS
-        )
+                CARDS.TWO.HEARTS,
+            )
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val player = Player(
-            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
-        )
+        val player =
+            Player(
+                playerId = UUID.randomUUID(),
+                activeCard = activePlayerCard,
+                cardsHand = playerHand,
+            )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -264,33 +317,42 @@ class GetPlayerBundlingCardsTests {
         Assert.assertEquals(
             "Нет возможности перевязать завязку 1 уровня с использованием дополнительной карты со стола, если сумма неправильная",
             expectedPlayerBundlingCards,
-            playerBundlingCards
+            playerBundlingCards,
         )
     }
 
     @Test
     fun should_player_link_the_card_older() {
-        val playerHand = listOf(
-            CARDS.EIGHT.DIAMONDS, CARDS.ACE.DIAMONDS
-        )
+        val playerHand =
+            listOf(
+                CARDS.EIGHT.DIAMONDS,
+                CARDS.ACE.DIAMONDS,
+            )
 
-        val tableDeck = listOf<Card>(
-            Card.AnyArithmeticCard.BundleCard(
-                cardList = listOf(
-                    CARDS.ACE.HEARTS, CARDS.SIX.SPADES
+        val tableDeck =
+            listOf<Card>(
+                Card.AnyArithmeticCard.BundleCard(
+                    cardList =
+                        listOf(
+                            CARDS.ACE.HEARTS,
+                            CARDS.SIX.SPADES,
+                        ),
+                    point = 1,
+                    arithmeticValue = 7,
+                    playerId = UUID.randomUUID(),
+                    bundleStage = 1,
                 ),
-                point = 1,
-                arithmeticValue = 7,
-                playerId = UUID.randomUUID(),
-                bundleStage = 1,
-            ), CARDS.TEN.SPADES
-        )
+                CARDS.TEN.SPADES,
+            )
 
         val activePlayerCard = CARDS.ACE.DIAMONDS
 
-        val player = Player(
-            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
-        )
+        val player =
+            Player(
+                playerId = UUID.randomUUID(),
+                activeCard = activePlayerCard,
+                cardsHand = playerHand,
+            )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -301,25 +363,31 @@ class GetPlayerBundlingCardsTests {
         Assert.assertEquals(
             "Можем перевязать завязку на свою карту, с картой из руки",
             expectedPlayerBundlingCards,
-            playerBundlingCards
+            playerBundlingCards,
         )
     }
 
     @Test
     fun should_work_correct_test8() {
-        val playerHand = listOf(
-            CARDS.TWO.DIAMONDS, CARDS.TWO.CLUBS
-        )
+        val playerHand =
+            listOf(
+                CARDS.TWO.DIAMONDS,
+                CARDS.TWO.CLUBS,
+            )
 
-        val tableDeck = listOf<Card>(
-            CARDS.TWO.HEARTS
-        )
+        val tableDeck =
+            listOf<Card>(
+                CARDS.TWO.HEARTS,
+            )
 
         val activePlayerCard = CARDS.TWO.DIAMONDS
 
-        val player = Player(
-            playerId = UUID.randomUUID(), activeCard = activePlayerCard, cardsHand = playerHand
-        )
+        val player =
+            Player(
+                playerId = UUID.randomUUID(),
+                activeCard = activePlayerCard,
+                cardsHand = playerHand,
+            )
 
         val tableActiveCards = emptyList<Card>()
 
@@ -328,7 +396,9 @@ class GetPlayerBundlingCardsTests {
         val expectedPlayerBundlingCards = listOf<Card>(CARDS.TWO.CLUBS)
 
         Assert.assertEquals(
-            "Мы можем завязать 2 двойки", expectedPlayerBundlingCards, playerBundlingCards
+            "Мы можем завязать 2 двойки",
+            expectedPlayerBundlingCards,
+            playerBundlingCards,
         )
     }
 

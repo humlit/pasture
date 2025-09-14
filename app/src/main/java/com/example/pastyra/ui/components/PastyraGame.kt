@@ -16,22 +16,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pastyra.ui.viewmodel.GameViewModel
 
 @Composable
-fun PastyraGameStart(
-    viewModel: GameViewModel
-) {
+fun PastyraGameStart(viewModel: GameViewModel) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val game = state.game
 
     Card(
         modifier = Modifier.fillMaxSize(),
-        colors = CardDefaults.cardColors(containerColor = Color.LightGray)
+        colors = CardDefaults.cardColors(containerColor = Color.LightGray),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 20.dp, bottom = 20.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(top = 20.dp, bottom = 20.dp),
             verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             PlayerUIView(game.playerList[0], viewModel)
             TableUIView(game.tableDeck, viewModel)

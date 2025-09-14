@@ -11,46 +11,55 @@ import java.util.UUID
 class CanPlayerFinishBundlingCardsTests {
     @Test
     fun should_work_correct_test1() {
-        val playerHand = listOf<Card>(
-            CARDS.FIVE.DIAMONDS,
-            CARDS.ACE.CLUBS,
-        )
+        val playerHand =
+            listOf<Card>(
+                CARDS.FIVE.DIAMONDS,
+                CARDS.ACE.CLUBS,
+            )
 
-        val tableDeck = listOf<Card>(
-            CARDS.FIVE.SPADES,
-            CARDS.FOUR.CLUBS,
-        )
+        val tableDeck =
+            listOf<Card>(
+                CARDS.FIVE.SPADES,
+                CARDS.FOUR.CLUBS,
+            )
 
         val tableActiveCards = emptyList<Card>()
 
         val cardThatBundles = CARDS.ACE.CLUBS
         val cardToBeBundled = CARDS.FIVE.DIAMONDS
 
-        val player = Player(
-            playerId = UUID.randomUUID(), activeCard = cardThatBundles, cardsHand = playerHand
-        )
+        val player =
+            Player(
+                playerId = UUID.randomUUID(),
+                activeCard = cardThatBundles,
+                cardsHand = playerHand,
+            )
 
         listOf(
             Card.AnyArithmeticCard.BundleCard(
-                cardList = listOf(
-                    CARDS.FOUR.CLUBS, cardThatBundles
-                ), //TODO: Этот параметр нам не нужен, но я оставил пока что его тут
+                cardList =
+                    listOf(
+                        CARDS.FOUR.CLUBS,
+                        cardThatBundles,
+                    ),
+                // TODO: Этот параметр нам не нужен, но я оставил пока что его тут
                 point = 0,
                 arithmeticValue = 5,
                 playerId = player.playerId,
-            )
+            ),
         )
 
-        val canPlayerFinishBundling = canPlayerFinishBundlingCards(
-            cardToBeBundled,
-            tableDeck,
-            tableActiveCards,
-        )
+        val canPlayerFinishBundling =
+            canPlayerFinishBundlingCards(
+                cardToBeBundled,
+                tableDeck,
+                tableActiveCards,
+            )
 
         Assert.assertEquals(
             "Игрок не может закончить завязку, если еще есть карты для завязки",
             canPlayerFinishBundling,
-            false
+            false,
         )
     }
 }

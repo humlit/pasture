@@ -10,26 +10,29 @@ fun isPlayerCanBundleCard(
     deck: List<Card>,
     tableActiveCards: List<Card>,
     cardThatBundles: Card.AnyArithmeticCard.ArithmeticCard,
-    cardToBeBundled: Card.AnyArithmeticCard.ArithmeticCard
+    cardToBeBundled: Card.AnyArithmeticCard.ArithmeticCard,
 ): Boolean {
     if (cardThatBundles.arithmeticValue == cardToBeBundled.arithmeticValue) {
         return isPlayerCanGetValueFromDeck(
-            deck, tableActiveCards, cardToBeBundled.arithmeticValue
+            deck,
+            tableActiveCards,
+            cardToBeBundled.arithmeticValue,
         )
     }
 
-    val filterCardToBundle = deck.filter {
-        if (it is Card.AnyArithmeticCard.BundleCard) {
-            it.bundleStage == 1
-        } else {
-            true
+    val filterCardToBundle =
+        deck.filter {
+            if (it is Card.AnyArithmeticCard.BundleCard) {
+                it.bundleStage == 1
+            } else {
+                true
+            }
         }
-    }
 
     return isPlayerCanGetValueFromDeck(
         filterCardToBundle,
         tableActiveCards,
-        cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue
+        cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue,
     )
 }
 
@@ -50,8 +53,13 @@ fun getPlayerBundlingCards(
     val filteredPlayerHand = player.cardsHand.filter { it.id != playerActiveCard.id }
 
     filteredPlayerHand.forEach { card ->
-        if (card is Card.AnyArithmeticCard.ArithmeticCard && playerActiveCard is Card.AnyArithmeticCard.ArithmeticCard && isPlayerCanBundleCard(
-                tableDeck, tableActiveCards, playerActiveCard, card
+        if (card is Card.AnyArithmeticCard.ArithmeticCard &&
+            playerActiveCard is Card.AnyArithmeticCard.ArithmeticCard &&
+            isPlayerCanBundleCard(
+                tableDeck,
+                tableActiveCards,
+                playerActiveCard,
+                card,
             )
         ) {
             cardsToBeBundled.add(card)
@@ -65,11 +73,9 @@ fun canPlayerFinishBundlingCards(
     cardToBeBundled: Card.AnyArithmeticCard.ArithmeticCard,
     tableDeck: List<Card>,
     tableActiveCards: List<Card>,
-): Boolean {
-
-    return !isPlayerCanGetValueFromDeck(
+): Boolean =
+    !isPlayerCanGetValueFromDeck(
         tableDeck = tableDeck,
         tableActiveCards = tableActiveCards,
-        findCardValue = cardToBeBundled.arithmeticValue
+        findCardValue = cardToBeBundled.arithmeticValue,
     )
-}
