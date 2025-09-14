@@ -5,6 +5,7 @@ import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.usercase.isPlayerCanTakeCard
 import org.junit.Assert
 import org.junit.Test
+import java.util.UUID
 
 class IsPlayerCanTakeCardTests {
     @Test
@@ -17,7 +18,7 @@ class IsPlayerCanTakeCardTests {
             CARDS.TWO.DIAMONDS, Card.AnyArithmeticCard.BundleCard(
                 cardList = listOf(
                     CARDS.FIVE.DIAMONDS, CARDS.ACE.CLUBS
-                ), playerId = 1, arithmeticValue = 6, point = 0
+                ), playerId = UUID.randomUUID(), arithmeticValue = 6, point = 0
             )
         )
 
@@ -45,7 +46,7 @@ class IsPlayerCanTakeCardTests {
             Card.AnyArithmeticCard.BundleCard(
                 cardList = listOf(
                     CARDS.FIVE.DIAMONDS, CARDS.ACE.CLUBS
-                ), playerId = 1, arithmeticValue = 6, point = 0
+                ), playerId = UUID.randomUUID(), arithmeticValue = 6, point = 0
             )
         )
 

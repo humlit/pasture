@@ -1,7 +1,9 @@
 package com.example.pastyra.domain.model
 
+import java.util.UUID
+
 data class Player(
-    val playerId: Int = 1,
+    val playerId: UUID = UUID.randomUUID(),
     val activeCard: Card? = null,
     val cardToBeBundled: Card.AnyArithmeticCard.ArithmeticCard? = null,
     val bundlingCard: Card.AnyArithmeticCard.BundleCard? = null,

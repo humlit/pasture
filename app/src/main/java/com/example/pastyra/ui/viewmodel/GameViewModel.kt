@@ -41,8 +41,8 @@ open class GameViewModel() : ViewModel() {
     }
 
     private fun startGame() {
-        addPlayer()
-        activePlayerSelect()
+        addPlayers()
+        selectFirstPlayer()
         dealInitialCard()
     }
 
@@ -145,7 +145,7 @@ open class GameViewModel() : ViewModel() {
                         is Card.AnyArithmeticCard.ArithmeticCard -> {
                             if (currentState.game.gameStage == Stage.TakeArithmeticCard) {
                                 selectArithmeticTableCard(
-                                    card, currentState, activePlayer.playerId
+                                    card, currentState, activePlayer
                                 )
                             } else {
                                 return@update currentState
@@ -155,7 +155,7 @@ open class GameViewModel() : ViewModel() {
                         is Card.QueenCard, is Card.KingCard -> {
                             if (currentState.game.gameStage == Stage.TakeQueenOrKingCard) {
                                 selectQueenAndKingCard(
-                                    card, currentState, activePlayer.playerId
+                                    card, currentState, activePlayer
                                 )
                             } else {
                                 return@update currentState
@@ -377,19 +377,22 @@ open class GameViewModel() : ViewModel() {
 
     fun switchActivePlayer() {
         _state.update { currentState ->
+            val game = currentState.game
+            val playerList = game.playerList
+            val playerOrderIds = game.playerOrderIds
 
-            val playerList = currentState.game.playerList
-            val currentId = requiredActivePlayer.playerId
-
-            val nextId = if (currentId >= playerList.size) 1 else currentId + 1
+            val newPlayerOrderIds =
+                playerOrderIds.subList(1, playerOrderIds.size) + playerOrderIds.first()
 
             val newPlayerList = playerList.map { player ->
-                player.copy(isActive = player.playerId == nextId)
+                player.copy(
+                    isActive = player.playerId == newPlayerOrderIds.first()
+                )
             }
 
             currentState.copy(
-                game = currentState.game.copy(
-                    playerList = newPlayerList,
+                game = game.copy(
+                    playerList = newPlayerList, playerOrderIds = newPlayerOrderIds
                 )
             )
         }
@@ -607,48 +610,37 @@ open class GameViewModel() : ViewModel() {
         }
     }
 
-    private fun addPlayer(playerCount: Int = 2) {
-        val player = Player()
-        val currentState = _state.value
+    private fun addPlayer() {
+        _state.update { currentState ->
+            val game = currentState.game
+            val player = Player()
 
-        var currentPlayerId = player.playerId
-        val newPlayerList = currentState.game.playerList.toMutableList()
+            currentState.copy(
+                game = game.copy(
+                    playerList = game.playerList + player,
+                    playerOrderIds = game.playerOrderIds + player.playerId
+                )
+            )
+        }
+    }
 
+    private fun addPlayers(playerCount: Int = 2) {
         repeat(playerCount) {
-            newPlayerList.add(Player(playerId = currentPlayerId))
-            currentPlayerId++
+            addPlayer()
         }
-
-        val newGame = currentState.game.copy(
-            playerList = newPlayerList
-        )
-
-        _state.value = currentState.copy(game = newGame)
     }
 
-    private fun activePlayerSelect() {
-        val currentState = _state.value
+    private fun selectFirstPlayer() {
+        _state.update { currentState ->
+            val game = currentState.game
+            val firstPlayerId = game.playerOrderIds.first()
 
-        val randomPlayer = currentState.game.playerList.random()
-
-        val newPlayerList = currentState.game.playerList.map { player ->
-            if (player.playerId == randomPlayer.playerId) {
-                player.copy(isActive = true)
-            } else {
-                player.copy(isActive = false)
-            }
-        }
-
-        val newGame = currentState.game.copy(
-            playerList = newPlayerList
-        )
-
-        _state.value = currentState.copy(game = newGame)
-    }
-
-    fun getSwitchedPlayerList(playerList: List<Player>): List<Player> {
-        return playerList.map { player ->
-            player.copy(isActive = !player.isActive)
+            currentState.copy(
+                game = game.copy(
+                    playerList = game.playerList.map { player ->
+                        player.copy(isActive = player.playerId === firstPlayerId)
+                    })
+            )
         }
     }
 

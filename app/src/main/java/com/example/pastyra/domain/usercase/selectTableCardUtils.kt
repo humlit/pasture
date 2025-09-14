@@ -6,18 +6,17 @@ import com.example.pastyra.domain.model.Player
 import com.example.pastyra.domain.model.SimpleCard
 
 fun selectArithmeticTableCard(
-    card: Card, state: GameState, playerId: Int
+    card: Card, state: GameState, player: Player
 ): MutableList<Card.AnyArithmeticCard> {
     val newTableActiveCards =
         state.game.tableActiveCards.filterIsInstance<Card.AnyArithmeticCard>().toMutableList()
-    val currentPlayer = state.game.playerList.find { it.playerId == playerId }
 
     if (card is Card.AnyArithmeticCard) {
         newTableActiveCards.add(card)
     }
 
     val cardVerificationToTake = isPlayerCanTakeAnyoneCard(
-        currentPlayer?.activeCard as Card.AnyArithmeticCard.ArithmeticCard, newTableActiveCards
+        player.activeCard as Card.AnyArithmeticCard.ArithmeticCard, newTableActiveCards
     )
 
     if (!cardVerificationToTake && newTableActiveCards.isNotEmpty()) {
@@ -27,11 +26,10 @@ fun selectArithmeticTableCard(
     return newTableActiveCards
 }
 
-fun selectQueenAndKingCard(card: Card, state: GameState, playerId: Int): MutableList<Card> {
+fun selectQueenAndKingCard(card: Card, state: GameState, player: Player): MutableList<Card> {
     val newTableActiveCards = state.game.tableActiveCards.toMutableList()
-    val currentPlayer = state.game.playerList.find { it.playerId == playerId }
 
-    if (card is SimpleCard && currentPlayer?.activeCard is SimpleCard && card.rank == currentPlayer.activeCard.rank) {
+    if (card is SimpleCard && player.activeCard is SimpleCard && card.rank == player.activeCard.rank) {
         newTableActiveCards.add(card)
     }
 
