@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-// TODO: запусти это и удали этот комментарий
 tasks.register("installGitHooks") {
     doLast {
         val preCommitHookFile = project.rootDir.resolve(".git/hooks/pre-commit")
@@ -46,11 +45,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true

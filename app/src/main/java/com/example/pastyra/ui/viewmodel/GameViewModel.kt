@@ -681,6 +681,4 @@ open class GameViewModel() : ViewModel() {
             )
         }
     }
-
-
 }
