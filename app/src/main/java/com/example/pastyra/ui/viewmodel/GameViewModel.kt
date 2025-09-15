@@ -1,5 +1,6 @@
 package com.example.pastyra.ui.viewmodel
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -252,27 +253,7 @@ open class GameViewModel : ViewModel() {
     }
 
     fun finishMove() {
-//        NOTE: Если решишься взяться за это, будь готов к большому рефакторингу и багфиксам ;)
-//        if (действие == завязка) {
-//            finishBundle() -> меняет карты стола и активного игрока, а также temporary карты
-//        }
-//
-//        if (действие == взятка) {
-//            finishTake() (ну или takeCard(), но оттуда надо будет убрать лишнюю логику)
-//            -> меняет карты стола и активного игрока, а также temporary карты
-//        }
-//
-//        далее общие действия завершения хода:
-//        _state.update { currentState ->
-//            currentState.copy(
-//                game = currentState.game.copy(
-//                    gameStage = Stage.DefaultStage,
-//                    playerList = нужно сменить статус активности игрока, тут может быть подъебка,
-//                                 если выше playerList ты обновляешь, нужно будет проверить
-//                )
-//            )
-//        }
-
+        Log.d("TEST_JACK", "JACK")
         switchActivePlayer()
         tryDealNewCards()
         removeState()
@@ -329,14 +310,6 @@ open class GameViewModel : ViewModel() {
     }
 
     fun takeCard() {
-        /**
-         * TODO: Мне не нравится, что по окончанию взятия карты у нас делаются одинаковые
-         *  преобразования стейта, но дублируются внутри каждой функции
-         *  `takeArithmeticCard`, `takeQueenAndKingCard`, `takeJackCard`.
-         *  Все эти преобразования должны быть тут, в `takeCard`. т.к. они идентичны.
-         *  Надо подумать как это реализовать
-         *  */
-
         when (requiredActivePlayerCard) {
             is Card.AnyArithmeticCard.ArithmeticCard -> {
                 takeAnyArithmeticCard()
@@ -352,7 +325,6 @@ open class GameViewModel : ViewModel() {
 
             else -> throw IllegalArgumentException("")
         }
-
         setLastTakenCardPlayer()
     }
 
@@ -380,6 +352,7 @@ open class GameViewModel : ViewModel() {
                 playerList.map { player ->
                     player.copy(
                         isActive = player.playerId == newPlayerOrderIds.first(),
+                        activeCard = null,
                     )
                 }
 
@@ -421,7 +394,6 @@ open class GameViewModel : ViewModel() {
                                 updatedPlayer.copy(
                                     cardsTaken = pl.cardsTaken + newTemporaryPlayerTakenCards + requiredActivePlayerCard,
                                     cardsHand = pl.cardsHand - requiredActivePlayerCard,
-                                    activeCard = null,
                                 )
                         }
                     }
@@ -450,7 +422,6 @@ open class GameViewModel : ViewModel() {
                             pl.copy(
                                 cardsTaken = pl.cardsTaken + tableTemporaryCard + cardToPlay,
                                 cardsHand = pl.cardsHand - requiredActivePlayerCard,
-                                activeCard = null,
                             )
                         }
 
@@ -506,7 +477,9 @@ open class GameViewModel : ViewModel() {
 
     fun bundleCard() {
         _state.update { currentState ->
-            val temporaryCards = mutableListOf<Card.AnyArithmeticCard.ArithmeticCard>()
+            val bundlingCardsList = mutableListOf<Card.AnyArithmeticCard.ArithmeticCard>()
+            val temporaryCardsList = mutableListOf<Card.AnyArithmeticCard>()
+
             val playerWhoHadABundle: Player? =
                 currentState.game.playerList.firstOrNull { player ->
                     player.bundlingCard in
@@ -516,21 +489,16 @@ open class GameViewModel : ViewModel() {
                 }
 
             currentState.game.temporaryPlayerBundlingCards.flatten().forEach { card ->
-                if (card is Card.AnyArithmeticCard.BundleCard) {
-                    temporaryCards.addAll(card.cardList)
-                } else {
-                    // Каст оправдан, других AnyArithmeticCard у нас нет
-                    temporaryCards.add(card as Card.AnyArithmeticCard.ArithmeticCard)
-                }
+                temporaryCardsList.add(card)
             }
 
             val temporaryBundleCards = currentState.game.temporaryPlayerBundlingCards
             val playerBundleCard = requireActivePlayerBundleCard
 
-            if (temporaryCards.isEmpty()) return@update currentState
+            if (temporaryCardsList.isEmpty()) return@update currentState
 
             val bundleStage =
-                temporaryCards.maxOf { card ->
+                temporaryCardsList.maxOf { card ->
                     if (card is Card.AnyArithmeticCard.BundleCard) {
                         (temporaryBundleCards.size - 1) + card.bundleStage
                     } else {
@@ -538,9 +506,19 @@ open class GameViewModel : ViewModel() {
                     }
                 }
 
+            currentState.game.temporaryPlayerBundlingCards.forEach { cards ->
+                cards.forEach { card ->
+                    if (card is Card.AnyArithmeticCard.BundleCard) {
+                        bundlingCardsList.addAll(card.cardList)
+                    } else if (card is Card.AnyArithmeticCard.ArithmeticCard) {
+                        bundlingCardsList.add(card)
+                    }
+                }
+            }
+
             val newBundleCards =
                 Card.AnyArithmeticCard.BundleCard(
-                    cardList = temporaryCards,
+                    cardList = bundlingCardsList,
                     arithmeticValue = playerBundleCard.arithmeticValue,
                     playerId = requiredActivePlayer.playerId,
                     bundleStage = bundleStage,
