@@ -2,6 +2,7 @@ package com.example.pastyra.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,8 +40,9 @@ fun PreviewCardUIView() {
     CardUIView(
         viewModel = viewModel(),
         card = CARDS.TEN.DIAMONDS,
-        isSelected = false,
-        isReadyForBundle = true,
+        isSelectedInPlayerHand = false,
+        isSelectedOnTableChecker = true,
+        isReadyForBundle = false,
         onClick = {},
     )
 }
@@ -49,15 +51,18 @@ fun PreviewCardUIView() {
 fun CardUIView(
     viewModel: GameViewModel,
     card: Card,
-    isSelected: Boolean = false,
+    isSelectedInPlayerHand: Boolean = false,
+    isSelectedOnTableChecker: Boolean = false,
     isReadyForBundle: Boolean = false,
     onClick: () -> Unit,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val game = state.value.game
 
-    val cardWith = if (isSelected) 119.dp else 85.dp
-    val cardHeight = if (isSelected) 168.dp else 120.dp
+    val borderColor = if (isSelectedOnTableChecker) Color.Green else Color.Transparent
+
+    val cardWith = if (isSelectedInPlayerHand) 119.dp else 85.dp
+    val cardHeight = if (isSelectedInPlayerHand) 168.dp else 120.dp
 
     Column(
         modifier =
@@ -68,6 +73,7 @@ fun CardUIView(
                     )
                 }.width(cardWith)
                 .height(cardHeight)
+                .border(width = 1.5.dp, color = borderColor, shape = RoundedCornerShape(8.dp))
                 .background(Color.Transparent)
                 .clip(RoundedCornerShape(10.dp)),
     ) {

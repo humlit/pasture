@@ -497,19 +497,3 @@ val DECK: MutableList<Card> =
         CARDS.KING.SPADES,
         CARDS.KING.HEARTS,
     ).shuffled().toMutableList()
-
-val DECK1: MutableList<Card> =
-    mutableListOf(
-        CARDS.ACE.DIAMONDS,
-        CARDS.THREE.DIAMONDS,
-        CARDS.SEVEN.CLUBS,
-        CARDS.TWO.HEARTS,
-        CARDS.TWO.HEARTS,
-        CARDS.FIVE.DIAMONDS,
-        CARDS.QUEEN.CLUBS,
-        CARDS.QUEEN.SPADES,
-        CARDS.QUEEN.HEARTS,
-        CARDS.JACK.DIAMONDS,
-        CARDS.JACK.SPADES,
-        CARDS.TWO.CLUBS,
-    ).toMutableList()
