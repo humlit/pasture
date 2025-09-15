@@ -86,7 +86,7 @@ fun PlayerUIView(
                 player.cardsHand.sortedCard().forEachIndexed { index, card ->
                     CardUIView(
                         card = card,
-                        isSelected = card == player.activeCard || card == player.cardToBeBundled,
+                        isSelectedInPlayerHand = card == player.activeCard || card == player.cardToBeBundled,
                         isReadyForBundle = cardsForBundleCheckList.any { it.id == card.id },
                         onClick = {
                             viewModel.selectCard(

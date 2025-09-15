@@ -90,7 +90,7 @@ fun DisplayCardsInBundle(
                         CardUIView(
                             card = card,
                             viewModel = viewModel(),
-                            isSelected = false,
+                            isSelectedInPlayerHand = false,
                             onClick = {},
                         )
                     }
@@ -153,7 +153,7 @@ fun DisplaySelectedTableCards(
                                 card = card,
                                 onClick = { clickListener(card) },
                                 viewModel = viewModel,
-                                isSelected = viewModel.cardForDeleteFromDisplay.any { it.id == card.id },
+                                isSelectedOnTableChecker = viewModel.cardForDeleteFromDisplay.any { it.id == card.id },
                             )
                         }
                     }

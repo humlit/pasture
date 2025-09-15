@@ -107,7 +107,7 @@ fun TableUIView(
                     rowCards.forEach { card ->
                         CardUIView(
                             card = card,
-                            isSelected =
+                            isSelectedInPlayerHand =
                                 state.value.game.tableActiveCards
                                     .any { it.id == card.id },
                             onClick = {
