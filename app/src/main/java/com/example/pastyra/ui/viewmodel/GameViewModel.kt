@@ -517,11 +517,7 @@ open class GameViewModel : ViewModel() {
 
             currentState.game.temporaryPlayerBundlingCards.flatten().forEach { card ->
 
-                if (card is Card.AnyArithmeticCard.BundleCard) {
-                    temporaryCards.addAll(card.cardList)
-                } else {
-                    temporaryCards.add(card)
-                }
+                temporaryCards.add(card)
             }
 
             val temporaryBundleCards = currentState.game.temporaryPlayerBundlingCards
