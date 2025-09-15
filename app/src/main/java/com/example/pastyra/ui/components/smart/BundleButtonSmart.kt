@@ -20,6 +20,7 @@ fun BundleButtonSmart(
 
     if (getPlayerBundlingCards(activePlayer, tableDeck, tableActiveCards).isNotEmpty()) {
         BundleButton(clickListener = {
+            viewModel.saveState()
             viewModel.startBundling(card)
             viewModel.waitToBundleCardStage()
         })
