@@ -146,7 +146,7 @@ class GetPlayerBundlingCardsTests {
             listOf<Card>(
                 Card.AnyArithmeticCard.BundleCard(
                     cardList =
-                        listOf<Card.AnyArithmeticCard>(
+                        listOf(
                             CARDS.ACE.DIAMONDS,
                             CARDS.FIVE.DIAMONDS,
                         ),
@@ -193,7 +193,7 @@ class GetPlayerBundlingCardsTests {
             listOf<Card>(
                 Card.AnyArithmeticCard.BundleCard(
                     cardList =
-                        listOf<Card.AnyArithmeticCard>(
+                        listOf(
                             CARDS.ACE.DIAMONDS,
                             CARDS.FIVE.DIAMONDS,
                             CARDS.SIX.DIAMONDS,
@@ -238,7 +238,7 @@ class GetPlayerBundlingCardsTests {
             listOf<Card>(
                 Card.AnyArithmeticCard.BundleCard(
                     cardList =
-                        listOf<Card.AnyArithmeticCard>(
+                        listOf(
                             CARDS.ACE.DIAMONDS,
                             CARDS.FOUR.DIAMONDS,
                         ),
@@ -285,7 +285,7 @@ class GetPlayerBundlingCardsTests {
             listOf<Card>(
                 Card.AnyArithmeticCard.BundleCard(
                     cardList =
-                        listOf<Card.AnyArithmeticCard>(
+                        listOf(
                             CARDS.ACE.DIAMONDS,
                             CARDS.FOUR.DIAMONDS,
                         ),

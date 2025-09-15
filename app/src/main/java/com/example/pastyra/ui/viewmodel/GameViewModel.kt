@@ -506,7 +506,9 @@ open class GameViewModel : ViewModel() {
 
     fun bundleCard() {
         _state.update { currentState ->
-            val temporaryCards = mutableListOf<Card.AnyArithmeticCard>()
+            val bundleCardList = mutableListOf<Card.AnyArithmeticCard.ArithmeticCard>()
+            val listOfBundleStageCounter = mutableListOf<Card.AnyArithmeticCard>()
+
             val playerWhoHadABundle: Player? =
                 currentState.game.playerList.firstOrNull { player ->
                     player.bundlingCard in
@@ -516,16 +518,16 @@ open class GameViewModel : ViewModel() {
                 }
 
             currentState.game.temporaryPlayerBundlingCards.flatten().forEach { card ->
-                temporaryCards.add(card)
+                listOfBundleStageCounter.add(card)
             }
 
             val temporaryBundleCards = currentState.game.temporaryPlayerBundlingCards
             val playerBundleCard = requireActivePlayerBundleCard
 
-            if (temporaryCards.isEmpty()) return@update currentState
+            if (listOfBundleStageCounter.isEmpty()) return@update currentState
 
             val bundleStage =
-                temporaryCards.maxOf { card ->
+                listOfBundleStageCounter.maxOf { card ->
                     if (card is Card.AnyArithmeticCard.BundleCard) {
                         (temporaryBundleCards.size - 1) + card.bundleStage
                     } else {
@@ -533,9 +535,17 @@ open class GameViewModel : ViewModel() {
                     }
                 }
 
+            listOfBundleStageCounter.forEach { card ->
+                if (card is Card.AnyArithmeticCard.BundleCard) {
+                    bundleCardList.addAll(card.cardList)
+                } else if (card is Card.AnyArithmeticCard.ArithmeticCard) {
+                    bundleCardList.add(card)
+                }
+            }
+
             val newBundleCards =
                 Card.AnyArithmeticCard.BundleCard(
-                    cardList = temporaryCards,
+                    cardList = bundleCardList,
                     arithmeticValue = playerBundleCard.arithmeticValue,
                     playerId = requiredActivePlayer.playerId,
                     bundleStage = bundleStage,
