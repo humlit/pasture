@@ -541,10 +541,6 @@ open class GameViewModel : ViewModel() {
             val newBundleCards =
                 Card.AnyArithmeticCard.BundleCard(
                     cardList = temporaryCards,
-                    point =
-                        temporaryCards.sumOf { card ->
-                            card.point
-                        },
                     arithmeticValue = playerBundleCard.arithmeticValue,
                     playerId = requiredActivePlayer.playerId,
                     bundleStage = bundleStage,

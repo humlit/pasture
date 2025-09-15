@@ -2,6 +2,20 @@ package com.example.pastyra.domain.model
 
 import java.util.UUID
 
+fun getArithmeticCardPoints(
+    rank: Rank,
+    suit: Suit,
+): Int =
+    when {
+        rank == Rank.ACE -> 1
+        rank == Rank.TWO && suit == Suit.CLUBS -> 2
+        rank == Rank.TEN && suit == Suit.DIAMONDS -> 3
+
+        else -> 0
+    }
+
+fun calcBundlePoints(cards: List<Card.AnyArithmeticCard>) = cards.sumOf { it.point }
+
 interface SimpleCard {
     val rank: Rank
 
@@ -26,45 +40,35 @@ sealed class Card(
         override val suit: Suit,
         override val icon: Int,
         override val rank: Rank = Rank.KING,
-        override val point: Int = 0,
-    ) : Card(
-            point,
-        ),
-        SimpleCard
-
-    data class JackCard(
-        override val rank: Rank = Rank.JACK,
-        override val suit: Suit,
-        override val icon: Int,
-        override val point: Int = 1,
-    ) : Card(
-            point = point,
-        ),
+    ) : Card(),
         SimpleCard
 
     data class QueenCard(
         override val rank: Rank = Rank.QUEEN,
         override val suit: Suit,
         override val icon: Int,
-        override val point: Int = 0,
+    ) : Card(),
+        SimpleCard
+
+    data class JackCard(
+        override val rank: Rank = Rank.JACK,
+        override val suit: Suit,
+        override val icon: Int,
     ) : Card(
-            point,
+            point = 1,
         ),
         SimpleCard
 
     sealed class AnyArithmeticCard(
-        override val point: Int = 0,
-    ) : Card(
-            point,
-        ),
+        override val point: Int,
+    ) : Card(),
         ArithmeticCardInterface {
         data class ArithmeticCard(
             override val rank: Rank,
             override val suit: Suit,
             override val arithmeticValue: Int,
-            override val point: Int = 0,
             override val icon: Int,
-        ) : AnyArithmeticCard(point = point),
+        ) : AnyArithmeticCard(point = getArithmeticCardPoints(rank, suit)),
             SimpleCard,
             ArithmeticCardInterface
 
@@ -74,9 +78,7 @@ sealed class Card(
             val playerId: UUID,
             val bundleStage: Int = 1,
             override val arithmeticValue: Int,
-            override val point: Int,
-            // TODO: BundleCard тоже должен иметь id уникальный
-        ) : AnyArithmeticCard(point = point),
+        ) : AnyArithmeticCard(point = calcBundlePoints(cardList)),
             ArithmeticCardInterface
     }
 }

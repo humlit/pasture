@@ -26,7 +26,6 @@ class IsPlayerCanTakeCardTests {
                         ),
                     playerId = UUID.randomUUID(),
                     arithmeticValue = 6,
-                    point = 0,
                 ),
             )
 
@@ -66,7 +65,6 @@ class IsPlayerCanTakeCardTests {
                         ),
                     playerId = UUID.randomUUID(),
                     arithmeticValue = 6,
-                    point = 0,
                 ),
             )
 

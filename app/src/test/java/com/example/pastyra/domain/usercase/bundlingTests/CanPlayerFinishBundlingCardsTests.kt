@@ -3,51 +3,45 @@ package com.example.pastyra.domain.usercase.bundlingTests
 import canPlayerFinishBundlingCards
 import com.example.pastyra.domain.model.CARDS
 import com.example.pastyra.domain.model.Card
-import com.example.pastyra.domain.model.Player
 import org.junit.Assert
 import org.junit.Test
-import java.util.UUID
 
 class CanPlayerFinishBundlingCardsTests {
     @Test
     fun should_work_correct_test1() {
-        val playerHand =
-            listOf<Card>(
-                CARDS.FIVE.DIAMONDS,
-                CARDS.ACE.CLUBS,
-            )
-
         val tableDeck =
             listOf<Card>(
                 CARDS.FIVE.SPADES,
-                CARDS.FOUR.CLUBS,
             )
 
-        val tableActiveCards = emptyList<Card>()
+        val tableActiveCards = listOf<Card>(CARDS.FOUR.CLUBS)
 
-        val cardThatBundles = CARDS.ACE.CLUBS
         val cardToBeBundled = CARDS.FIVE.DIAMONDS
 
-        val player =
-            Player(
-                playerId = UUID.randomUUID(),
-                activeCard = cardThatBundles,
-                cardsHand = playerHand,
+        val canPlayerFinishBundling =
+            canPlayerFinishBundlingCards(
+                cardToBeBundled,
+                tableDeck,
+                tableActiveCards,
             )
 
-        listOf(
-            Card.AnyArithmeticCard.BundleCard(
-                cardList =
-                    listOf(
-                        CARDS.FOUR.CLUBS,
-                        cardThatBundles,
-                    ),
-                // TODO: Этот параметр нам не нужен, но я оставил пока что его тут
-                point = 0,
-                arithmeticValue = 5,
-                playerId = player.playerId,
-            ),
+        Assert.assertEquals(
+            "Игрок не может закончить завязку, если значение связки не соответсвтует карте",
+            canPlayerFinishBundling,
+            false,
         )
+    }
+
+    @Test
+    fun should_work_correct_test2() {
+        val tableDeck =
+            listOf<Card>(
+                CARDS.FIVE.SPADES,
+            )
+
+        val tableActiveCards = listOf<Card>()
+
+        val cardToBeBundled = CARDS.FIVE.DIAMONDS
 
         val canPlayerFinishBundling =
             canPlayerFinishBundlingCards(
@@ -60,6 +54,31 @@ class CanPlayerFinishBundlingCardsTests {
             "Игрок не может закончить завязку, если еще есть карты для завязки",
             canPlayerFinishBundling,
             false,
+        )
+    }
+
+    @Test
+    fun should_work_correct_test3() {
+        val tableDeck =
+            listOf<Card>(
+                CARDS.SIX.SPADES,
+            )
+
+        val tableActiveCards = listOf<Card>()
+
+        val cardToBeBundled = CARDS.FIVE.DIAMONDS
+
+        val canPlayerFinishBundling =
+            canPlayerFinishBundlingCards(
+                cardToBeBundled,
+                tableDeck,
+                tableActiveCards,
+            )
+
+        Assert.assertEquals(
+            "Игрок может закончить завязку, если больше нечего завязывать",
+            canPlayerFinishBundling,
+            true,
         )
     }
 }
