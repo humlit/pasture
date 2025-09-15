@@ -69,12 +69,3 @@ fun selectCardForBundle(
 
     return newTableActiveCard
 }
-
-fun removeTableCards(
-    card: Card,
-    chosenTableCards: List<Card>,
-): List<Card> {
-    val newChosenTableCards = chosenTableCards.toMutableList()
-
-    return newChosenTableCards
-}
