@@ -73,8 +73,7 @@ sealed class Card(
             ArithmeticCardInterface
 
         data class BundleCard(
-            // TODO: Должно быть просто ArithmeticCard
-            val cardList: List<AnyArithmeticCard>,
+            val cardList: List<ArithmeticCard>,
             val playerId: UUID,
             val bundleStage: Int = 1,
             override val arithmeticValue: Int,
