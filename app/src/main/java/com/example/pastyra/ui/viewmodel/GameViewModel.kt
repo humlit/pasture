@@ -506,7 +506,7 @@ open class GameViewModel : ViewModel() {
 
     fun bundleCard() {
         _state.update { currentState ->
-            val temporaryCards = mutableListOf<Card.AnyArithmeticCard>()
+            val temporaryCards = mutableListOf<Card.AnyArithmeticCard.ArithmeticCard>()
             val playerWhoHadABundle: Player? =
                 currentState.game.playerList.firstOrNull { player ->
                     player.bundlingCard in
@@ -516,11 +516,11 @@ open class GameViewModel : ViewModel() {
                 }
 
             currentState.game.temporaryPlayerBundlingCards.flatten().forEach { card ->
-
                 if (card is Card.AnyArithmeticCard.BundleCard) {
                     temporaryCards.addAll(card.cardList)
                 } else {
-                    temporaryCards.add(card)
+                    // Каст оправдан, других AnyArithmeticCard у нас нет
+                    temporaryCards.add(card as Card.AnyArithmeticCard.ArithmeticCard)
                 }
             }
 
