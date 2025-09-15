@@ -22,6 +22,7 @@ fun TakeCardButtonSmart(viewModel: GameViewModel) {
         )
     ) {
         TakeCardButton(clickListener = {
+            viewModel.saveState()
             when (viewModel.requiredActivePlayerCard) {
                 is Card.AnyArithmeticCard.ArithmeticCard -> {
                     viewModel.waitToTakeArithmeticCardStage()

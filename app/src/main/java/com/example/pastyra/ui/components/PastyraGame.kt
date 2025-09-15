@@ -1,5 +1,6 @@
 package com.example.pastyra.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,8 @@ import com.example.pastyra.ui.viewmodel.GameViewModel
 fun PastyraGameStart(viewModel: GameViewModel) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val game = state.game
+
+    Log.d("TEST-SYSTEM", viewModel.requiredActivePlayer.toString())
 
     Card(
         modifier = Modifier.fillMaxSize(),

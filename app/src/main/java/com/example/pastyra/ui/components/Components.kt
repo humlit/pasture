@@ -30,6 +30,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import canPlayerFinishBundlingCards
 import com.example.pastyra.R
 import com.example.pastyra.domain.model.Card
 import com.example.pastyra.domain.usercase.isPlayerCanFinishTakingCard
@@ -66,7 +68,53 @@ fun StyledButton(
 }
 
 @Composable
-fun DisplayCards(
+fun DisplayCardsInBundle(
+    showDialog: Boolean,
+    card: Card.AnyArithmeticCard.BundleCard,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = {},
+            title = {
+                Text(
+                    text = "Связанные карты",
+                )
+            },
+            text = {
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    items(card.cardList) { card ->
+                        CardUIView(
+                            card = card,
+                            viewModel = viewModel(),
+                            isSelected = false,
+                            onClick = {},
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    TextButton(
+                        onClick = onDismiss,
+                    ) { Text(text = stringResource(R.string.cancel_button)) }
+
+                    TextButton(
+                        onClick = onConfirm,
+                    ) { Text(text = stringResource(R.string.confirm_button)) }
+                }
+            },
+        )
+    }
+}
+
+@Composable
+fun DisplaySelectedTableCards(
     viewModel: GameViewModel,
     showDialog: Boolean,
     beingCollectedList: List<Card>,
@@ -127,7 +175,7 @@ fun DisplayCards(
                         items(readyList) { card ->
                             CardUIView(
                                 card = card,
-                                onClick = { },
+                                onClick = {},
                                 viewModel = viewModel,
                             )
                         }
@@ -252,7 +300,9 @@ fun PlayerTakeCard(viewModel: GameViewModel) {
             enabledCondition = canFinish,
         )
 
-        CancelButton(clickListener = {})
+        CancelButton(clickListener = {
+            viewModel.cancelMove()
+        })
     }
 }
 
@@ -260,19 +310,31 @@ fun PlayerTakeCard(viewModel: GameViewModel) {
 fun PlayerBundleCard(viewModel: GameViewModel) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val game = state.value.game
+    val tableDeck = game.tableDeck
+    val tableActiveCards = game.tableActiveCards
+    val playerCardToBeBundled = viewModel.requireActivePlayerBundleCard
+
+    val canFinish =
+        canPlayerFinishBundlingCards(
+            cardToBeBundled = playerCardToBeBundled,
+            tableDeck = tableDeck,
+            tableActiveCards = tableActiveCards,
+        )
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
-        CancelButton(clickListener = {})
+        CancelButton(clickListener = {
+            viewModel.cancelMove()
+        })
         FinishMoveButton(
             clickListener = {
                 viewModel.bundleCard()
                 viewModel.finishMove()
             },
-            enabledCondition = game.tableActiveCards.isEmpty() && game.temporaryPlayerBundlingCards.isNotEmpty(),
+            enabledCondition = canFinish && tableActiveCards.isEmpty(),
         )
     }
 }

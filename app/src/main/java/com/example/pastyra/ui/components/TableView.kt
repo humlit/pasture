@@ -1,6 +1,5 @@
 package com.example.pastyra.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,10 +37,9 @@ fun TableUIView(
     val game = state.value.game
 
     var onTableDisplayListOfCard by remember { mutableStateOf(emptyList<Card>()) }
+    var showDisplaySelectedTableCards by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
-
-    var showDialog by remember { mutableStateOf(false) }
 
     onTableDisplayListOfCard =
         when (game.gameStage) {
@@ -55,9 +53,6 @@ fun TableUIView(
             4,
         )
 
-    Log.d("GAME_SHOULD_RENDER", "TableView")
-    Log.d("GAME_SHOULD_RENDER", rowsCard.toString())
-
     Card(
         modifier =
             Modifier
@@ -68,19 +63,19 @@ fun TableUIView(
         LazyRow(
             modifier =
                 Modifier
-                    .clickable(onClick = { showDialog = true })
+                    .clickable(onClick = { showDisplaySelectedTableCards = true })
                     .background(color = Color.Transparent),
         ) {
             items(onTableDisplayListOfCard) { card ->
                 ShortCardUIView(card, onClick = {
-                    showDialog = true
+                    showDisplaySelectedTableCards = true
                 })
             }
         }
 
-        DisplayCards(
+        DisplaySelectedTableCards(
             viewModel = viewModel,
-            showDialog = showDialog,
+            showDialog = showDisplaySelectedTableCards,
             beingCollectedList = game.tableActiveCards,
             readyList =
                 if (game.gameStage == Stage.WaitToBundle) {
@@ -90,10 +85,10 @@ fun TableUIView(
                 },
             onConfirm = {
                 viewModel.confirmDeleteCardFromDisplay()
-                showDialog = false
+                showDisplaySelectedTableCards = false
             },
             onDismiss = {
-                showDialog = false
+                showDisplaySelectedTableCards = false
                 viewModel.closeDialogBox()
             },
             clickListener = { card ->
@@ -132,7 +127,6 @@ fun TableUIView(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(5.dp))
             }
         }

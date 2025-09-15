@@ -32,6 +32,8 @@ open class GameViewModel : ViewModel() {
     var cardForDeleteFromDisplay by mutableStateOf<List<Card>>(emptyList())
         private set
 
+    private var stateSavePoint: GameState? = null
+
     private val selectionMutex = Mutex()
 
     init {
@@ -48,9 +50,6 @@ open class GameViewModel : ViewModel() {
         get() =
             state.value.game.playerList
                 .find { it.isActive }
-
-    val activePlayerCard: Card?
-        get() = requiredActivePlayer.activeCard
 
     val requiredActivePlayer: Player
         get() = activePlayer ?: throw AssertionError("No active player")
@@ -87,57 +86,21 @@ open class GameViewModel : ViewModel() {
         viewModelScope.launch {
             _state.update { currentState ->
 
-                val newTempPlayerBundlingCard =
-                    currentState.game.temporaryPlayerBundlingCards
-                        .flatten()
-                        .toMutableList()
-                val newTableActiveCard = currentState.game.tableActiveCards.toMutableList()
-
-                val newPlayerList: List<Player> =
+                val newPlayerList =
                     currentState.game.playerList.map { pl ->
-                        if (pl.playerId == requiredActivePlayer.playerId) {
-                            when {
-                                currentState.game.gameStage == Stage.WaitToBundle && newTempPlayerBundlingCard.isNotEmpty() -> {
-                                    pl
-                                        .copy(
-                                            cardsHand = pl.cardsHand + newTempPlayerBundlingCard.first(),
-                                            cardToBeBundled = null,
-                                        ).also { newTempPlayerBundlingCard.removeFirstOrNull() }
-                                }
-
-                                currentState.game.gameStage == Stage.WaitToBundle && newTableActiveCard.isNotEmpty() -> {
-                                    pl
-                                        .copy(
-                                            cardsHand = pl.cardsHand + newTableActiveCard.first(),
-                                            cardToBeBundled = null,
-                                        ).also { newTableActiveCard.removeFirstOrNull() }
-                                }
-
-                                else ->
-                                    pl.copy(
-                                        cardToBeBundled = null,
-                                    )
-                            }
+                        if (pl.playerId == requiredActivePlayer.playerId && currentState.game.gameStage == Stage.DefaultStage) {
+                            pl.copy(
+                                activeCard = card,
+                            )
                         } else {
                             pl
                         }
                     }
 
-                val combinedTableDeck =
-                    currentState.game.tableDeck + newTableActiveCard + currentState.game.temporaryPlayerTakenCards +
-                        newTempPlayerBundlingCard
-
-                updateActivePlayerCard(card)
-
                 currentState.copy(
                     game =
                         currentState.game.copy(
                             playerList = newPlayerList,
-                            temporaryPlayerTakenCards = emptyList(),
-                            temporaryPlayerBundlingCards = emptyList(),
-                            tableActiveCards = emptyList(),
-                            tableDeck = combinedTableDeck,
-                            gameStage = Stage.DefaultStage,
                         ),
                 )
             }
@@ -543,16 +506,33 @@ open class GameViewModel : ViewModel() {
 
     fun bundleCard() {
         _state.update { currentState ->
-            val tempCards = currentState.game.temporaryPlayerBundlingCards.flatten()
+            val temporaryCards = mutableListOf<Card.AnyArithmeticCard>()
+            val playerWhoHadABundle: Player? =
+                currentState.game.playerList.firstOrNull { player ->
+                    player.bundlingCard in
+                        currentState.game.temporaryPlayerBundlingCards
+                            .flatten()
+                            .filterIsInstance<Card.AnyArithmeticCard.BundleCard>()
+                }
+
+            currentState.game.temporaryPlayerBundlingCards.flatten().forEach { card ->
+
+                if (card is Card.AnyArithmeticCard.BundleCard) {
+                    temporaryCards.addAll(card.cardList)
+                } else {
+                    temporaryCards.add(card)
+                }
+            }
+
             val temporaryBundleCards = currentState.game.temporaryPlayerBundlingCards
             val playerBundleCard = requireActivePlayerBundleCard
 
-            if (tempCards.isEmpty()) return@update currentState
+            if (temporaryCards.isEmpty()) return@update currentState
 
             val bundleStage =
-                tempCards.maxOf {
-                    if (it is Card.AnyArithmeticCard.BundleCard) {
-                        (temporaryBundleCards.size - 1) + it.bundleStage
+                temporaryCards.maxOf { card ->
+                    if (card is Card.AnyArithmeticCard.BundleCard) {
+                        (temporaryBundleCards.size - 1) + card.bundleStage
                     } else {
                         temporaryBundleCards.size
                     }
@@ -560,9 +540,9 @@ open class GameViewModel : ViewModel() {
 
             val newBundleCards =
                 Card.AnyArithmeticCard.BundleCard(
-                    cardList = tempCards,
+                    cardList = temporaryCards,
                     point =
-                        tempCards.sumOf { card ->
+                        temporaryCards.sumOf { card ->
                             card.point
                         },
                     arithmeticValue = playerBundleCard.arithmeticValue,
@@ -574,15 +554,24 @@ open class GameViewModel : ViewModel() {
 
             val newPlayerList =
                 currentState.game.playerList.map { pl ->
-                    when {
-                        pl.playerId == requiredActivePlayer.playerId ->
-                            pl.copy(
+                    var updatedPlayer = pl
+
+                    if (pl.playerId == playerWhoHadABundle?.playerId) {
+                        updatedPlayer =
+                            updatedPlayer.copy(
+                                bundlingCard = null,
+                            )
+                    }
+
+                    if (pl.playerId == requiredActivePlayer.playerId) {
+                        updatedPlayer =
+                            updatedPlayer.copy(
                                 bundlingCard = newBundleCards,
                                 cardToBeBundled = null,
                             )
-
-                        else -> pl
                     }
+
+                    updatedPlayer
                 }
 
             currentState.copy(
@@ -622,6 +611,16 @@ open class GameViewModel : ViewModel() {
                         playerList = newPlayerList,
                     ),
             )
+        }
+    }
+
+    fun saveState() {
+        stateSavePoint = state.value.copy()
+    }
+
+    fun cancelMove() {
+        stateSavePoint?.let { savedState ->
+            _state.update { savedState }
         }
     }
 
