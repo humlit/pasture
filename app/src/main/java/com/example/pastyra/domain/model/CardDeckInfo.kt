@@ -436,7 +436,7 @@ object CARDS {
     }
 }
 
-val DECK1: List<Card> =
+val DECK: List<Card> =
     listOf(
         CARDS.ACE.DIAMONDS,
         CARDS.ACE.CLUBS,
@@ -494,7 +494,7 @@ val DECK1: List<Card> =
 
 // --------------------------------------------------------------------------------------------------
 
-val DECK: List<Card> = // TESTED DECK
+val DECK1: List<Card> = // TESTED DECK
     listOf(
         CARDS.ACE.DIAMONDS,
         CARDS.SEVEN.CLUBS, // 1 player
