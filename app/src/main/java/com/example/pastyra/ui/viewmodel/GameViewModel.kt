@@ -252,6 +252,11 @@ open class GameViewModel : ViewModel() {
         cardForDeleteFromDisplay = emptyList()
     }
 
+    fun playerSelectHisCardInDisplay() {
+        cardForDeleteFromDisplay = emptyList()
+        cancelMove()
+    }
+
     fun finishMove() {
         Log.d("TEST_JACK", "JACK")
         tryAddPastureScore()
@@ -280,7 +285,8 @@ open class GameViewModel : ViewModel() {
                     player.copy(
                         pastyrs =
                             when {
-                                currentPlayer.playerId == player.playerId -> player.pastyrs + 1 else -> player.pastyrs
+                                currentPlayer.playerId == player.playerId -> player.pastyrs + 1
+                                else -> player.pastyrs
                             },
                     )
                 }

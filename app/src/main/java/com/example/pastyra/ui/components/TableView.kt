@@ -35,6 +35,7 @@ fun TableUIView(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val game = state.value.game
+    val cardForDeleteFromDisplayChecker = viewModel.cardForDeleteFromDisplay
 
     var onTableDisplayListOfCard by remember { mutableStateOf(emptyList<Card>()) }
     var showDisplaySelectedTableCards by remember { mutableStateOf(false) }
@@ -84,7 +85,15 @@ fun TableUIView(
                     game.temporaryPlayerTakenCards
                 },
             onConfirm = {
-                viewModel.confirmDeleteCardFromDisplay()
+                if (game.gameStage == Stage.WaitToBundle &&
+                    game.temporaryPlayerBundlingCards.isEmpty() &&
+                    cardForDeleteFromDisplayChecker.any { it == game.tableActiveCards[0] }
+                ) {
+                    viewModel.playerSelectHisCardInDisplay()
+                } else {
+                    viewModel.confirmDeleteCardFromDisplay()
+                }
+
                 showDisplaySelectedTableCards = false
             },
             onDismiss = {
