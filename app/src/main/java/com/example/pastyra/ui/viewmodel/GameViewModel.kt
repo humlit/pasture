@@ -254,9 +254,48 @@ open class GameViewModel : ViewModel() {
 
     fun finishMove() {
         Log.d("TEST_JACK", "JACK")
+        tryAddPastureScore()
         switchActivePlayer()
         tryDealNewCards()
         removeState()
+    }
+
+    fun tryAddPastureScore() {
+        _state.update { currentState ->
+            val game = currentState.game
+            val currentPlayer = requiredActivePlayer
+            val oldTableDeck = stateSavePoint?.game?.tableDeck
+
+            val isEmptyGameDeck = game.gameDeck.isEmpty()
+            val isEmptyTableDeck = game.tableDeck.isEmpty()
+            val isJackTakeJackCard =
+                when {
+                    currentPlayer.activeCard is Card.JackCard && oldTableDeck?.size == 1 && oldTableDeck[0] is Card.JackCard -> true
+
+                    else -> false
+                }
+
+            val newPlayerList =
+                game.playerList.map { player ->
+                    player.copy(
+                        pastyrs =
+                            when {
+                                currentPlayer.playerId == player.playerId -> player.pastyrs + 1 else -> player.pastyrs
+                            },
+                    )
+                }
+
+            if (isJackTakeJackCard || (!isEmptyGameDeck && isEmptyTableDeck)) {
+                currentState.copy(
+                    game =
+                        game.copy(
+                            playerList = newPlayerList,
+                        ),
+                )
+            } else {
+                currentState
+            }
+        }
     }
 
     fun removeState() {

@@ -436,8 +436,8 @@ object CARDS {
     }
 }
 
-val DECK: MutableList<Card> =
-    mutableListOf(
+val DECK: List<Card> =
+    listOf(
         CARDS.ACE.DIAMONDS,
         CARDS.ACE.CLUBS,
         CARDS.ACE.SPADES,
@@ -490,4 +490,4 @@ val DECK: MutableList<Card> =
         CARDS.KING.CLUBS,
         CARDS.KING.SPADES,
         CARDS.KING.HEARTS,
-    ).shuffled().toMutableList()
+    ).shuffled()
