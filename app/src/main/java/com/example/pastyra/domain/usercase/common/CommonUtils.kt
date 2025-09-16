@@ -1,5 +1,4 @@
 import com.example.pastyra.domain.model.Card
-import com.example.pastyra.domain.model.Player
 
 fun isPlayerCanGetValueFromDeck(
     tableDeck: List<Card>,
@@ -29,7 +28,7 @@ fun isPlayerCanGetValueFromDeck(
     return dp[findCardValue]
 }
 
-fun isPlayerCanGetValueFromDeckForTakeCard(
+fun isPlayerCanGetValueFromFilteredDeck(
     tableDeck: List<Card>,
     tableActiveCards: List<Card>,
     findCardValue: Int,
@@ -51,5 +50,3 @@ fun isPlayerCanGetValueFromDeckForTakeCard(
         findCardValue = findCardValue,
     )
 }
-
-fun getPlayerScore(player: Player): Int = player.pastyrs + player.cardsTaken.sumOf { it.point }

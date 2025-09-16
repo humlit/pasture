@@ -13,10 +13,10 @@ fun isPlayerCanBundleCard(
     cardToBeBundled: Card.AnyArithmeticCard.ArithmeticCard,
 ): Boolean {
     if (cardThatBundles.arithmeticValue == cardToBeBundled.arithmeticValue) {
-        return isPlayerCanGetValueFromDeck(
-            deck,
-            tableActiveCards,
-            cardToBeBundled.arithmeticValue,
+        return isPlayerCanGetValueFromFilteredDeck(
+            tableDeck = deck,
+            tableActiveCards = tableActiveCards,
+            findCardValue = cardToBeBundled.arithmeticValue,
         )
     }
 
@@ -30,9 +30,9 @@ fun isPlayerCanBundleCard(
         }
 
     return isPlayerCanGetValueFromDeck(
-        filterCardToBundle,
-        tableActiveCards,
-        cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue,
+        tableDeck = filterCardToBundle,
+        tableActiveCards = tableActiveCards,
+        findCardValue = cardToBeBundled.arithmeticValue - cardThatBundles.arithmeticValue,
     )
 }
 
@@ -56,10 +56,10 @@ fun getPlayerBundlingCards(
         if (card is Card.AnyArithmeticCard.ArithmeticCard &&
             playerActiveCard is Card.AnyArithmeticCard.ArithmeticCard &&
             isPlayerCanBundleCard(
-                tableDeck,
-                tableActiveCards,
-                playerActiveCard,
-                card,
+                deck = tableDeck,
+                tableActiveCards = tableActiveCards,
+                cardThatBundles = playerActiveCard,
+                cardToBeBundled = card,
             )
         ) {
             cardsToBeBundled.add(card)
