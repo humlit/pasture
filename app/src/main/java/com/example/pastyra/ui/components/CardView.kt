@@ -3,7 +3,7 @@ package com.example.pastyra.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,8 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,15 +67,13 @@ fun CardUIView(
     Column(
         modifier =
             Modifier
-                .pointerInput(card) {
-                    detectTapGestures(
-                        onTap = { onClick() },
-                    )
-                }.width(cardWith)
+                .width(cardWith)
                 .height(cardHeight)
                 .border(width = 1.5.dp, color = borderColor, shape = RoundedCornerShape(8.dp))
                 .background(Color.Transparent)
-                .clip(RoundedCornerShape(10.dp)),
+                .clip(RoundedCornerShape(10.dp))
+                .testTag("CardView")
+                .clickable(onClick = onClick),
     ) {
         Box {
             Row(
@@ -90,11 +88,7 @@ fun CardUIView(
                     )
                 } else if (card is Card.AnyArithmeticCard.BundleCard) {
                     Column(
-                        modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .background(Color.White)
-                                .padding(2.dp),
+                        modifier = Modifier.fillMaxSize().background(Color.White).padding(2.dp),
                         verticalArrangement = Arrangement.SpaceEvenly,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {

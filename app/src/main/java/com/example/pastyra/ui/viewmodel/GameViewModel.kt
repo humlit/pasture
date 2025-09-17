@@ -1,7 +1,6 @@
 package com.example.pastyra.ui.viewmodel
 
 import android.util.Log
-import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,12 +22,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-open class GameViewModel : ViewModel() {
-    private val _state = MutableStateFlow(GameState())
+open class GameViewModel(
+    initialState: GameState = GameState(),
+) : ViewModel() {
+    private val _state = MutableStateFlow(initialState)
     val state: StateFlow<GameState> = _state.asStateFlow()
-
-    @get:VisibleForTesting
-    internal val mutableState: MutableStateFlow<GameState> get() = _state
 
     var cardForDeleteFromDisplay by mutableStateOf<List<Card>>(emptyList())
         private set
@@ -273,6 +271,8 @@ open class GameViewModel : ViewModel() {
 
             val isEmptyGameDeck = game.gameDeck.isEmpty()
             val isEmptyTableDeck = game.tableDeck.isEmpty()
+            val isEmptyPlayersCardsHand = game.playerList.all { it.cardsHand.isEmpty() }
+            val isLastPlayedCard = isEmptyPlayersCardsHand && isEmptyGameDeck
             val isJackTakeJackCard =
                 when {
                     currentPlayer.activeCard is Card.JackCard && oldTableDeck?.size == 1 && oldTableDeck[0] is Card.JackCard -> true
@@ -291,7 +291,7 @@ open class GameViewModel : ViewModel() {
                     )
                 }
 
-            if (isJackTakeJackCard || (!isEmptyGameDeck && isEmptyTableDeck)) {
+            if (!isLastPlayedCard && (isJackTakeJackCard || isEmptyTableDeck)) {
                 currentState.copy(
                     game =
                         game.copy(
