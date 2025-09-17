@@ -292,9 +292,6 @@ fun PlayerTakeCard(viewModel: GameViewModel) {
     ) {
         FinishMoveButton(
             clickListener = {
-                // Тут нужно делать viewModel.finishMove(), этот метод надо создать
-                // В нем будут поочередно выполняться нужные действия, см пример во viewModel
-                viewModel.takeCard()
                 viewModel.finishMove()
             },
             enabledCondition = canFinish,
@@ -331,7 +328,6 @@ fun PlayerBundleCard(viewModel: GameViewModel) {
         })
         FinishMoveButton(
             clickListener = {
-                viewModel.bundleCard()
                 viewModel.finishMove()
             },
             enabledCondition = canFinish && tableActiveCards.isEmpty(),

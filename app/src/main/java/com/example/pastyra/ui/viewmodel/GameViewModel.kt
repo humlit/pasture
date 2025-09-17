@@ -1,6 +1,5 @@
 package com.example.pastyra.ui.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -256,7 +255,11 @@ open class GameViewModel(
     }
 
     fun finishMove() {
-        Log.d("TEST_JACK", "JACK")
+        when (state.value.game.gameStage) {
+            Stage.TakeArithmeticCard, Stage.TakeQueenOrKingCard -> takeCard()
+            Stage.WaitToBundle -> bundleCard()
+            Stage.DefaultStage -> putCardOnTable()
+        }
         tryAddPastureScore()
         switchActivePlayer()
         tryDealNewCards()

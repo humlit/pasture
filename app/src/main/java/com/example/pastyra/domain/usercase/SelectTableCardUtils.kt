@@ -39,7 +39,11 @@ fun selectQueenAndKingCard(
 ): MutableList<Card> {
     val newTableActiveCards = state.game.tableActiveCards.toMutableList()
 
-    if (card is SimpleCard && player.activeCard is SimpleCard && card.rank == player.activeCard.rank) {
+    if (state.game.temporaryPlayerTakenCards.isEmpty() &&
+        card is SimpleCard &&
+        player.activeCard is SimpleCard &&
+        card.rank == player.activeCard.rank
+    ) {
         newTableActiveCards.add(card)
     }
 

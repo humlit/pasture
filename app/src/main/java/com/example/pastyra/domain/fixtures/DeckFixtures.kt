@@ -37,7 +37,7 @@ val DECK_BUNDLE_TEST: List<Card> = // TESTED DECK
     listOf(
         CARDS.ACE.DIAMONDS,
         CARDS.SEVEN.CLUBS, // 1 player
-        CARDS.ACE.SPADES,
+        CARDS.QUEEN.SPADES,
         CARDS.TEN.DIAMONDS,
         //
         CARDS.EIGHT.DIAMONDS,
@@ -45,8 +45,8 @@ val DECK_BUNDLE_TEST: List<Card> = // TESTED DECK
         CARDS.ACE.HEARTS, // 2 player
         CARDS.NINE.HEARTS,
         //
-        CARDS.SIX.DIAMONDS,
-        CARDS.ACE.CLUBS,
+        CARDS.QUEEN.DIAMONDS,
+        CARDS.QUEEN.CLUBS,
         CARDS.TWO.SPADES, // table
-        CARDS.TEN.HEARTS,
+        CARDS.SIX.HEARTS,
     )
