@@ -23,7 +23,6 @@ fun PutCardOnTableButtonSmart(viewModel: GameViewModel) {
         isActivePlayerHasBundleCard
     ) {
         PutCardOnTableButton(clickListener = {
-            viewModel.putCardOnTable()
             viewModel.finishMove()
         })
     }

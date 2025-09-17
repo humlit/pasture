@@ -43,12 +43,12 @@ fun getPlayerBundlingCards(
     player: Player,
     tableDeck: List<Card>,
     tableActiveCards: List<Card>,
-): List<Card> {
+): List<Card.AnyArithmeticCard> {
     if (player.activeCard == null) return listOf()
 
     val playerActiveCard = player.activeCard
 
-    val cardsToBeBundled = mutableListOf<Card>()
+    val cardsToBeBundled = mutableListOf<Card.AnyArithmeticCard>()
 
     val filteredPlayerHand = player.cardsHand.filter { it.id != playerActiveCard.id }
 

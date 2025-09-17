@@ -33,7 +33,6 @@ fun TakeCardButtonSmart(viewModel: GameViewModel) {
                 }
 
                 else -> {
-                    viewModel.takeCard()
                     viewModel.finishMove()
                 }
             }

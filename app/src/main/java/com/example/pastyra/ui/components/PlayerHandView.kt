@@ -1,5 +1,6 @@
 package com.example.pastyra.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,7 +47,7 @@ fun PlayerUIView(
     val tableActiveCards = game.tableActiveCards
 
     val cardsForBundleCheckList = getPlayerBundlingCards(player, tableDeck, tableActiveCards)
-
+    Log.d("BUNDLE_TEST", cardsForBundleCheckList.toString())
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
     ) {
@@ -87,7 +88,15 @@ fun PlayerUIView(
                     CardUIView(
                         card = card,
                         isSelectedInPlayerHand = card == player.activeCard || card == player.cardToBeBundled,
-                        isReadyForBundle = cardsForBundleCheckList.any { it.id == card.id },
+                        isReadyForBundle =
+                            if (player.bundlingCard != null) {
+                                cardsForBundleCheckList.filter { it.arithmeticValue == player.bundlingCard.arithmeticValue }.any {
+                                    it.id ==
+                                        card.id
+                                }
+                            } else {
+                                cardsForBundleCheckList.any { it.id == card.id }
+                            },
                         onClick = {
                             viewModel.selectCard(
                                 card = card,
