@@ -116,9 +116,6 @@ fun TableUIView(
                     rowCards.forEach { card ->
                         CardUIView(
                             card = card,
-                            isSelectedInPlayerHand =
-                                state.value.game.tableActiveCards
-                                    .any { it.id == card.id },
                             onClick = {
                                 scope.launch {
                                     if (game.gameStage == Stage.TakeArithmeticCard || game.gameStage == Stage.TakeQueenOrKingCard) {
